@@ -1,3 +1,5 @@
+import { log } from "console";
+
 // lib/gcs.js
 import { Storage } from "@google-cloud/storage";
 
@@ -5,6 +7,8 @@ import { Storage } from "@google-cloud/storage";
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config({ path: "./.env.local" });
 }
+
+console.log("process.env", process.env);
 
 // Ensure all necessary environment variables are set
 if (
