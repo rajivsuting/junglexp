@@ -1,0 +1,37 @@
+{
+  "name": "eTroupers",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "format": "turbo format --continue --",
+    "format:fix": "turbo format --continue -- --write",
+    "lint": "turbo lint --continue --",
+    "lint:fix": "turbo lint --continue -- --apply",
+    "db:generate": "yarn workspace @repo/db drizzle-kit generate",
+    "db:migrate": "yarn workspace @repo/db drizzle-kit migrate",
+    "db:push": "yarn workspace @repo/db drizzle-kit push",
+    "db:studio": "yarn workspace @repo/db drizzle-kit studio",
+    "db:seed": "yarn workspace @repo/db seed",
+    "admin": "yarn workspace admin"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@turbo/gen": "^2.5.4",
+    "prettier": "^3.5.3",
+    "turbo": "^2.5.4",
+    "typescript": "5.8.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "yarn@4.6.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tooling/*"
+  ],
+  "dependencies": {
+    "@google-cloud/storage": "^7.16.0"
+  }
+}

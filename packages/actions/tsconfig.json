@@ -1,0 +1,11 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "paths": {
+      "@repo/db/*": ["../db/*"]
+    }
+  },
+  "include": ["*.ts", "src", "../db/schema"],
+  "exclude": ["node_modules"]
+}
