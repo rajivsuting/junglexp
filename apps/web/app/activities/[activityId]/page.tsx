@@ -1,14 +1,16 @@
-import { ActivityDetail } from '@/components/activity-detail';
-import { Footer } from '@/components/footer';
+import type { PageProps } from "@/.next/types/app/page";
+import { ActivityDetail } from "@/components/activity-detail";
+import { Footer } from "@/components/footer";
 
-export default function ActivityDetailPage({
+export default async function ActivityDetailPage({
   params,
 }: {
-  params: { activityId: string };
+  params: Promise<{ activityId: string }>;
 }) {
+  const { activityId } = await params;
   return (
     <div className="min-h-screen bg-background">
-      <ActivityDetail activityId={params.activityId} />
+      <ActivityDetail activityId={activityId} />
       <Footer />
     </div>
   );

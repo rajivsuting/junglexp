@@ -7,11 +7,15 @@ export const getServerSideExistingSlugs = async (
   field: string,
   value: string
 ) => {
-  const existingSlugsSet = new Set(
-    (
-      await db.select({ slug: Souvenirs.slug }).from().where(eq(field, value))
-    ).map((s) => s.slug)
-  );
+  // const existingSlugsSet = new Set(
+  //   (
+  //     await db
+  //       .select({ slug: Souvenirs.slug })
+  //       .from(Souvenirs)
+  //       .where(eq(field, value))
+  //   ).map((s) => s.slug)
+  // );
 
-  return existingSlugsSet;
+  // return existingSlugsSet;
+  return {};
 };

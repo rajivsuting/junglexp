@@ -1,15 +1,25 @@
 "use client";
 
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form } from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { IconSelect, IconSelectButton, IconSelectFormField } from './icon-select';
+import {
+  IconSelect,
+  IconSelectButton,
+  IconSelectFormField,
+} from "./icon-select";
 
 // Example form schema
 const formSchema = z.object({
@@ -55,7 +65,7 @@ export function IconSelectDemo() {
           <CardContent className="space-y-4">
             <IconSelect
               onIconSelect={setSelectedIcon}
-              selectedIcon={selectedIcon}
+              selectedIcon={selectedIcon as any}
               searchPlaceholder="Search for an icon..."
             >
               <Button variant="outline" className="w-full">
@@ -88,7 +98,7 @@ export function IconSelectDemo() {
           <CardContent className="space-y-4">
             <IconSelectButton
               onIconSelect={setSelectedIcon}
-              selectedIcon={selectedIcon}
+              selectedIcon={selectedIcon as any}
               variant="outline"
               className="w-full"
             />

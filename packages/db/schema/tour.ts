@@ -91,5 +91,3 @@ export type TNewTourPricingBase = typeof TourPricing.$inferInsert;
 
 export type TTourHotelBase = typeof TourHotels.$inferSelect;
 export type TNewTourHotelBase = typeof TourHotels.$inferInsert;
-
-export type TTourImageBase = typeof TourImages.$inferSelect;

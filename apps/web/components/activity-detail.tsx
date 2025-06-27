@@ -1,27 +1,50 @@
 "use client";
 
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import {
-    Award, CalendarIcon, Camera, Check, Clock, Mountain, Shield, Star, Users, X
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+  Award,
+  CalendarIcon,
+  Camera,
+  Check,
+  Clock,
+  Mountain,
+  Shield,
+  Star,
+  Users,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
-import { HeroSection } from './activity-hero/hero-section';
+import { HeroSection } from "./activity-hero/hero-section";
 
 // Sample activity data
 const activityData = {
@@ -184,7 +207,7 @@ const reviews = [
   },
 ];
 
-export function ActivityDetail() {
+export function ActivityDetail({ activityId }: { activityId: string }) {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [participants, setParticipants] = useState("2");
   const [formData, setFormData] = useState({
@@ -241,16 +264,13 @@ export function ActivityDetail() {
       !formData.lastName ||
       !formData.email
     ) {
-      toast({
-        title: "Missing Information",
+      toast.error("Missing Information", {
         description: "Please fill in all required fields and select a date.",
-        variant: "destructive",
       });
       return;
     }
 
-    toast({
-      title: "Booking Request Submitted!",
+    toast.error("Booking Request Submitted!", {
       description: "We'll contact you within 24 hours to confirm your booking.",
     });
   };

@@ -2699,7 +2699,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@repo/common-utils@workspace:^, @repo/common-utils@workspace:packages/common-utils":
+"@repo/common-utils@npm:*, @repo/common-utils@workspace:packages/common-utils":
   version: 0.0.0-use.local
   resolution: "@repo/common-utils@workspace:packages/common-utils"
   dependencies:
@@ -3288,7 +3288,7 @@ __metadata:
     "@radix-ui/react-tabs": "npm:^1.1.12"
     "@radix-ui/react-tooltip": "npm:^1.2.7"
     "@repo/actions": "npm:*"
-    "@repo/common-utils": "workspace:^"
+    "@repo/common-utils": "npm:*"
     "@repo/db": "npm:*"
     "@repo/typescript-config": "npm:*"
     "@tailwindcss/postcss": "npm:^4.1.8"
@@ -3302,7 +3302,7 @@ __metadata:
     cmdk: "npm:^1.1.1"
     date-fns: "npm:^4.1.0"
     firebase: "npm:^11.9.0"
-    lucide-react: "npm:^0.511.0"
+    lucide-react: "npm:^0.522.0"
     next: "npm:^15.3.0"
     next-themes: "npm:^0.4.6"
     nextjs-toploader: "npm:^3.8.16"
@@ -5701,15 +5701,6 @@ __metadata:
   version: 7.18.3
   resolution: "lru-cache@npm:7.18.3"
   checksum: 10c0/b3a452b491433db885beed95041eb104c157ef7794b9c9b4d647be503be91769d11206bb573849a16b4cc0d03cbd15ffd22df7960997788b74c1d399ac7a4fed
-  languageName: node
-  linkType: hard
-
-"lucide-react@npm:^0.511.0":
-  version: 0.511.0
-  resolution: "lucide-react@npm:0.511.0"
-  peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/bf09dd73cf2233abea90506ad31a91739555d761062722acbe045cb73e274f035b196472de0971a8a8f0645b2b54e3f21b8c1980fe87c909ca93171a9c28428a
   languageName: node
   linkType: hard
 

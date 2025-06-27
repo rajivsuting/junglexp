@@ -1,6 +1,5 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { currentUser } from "@clerk/nextjs/server";
-
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const UserDetails = async () => {
   const user = await currentUser();

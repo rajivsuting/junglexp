@@ -68,7 +68,7 @@ export default function TestPage() {
                 <FormControl>
                   <IconSelectButton
                     onIconSelect={(icon) => field.onChange(icon)}
-                    selectedIcon={field.value}
+                    selectedIcon={field.value as any}
                     searchPlaceholder="Search for an icon..."
                   />
                 </FormControl>

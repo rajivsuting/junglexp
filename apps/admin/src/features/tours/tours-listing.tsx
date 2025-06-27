@@ -1,11 +1,10 @@
-import { searchParamsCache } from '@/lib/searchparams';
-import { getSouvenirs } from '@repo/actions/souvenirs.actions';
+import { searchParamsCache } from "@/lib/searchparams";
+import { getSouvenirs } from "@repo/actions/souvenirs.actions";
 
-import { SouvenirsTable } from './components/souvenirs-table';
-import { columns } from './components/souvenirs-table/columns';
+import { columns } from "../souvenirs/components/souvenirs-table/columns";
+import { SouvenirsTable } from "./components/tours-table";
 
 import type { TGetSouvenirsFilters } from "@repo/actions/souvenirs.actions";
-
 const ToursListing = async () => {
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("name");
