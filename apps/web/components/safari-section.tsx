@@ -1,7 +1,7 @@
-import { Truck, Users, Waves } from 'lucide-react';
+import { Truck, Users, Waves } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Placeholder SVG for Elephant
 function ElephantIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -87,11 +87,11 @@ export function SafariSection() {
     <section className="py-16 bg-gray-50" id="safari-section">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title and Description */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+        <div className="mb-12">
+          <h2 className="text-4xl font-extrabold  mb-4">
             Thrilling Adventures and Memorable Activities in Jim Corbett Park
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg ">
             Enjoy exciting safaris, peaceful hot air balloon rides, and fun
             river rafting adventures.
           </p>

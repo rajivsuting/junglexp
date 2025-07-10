@@ -85,17 +85,17 @@ const featuredResorts = [
   },
 ];
 
-export function FeaturedResorts() {
+export function FeaturedForestStays() {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Top Resorts In Corbett National Park Tour
+            Top Forest Stays In Corbett National Park Tour
           </h2>
           <p className="text-lg text-muted-foreground mx-auto">
-            We've picked the Top Resorts in Corbett National Park Tour for you
-            to choose from below so you can unwind while on vacation. These
+            We've picked the Top Forest stays in Corbett National Park Tour for
+            you to choose from below so you can unwind while on vacation. These
             particular resorts are highly regarded for their features, services,
             cuisine, activities, and other aspects.
           </p>
@@ -111,7 +111,7 @@ export function FeaturedResorts() {
 
         <div className="text-center">
           <Button size="lg" variant="outline">
-            See All Resorts
+            See All Forest Stays
           </Button>
         </div>
       </div>

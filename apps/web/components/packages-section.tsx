@@ -1,8 +1,14 @@
-import { ArrowRight, Calendar, Users } from 'lucide-react';
+import { ArrowRight, Calendar, Users } from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const packages = [
   {
@@ -69,12 +75,12 @@ export function PackagesSection() {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Uncover the Best Corbett National Park Tour Packages for Your
             Perfect Escape
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground mx-auto">
             Explore Tailored Experiences with Stay, Adventure, and Nature in One
             Perfect Package
           </p>

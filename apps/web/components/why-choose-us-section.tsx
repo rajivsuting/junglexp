@@ -1,15 +1,20 @@
-import { BadgeDollarSign, CalendarCheck, LifeBuoy, ShieldCheck } from 'lucide-react';
+import {
+  BadgeDollarSign,
+  CalendarCheck,
+  LifeBuoy,
+  ShieldCheck,
+} from "lucide-react";
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from "@/components/ui/card";
 
 export function WhyChooseUsSection() {
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+        <h2 className="text-3xl md:text-4xl font-bold mb-2 ">
           Why Choose Us to Explore Jim Corbett Park?
         </h2>
-        <p className="text-lg text-muted-foreground mb-10">
+        <p className="text-lg mb-10">
           Trusted, Hassle-Free, and Unforgettable Experiences
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

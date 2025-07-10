@@ -1,7 +1,7 @@
-import { Truck, Users, Waves } from 'lucide-react';
+import { Truck, Users, Waves } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const activities = [
   {
@@ -54,7 +54,7 @@ export function ActivitiesSection() {
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Thrilling Adventures and Memorable Activities in Jim Corbett Park
           </h2>
