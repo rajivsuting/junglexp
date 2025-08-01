@@ -1,0 +1,181 @@
+import Image from "next/image";
+
+import Map from "@/components/Map";
+
+import { Footer } from "../../web/components/footer";
+import { Navigation } from "../../web/components/navigation";
+import LodgesSection from "./components/LodgesSection";
+import ReviewsSection from "./components/ReviewsSection";
+
+export default function HomePage() {
+  return (
+    <div className="bg-background text-foreground font-sans">
+      {/* Hero Section */}
+      <section className="relative min-h-[90vh] flex items-center justify-start overflow-hidden">
+        <Image
+          src="/a-rugged-open-top-safari-jeep-with-tourists-wearin.png"
+          alt="Elephants drinking in Pan in Hwange"
+          fill
+          priority
+          className="object-cover object-center absolute inset-0 z-0"
+        />
+        <div className="relative grid grid-cols-1 z-10 mx-8 md:mx-24">
+          <p className="text-sm md:text-[16px] font-light mb-4 text-white">
+            DISCOVER . EXPLORE . EXPERIENCE
+          </p>
+          <p className="text-[32px] md:text-[62px] font-light mb-6 w-full md:leading-18 text-white drop-shadow">
+            <span>
+              Plan Your Next
+              <br />
+              Safari to <span className="font-bold">Jim Corbett</span>
+              <br />
+              National Park
+            </span>
+          </p>
+          <button className="px-6 py-2 border-2 w-fit border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
+            Find Lodges
+          </button>
+        </div>
+      </section>
+
+      {/* Main Hwange Information Section */}
+      <section className="py-10">
+        <div className="max-w-5xl mx-auto px-4 text-center">
+          <h1 className="text-primary text-3xl font-light mb-8">
+            <span className="font-bold">JIM CORBETT</span> NATIONAL PARK
+          </h1>
+
+          <div className="space-y-6 text-primary font-light">
+            <p className="text-lg max-w-4xl mx-auto">
+              Home to the Big 5 and a mere 2 hours from Victoria Falls lies the
+              famous Jim Corbett National Park.
+            </p>
+
+            <p className="text-lg max-w-4xl mx-auto">
+              Indias largest National Park offers excellent wildlife viewing and
+              has the highest diversity of mammals of any National Park in
+              Africa.
+            </p>
+
+            <p className="text-lg max-w-4xl mx-auto">
+              During a visit one may enjoy sightings of Lion, Leopard, Cheetah,
+              Wild Dog and more.
+            </p>
+
+            <p className="text-lg max-w-4xl mx-auto">
+              Activities range from Game Drives, Night Drives, Photographic and
+              Walking Safaris.
+            </p>
+
+            <div className="pt-6">
+              <p className="text-lg max-w-4xl mx-auto">
+                Choose from a wide range of exclusive accommodation.
+              </p>
+
+              <p className="text-lg max-w-4xl mx-auto pt-2">
+                Road transfers, flight transfers and self drives on request.
+              </p>
+            </div>
+
+            <div className="pt-8">
+              <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Navigation Links */}
+      <section className="w-ful flex flex-row bg-[#F5F0E6]">
+        <div className="flex flex-1 flex-col md:flex-row">
+          <div className="flex-1 flex h-full overflow-auto">
+            <video
+              autoPlay
+              loop
+              muted
+              className="flex-1 flex object-cover"
+              src="https://video.wixstatic.com/video/5265be_ef0152dfff594d299e5363f2742b4853/720p/mp4/file.mp4"
+            />
+          </div>
+          <div className="max-w-4xl py-32 flex-1 mx-auto px-10">
+            <h2 className="text-2xl font-mono font-bold text-center mb-12 text-[#9B8B6C]">
+              QUICK NAVIGATION LINKS
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
+              {[
+                {
+                  title: "ABOUT HWANGE",
+                  href: "#about",
+                  color: "bg-[#6B705C]",
+                },
+                {
+                  title: "TRAVEL TO HWANGE",
+                  href: "#travel",
+                  color: "bg-[#A5A58D]",
+                },
+                {
+                  title: "HWANGE FAQ'S",
+                  href: "#faqs",
+                  color: "bg-[#2F2F2F]",
+                },
+              ].map((link) => (
+                <a
+                  key={link.title}
+                  href={link.href}
+                  className="group flex flex-col items-center gap-4"
+                >
+                  <div
+                    className={`lg:w-32 lg:h-32 w-24 h-24 rounded-full ${link.color} relative flex items-center justify-center group-hover:scale-105 transition-transform`}
+                  >
+                    <div className="lg:w-24 lg:h-24 w-18 h-18  rounded-full border-2 border-[#F5F0E6] opacity-60"></div>
+                    <div className="w-10 h-10 lg:w-16 lg:h-16  rounded-full border-2 border-[#F5F0E6] opacity-40 absolute"></div>
+                  </div>
+                  <span className="text-[#877B4E] text-center font-bold text-sm">
+                    {link.title}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 flex h-full overflow-auto">
+            <video
+              autoPlay
+              loop
+              muted
+              className="flex flex-1 object-cover"
+              src="https://video.wixstatic.com/video/5265be_a0ccfaab6d554b358651c0877c8f5ffd/720p/mp4/file.mp4"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Lodges Section */}
+      <LodgesSection />
+
+      {/* Map Section (Placeholder) */}
+      <Map />
+      {/* <section className="py-16 bg-muted">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-primary">
+            Map of Jim Corbett National Park
+          </h2>
+          <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+            [Map Placeholder]
+          </div>
+        </div>
+      </section> */}
+
+      {/* Reviews Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h2 className="text-[#9B8B6C] text-3xl font-light mb-8">
+            <span className="font-bold">JIM CORBETT NATIONAL PARK</span> REVIEWS
+          </h2>
+
+          <ReviewsSection />
+        </div>
+      </section>
+    </div>
+  );
+}
