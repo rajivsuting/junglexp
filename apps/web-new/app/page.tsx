@@ -1,11 +1,11 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-import Map from "@/components/Map";
+import Map from '@/components/Map';
 
-import { Footer } from "../../web/components/footer";
-import { Navigation } from "../../web/components/navigation";
-import LodgesSection from "./components/LodgesSection";
-import ReviewsSection from "./components/ReviewsSection";
+import { Footer } from '../../web/components/footer';
+import { Navigation } from '../../web/components/navigation';
+import LodgesSection from './components/LodgesSection';
+import ReviewsSection from './components/ReviewsSection';
 
 export default function HomePage() {
   return (
@@ -14,7 +14,7 @@ export default function HomePage() {
       <section className="relative min-h-[90vh] flex items-center justify-start overflow-hidden">
         <Image
           src="/a-rugged-open-top-safari-jeep-with-tourists-wearin.png"
-          alt="Elephants drinking in Pan in Hwange"
+          alt="Elephants drinking in Pan in Jim Corbett"
           fill
           priority
           className="object-cover object-center absolute inset-0 z-0"
@@ -104,17 +104,17 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
               {[
                 {
-                  title: "ABOUT HWANGE",
+                  title: "ABOUT JIM CORBETT",
                   href: "#about",
                   color: "bg-[#6B705C]",
                 },
                 {
-                  title: "TRAVEL TO HWANGE",
+                  title: "TRAVEL TO JIM CORBETT",
                   href: "#travel",
                   color: "bg-[#A5A58D]",
                 },
                 {
-                  title: "HWANGE FAQ'S",
+                  title: "JIM CORBETT FAQ'S",
                   href: "#faqs",
                   color: "bg-[#2F2F2F]",
                 },

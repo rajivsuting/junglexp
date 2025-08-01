@@ -53,7 +53,7 @@ export default function LodgesSection() {
 
         <div className="relative w-full overflow-hidden">
           <div
-            className="flex gap-4 animate-[scroll_40s_linear_infinite] focus-within:[animation-play-state:paused!important]"
+            className="flex gap-4 animate-[scroll_40s_linear_infinite] hover:[animation-play-state:paused!important]"
             style={{ width: "max-content" }}
           >
             {allLodges.map((lodge, index) => (
