@@ -59,7 +59,7 @@ export default function LodgesSection() {
             {allLodges.map((lodge, index) => (
               <button
                 key={`${lodge.name}-${index}`}
-                className="group w-[calc(100%_-_32px)] md:w-[550px] cursor-pointer flex-shrink-0"
+                className="group w-[calc(100vw_-_32px)] md:w-[550px] cursor-pointer flex-shrink-0"
                 tabIndex={0}
               >
                 <div className="relative aspect-video w-full overflow-hidden">
