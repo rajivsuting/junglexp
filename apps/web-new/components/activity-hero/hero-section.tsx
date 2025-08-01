@@ -1,5 +1,6 @@
-import { HeroOverlay } from './hero-overlay';
-import { ImageCarousel } from './image-carousel';
+import Header from "../Header";
+import { HeroOverlay } from "./hero-overlay";
+import { ImageCarousel } from "./image-carousel";
 
 interface HeroSectionProps {
   images: string[];

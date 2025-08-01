@@ -1,27 +1,50 @@
 "use client";
 
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import {
-    Award, CalendarIcon, Camera, Check, Clock, Mountain, Shield, Star, Users, X
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+  Award,
+  CalendarIcon,
+  Camera,
+  Check,
+  Clock,
+  Mountain,
+  Shield,
+  Star,
+  Users,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
-import { HeroSection } from './activity-hero/hero-section';
+import { HeroSection } from "./activity-hero/hero-section";
 
 // Sample activity data
 const activityData = {
@@ -280,7 +303,7 @@ export function ActivityDetail({ activityId }: { activityId: string }) {
             <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-slate-50 rounded-3xl overflow-hidden">
               <CardHeader className="pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl font-bold text-slate-800">
-                  <div className="p-3 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl shadow-lg">
+                  <div className="p-3  bg-primary rounded-2xl shadow-lg">
                     <Mountain className="h-6 w-6 text-white" />
                   </div>
                   Overview
@@ -372,7 +395,7 @@ export function ActivityDetail({ activityId }: { activityId: string }) {
                     className={cn(
                       "flex-1 px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-300",
                       activeSection === tab.id
-                        ? "bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg"
+                        ? "bg-primary text-white shadow-lg"
                         : "text-slate-600 hover:text-slate-800 hover:bg-slate-50"
                     )}
                   >
@@ -396,7 +419,7 @@ export function ActivityDetail({ activityId }: { activityId: string }) {
                   <CardContent className="space-y-8">
                     {activityData.itinerary.map((day) => (
                       <div key={day.day} className="relative pl-8">
-                        <div className="absolute left-0 top-2 w-6 h-6 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full shadow-lg flex items-center justify-center">
+                        <div className="absolute left-0 top-2 w-6 h-6 bg-primary rounded-full shadow-lg flex items-center justify-center">
                           <span className="text-white text-xs font-bold">
                             {day.day}
                           </span>
@@ -589,7 +612,7 @@ export function ActivityDetail({ activityId }: { activityId: string }) {
           <div className="lg:col-span-1">
             <div className="sticky top-8">
               <Card className="border-0 shadow-2xl bg-gradient-to-br from-white to-slate-50 rounded-3xl pt-0 overflow-hidden">
-                <CardHeader className="bg-gradient-to-r p-6 from-amber-400 to-orange-500 text-white">
+                <CardHeader className=" p-6 bg-primary text-white">
                   <CardTitle className="flex items-center justify-between text-xl">
                     <span className="font-bold">Book This Adventure</span>
                     <Badge className="bg-white text-amber-600 text-xl font-black px-3 py-1 rounded-xl">

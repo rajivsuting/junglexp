@@ -24,11 +24,10 @@ export default function Header() {
 
         {/* Main Header with background image */}
         <div
-          className="bg-cover w-full absolute bg-center h-[100px]"
+          className="bg-cover w-full absolute z-50 bg-center h-[100px]"
           // style={{ backgroundImage: "url(/header-bg.jpg)" }}
         >
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/20" />
 
           {/* Header Content */}
           <div className="relative z-10 h-full flex items-center justify-between px-8">

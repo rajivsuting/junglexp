@@ -1,8 +1,8 @@
-import { ArrowLeft, Heart, MapPin, Share2, Star } from 'lucide-react';
-import Link from 'next/link';
+import { ArrowLeft, Heart, MapPin, Share2, Star } from "lucide-react";
+import Link from "next/link";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface HeroOverlayProps {
   activityName: string;
@@ -29,7 +29,7 @@ export function HeroOverlay({
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/70 z-20" />
 
       {/* Glassmorphic Navigation Bar */}
-      <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-30">
+      {/* <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-30">
         <Link href="/activities">
           <Button
             variant="outline"
@@ -55,13 +55,13 @@ export function HeroOverlay({
             <Share2 className="h-4 w-4" />
           </Button>
         </div>
-      </div>
+      </div> */}
 
       {/* Modern Hero Content */}
       <div className="absolute inset-x-4 bottom-8 z-30 text-white">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-            <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 px-4 py-2 rounded-xl text-sm font-semibold shadow-lg">
+            <Badge className="bg-primary  text-white border-0 px-4 py-2 rounded-xl text-sm font-semibold shadow-lg">
               {difficulty}
             </Badge>
             <Badge className="backdrop-blur-xl bg-white/20 border-white/30 text-white px-4 py-2 rounded-xl text-sm font-semibold">
