@@ -4,6 +4,8 @@ import Map from '@/components/Map';
 
 import { Footer } from '../../web/components/footer';
 import { Navigation } from '../../web/components/navigation';
+import ForestStaysSection from './components/ForestStaysSection';
+import ImageSlideshow from './components/ImageSlideshow';
 import LodgesSection from './components/LodgesSection';
 import ReviewsSection from './components/ReviewsSection';
 
@@ -12,13 +14,14 @@ export default function HomePage() {
     <div className="bg-background text-foreground font-sans">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-start overflow-hidden">
-        <Image
+        {/* <Image
           src="/a-rugged-open-top-safari-jeep-with-tourists-wearin.png"
           alt="Elephants drinking in Pan in Jim Corbett"
           fill
           priority
           className="object-cover object-center absolute inset-0 z-0"
-        />
+        /> */}
+        <ImageSlideshow />
         <div className="relative grid grid-cols-1 z-10 mx-8 md:mx-24">
           <p className="text-sm md:text-[16px] font-light mb-4 text-white">
             DISCOVER . EXPLORE . EXPERIENCE
@@ -152,6 +155,8 @@ export default function HomePage() {
 
       {/* Lodges Section */}
       <LodgesSection />
+      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
+      <ForestStaysSection />
 
       {/* Map Section (Placeholder) */}
       <Map />

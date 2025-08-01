@@ -35,7 +35,7 @@ const lodges: Lodge[] = [
   },
 ];
 
-export default function LodgesSection() {
+export default function ForestStaysSection() {
   // Double the lodges for seamless infinite scroll
   const allLodges = [...lodges, ...lodges];
 
@@ -43,14 +43,14 @@ export default function LodgesSection() {
     <section className="py-16 overflow-hidden">
       <div className="mx-auto">
         <h2 className="text-primary text-center text-3xl font-light mb-8">
-          TOP RESORTS IN <span className="font-bold">JIM CORBETT</span>
+          TOP FOREST STAYS IN <span className="font-bold">JIM CORBETT</span>
         </h2>
 
         <p className="text-center text-primary text-lg mb-16 max-w-4xl mx-auto">
-          We've picked the Top Resorts in Corbett National Park Tour for you to
-          choose from below so you can unwind while on vacation. These
+          We've picked the Top Forest stays in Corbett National Park Tour for
+          you to choose from below so you can unwind while on vacation. These
           particular resorts are highly regarded for their features, services,
-          cuisine, activities, and other aspect.
+          cuisine, activities, and other aspects.
         </p>
 
         <div className="relative w-full overflow-hidden">
