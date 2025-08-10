@@ -24,6 +24,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { NavDocuments } from "./nav-documents";
+import { NavGlobal } from "./nav-global";
 import { NavMain } from "./nav-main";
 import { NavOthers } from "./nav-others";
 import { NavUser } from "./nav-user";
@@ -143,6 +144,7 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        <NavGlobal />
         <NavMain />
         <NavOthers />
         <NavDocuments items={data.documents} />

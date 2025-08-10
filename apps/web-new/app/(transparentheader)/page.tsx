@@ -1,13 +1,10 @@
 import Image from 'next/image';
 
+import ForestStaysSection from '@/components/ForestStaysSection';
+import ImageSlideshow from '@/components/ImageSlideshow';
+import LodgesSection from '@/components/LodgesSection';
 import Map from '@/components/Map';
-
-import { Footer } from '../../web/components/footer';
-import { Navigation } from '../../web/components/navigation';
-import ForestStaysSection from './components/ForestStaysSection';
-import ImageSlideshow from './components/ImageSlideshow';
-import LodgesSection from './components/LodgesSection';
-import ReviewsSection from './components/ReviewsSection';
+import ReviewsSection from '@/components/ReviewsSection';
 
 export default function HomePage() {
   return (

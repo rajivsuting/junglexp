@@ -18,7 +18,7 @@ export default function ImageSlideshow() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // Change image every 5 seconds
+    }, 6000); // Change image every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -41,7 +41,7 @@ export default function ImageSlideshow() {
           />
         </div>
       ))}
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-black/20" />
     </div>
   );
 }

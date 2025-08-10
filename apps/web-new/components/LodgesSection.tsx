@@ -71,6 +71,7 @@ export default function LodgesSection() {
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-110"
                   />
+                  <div className="'absolute inset-0 bg-[#3c553d50]" />
                 </div>
                 <h3 className="text-sm py-3 bg-dark-corvid text-white text-center">
                   {lodge.name}

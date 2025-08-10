@@ -1,5 +1,5 @@
-import Link from "next/link";
-import React from "react";
+import Link from 'next/link';
+import React from 'react';
 
 const navLinks = [
   { name: "Home", href: "#" },
@@ -10,7 +10,11 @@ const navLinks = [
   { name: "Contact Us", href: "#" },
 ];
 
-export default function Header() {
+export default function Header({
+  transparent = true,
+}: {
+  transparent?: boolean;
+}) {
   return (
     <>
       <input type="checkbox" id="menu-toggle" className="menu-toggle" />
@@ -24,7 +28,9 @@ export default function Header() {
 
         {/* Main Header with background image */}
         <div
-          className="bg-cover w-full absolute z-50 bg-center h-[100px]"
+          className={`bg-cover w-full z-50 bg-center h-[100px] ${
+            transparent ? "absolute" : "bg-[#2A2B20]"
+          }`}
           // style={{ backgroundImage: "url(/header-bg.jpg)" }}
         >
           {/* Overlay */}
