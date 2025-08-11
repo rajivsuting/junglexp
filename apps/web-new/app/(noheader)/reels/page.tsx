@@ -122,7 +122,7 @@ function ReelItem({ reel, isActive, isMuted, onToggleMute }: ReelItemProps) {
   };
 
   return (
-    <div className="relative w-full h-screen bg-black">
+    <div className="relative w-full h-[100dvh] bg-black">
       {/* Video */}
       <video
         ref={videoRef}
@@ -159,7 +159,7 @@ function ReelItem({ reel, isActive, isMuted, onToggleMute }: ReelItemProps) {
           {/* Play/Pause Button */}
           <button
             onClick={togglePlay}
-            className="w-12 h-12 rounded-full bg-black bg-opacity-50 flex items-center justify-center hover:bg-opacity-70 transition-all backdrop-blur-sm"
+            className="w-12 h-12 rounded-full bg-black bg-opacity-50 flex items-center justify-center hover:bg-opacity-70 transition-all lg:bg-[#2a2b20] md:backdrop-blur-sm"
           >
             {isPlaying ? (
               <Pause className="w-6 h-6 text-white" />
@@ -225,11 +225,11 @@ function ReelItem({ reel, isActive, isMuted, onToggleMute }: ReelItemProps) {
 
               {/* Package Info */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold text-lg leading-tight mb-1">
+                <h3 className="text-white font-semibold text-sm md:text-lg leading-tight mb-1">
                   {reel.title}
                 </h3>
                 <p
-                  className="text-white/80 text-sm leading-relaxed mb-2 overflow-hidden"
+                  className="text-white/80 text-xs md:text-sm leading-relaxed mb-2 overflow-hidden"
                   style={{
                     display: "-webkit-box",
                     WebkitLineClamp: 2,
@@ -241,7 +241,7 @@ function ReelItem({ reel, isActive, isMuted, onToggleMute }: ReelItemProps) {
 
                 {/* Package Count */}
                 <div className="flex items-center justify-between">
-                  <span className="text-green-400 font-medium text-sm">
+                  <span className="text-green-400 font-medium text-xs md:text-sm">
                     4+ Packages
                   </span>
                 </div>
@@ -282,15 +282,15 @@ export default function ReelsPage() {
   };
 
   return (
-    <div className="bg-black min-h-screen max-w-md mx-auto relative">
+    <div className="bg-black h-[100dvh] max-w-md mx-auto relative">
       {/* Reels Container */}
       <div
         ref={containerRef}
-        className="h-screen overflow-y-scroll no-scrollbar snap-y snap-mandatory pt-16"
+        className="h-full overflow-y-scroll no-scrollbar snap-y snap-mandatory"
         style={{ scrollBehavior: "smooth" }}
       >
         {reels.map((reel, index) => (
-          <div key={reel.id} className="snap-start">
+          <div key={reel.id} className="snap-start h-[100dvh]">
             <ReelItem
               reel={reel}
               isActive={index === currentIndex}

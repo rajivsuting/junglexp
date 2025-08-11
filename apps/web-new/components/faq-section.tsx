@@ -69,19 +69,21 @@ export function FAQSection() {
                 {faq.question}
               </span>
               <ChevronDown
-                className={`w-5 h-5 text-muted-foreground transition-transform flex-shrink-0 ${
+                className={`w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0 ${
                   openIndex === idx ? "rotate-180" : ""
                 }`}
               />
             </button>
-            {openIndex === idx && faq.answer && (
-              <div
-                id={`faq-panel-${idx}`}
-                className="px-4 pb-4 text-muted-foreground leading-relaxed"
-              >
+            <div
+              id={`faq-panel-${idx}`}
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                openIndex === idx ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+              }`}
+            >
+              <div className="px-4 pb-4 text-muted-foreground leading-relaxed">
                 {faq.answer}
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>

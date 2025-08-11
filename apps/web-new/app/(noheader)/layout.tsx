@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${montserrat.className} font-sans antialiased`}>
-        <header className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-md z-50 bg-[#2a2b20] bg-opacity-50 backdrop-blur-sm">
+        <header className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-md z-50 backdrop-blur-sm">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center space-x-4">
               <Link
