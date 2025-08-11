@@ -53,11 +53,14 @@ export function FAQSection() {
       <h2 className="text-xl font-semibold text-primary mb-6">
         Frequently Asked Questions
       </h2>
-      <div className="space-y-4">
+      <div className="">
         {faqs.map((faq, idx) => (
-          <div key={faq.question} className="border border-border bg-card">
+          <div
+            key={faq.question}
+            className={`${idx !== faqs.length - 1 ? "border-b border-b-border" : ""}`}
+          >
             <button
-              className="w-full flex justify-between items-center text-left p-4 hover:bg-muted/50 transition-colors focus:outline-none"
+              className="w-full flex justify-between items-center text-left py-4 transition-all duration-200 hover:bg-muted/30 focus:outline-none"
               aria-expanded={openIndex === idx}
               aria-controls={`faq-panel-${idx}`}
               onClick={() => handleToggle(idx)}

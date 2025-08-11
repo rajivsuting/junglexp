@@ -2,7 +2,9 @@
 
 import Image from 'next/image';
 
-const ReviewsSection = () => {
+import { cn } from '@/lib/utils';
+
+const ReviewsSection = ({ className }: { className?: string }) => {
   const reviews = [
     {
       name: "Theo Fumagalli",
@@ -56,7 +58,7 @@ const ReviewsSection = () => {
   ];
 
   return (
-    <div className="self-center w-full">
+    <div className={cn("self-center w-full", className)}>
       <div className="w-full bg-card p-4 font-mono mb-6">
         <div className="flex items-center justify-center gap-2 mb-1">
           <div className="w-6 h-6">

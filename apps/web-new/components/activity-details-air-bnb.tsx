@@ -7,7 +7,8 @@ import {
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { FAQSection } from '../../web/components/faq-section';
+import { FAQSection } from '@/components/faq-section';
+
 import ReviewsSection from './ReviewsSection';
 
 interface ActivityDetailsProps {
@@ -157,10 +158,96 @@ export default function ActivityDetailsAirBnb(
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [showIncluded, setShowIncluded] = useState(false);
   const [showExcluded, setShowExcluded] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   const displayedAmenities = showAllAmenities
     ? amenities
     : amenities.slice(0, 6);
+
+  // Booking Form Component
+  const BookingForm = ({ className = "" }: { className?: string }) => (
+    <div className={className}>
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-0 border border-border overflow-hidden">
+          <div className="p-3 border-r border-border">
+            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Check-in
+            </label>
+            <input
+              type="date"
+              className="w-full mt-1 bg-transparent text-primary focus:outline-none text-sm"
+              defaultValue="2025-08-29"
+            />
+          </div>
+          <div className="p-3">
+            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Check-out
+            </label>
+            <input
+              type="date"
+              className="w-full mt-1 bg-transparent text-primary focus:outline-none text-sm"
+              defaultValue="2025-08-31"
+            />
+          </div>
+        </div>
+        <div className="border border-border p-3">
+          <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Guests
+          </label>
+          <select className="w-full mt-1 bg-transparent text-primary focus:outline-none text-sm">
+            <option>1 guest</option>
+            <option>2 guests</option>
+            <option>3 guests</option>
+            <option>4 guests</option>
+            <option>5 guests</option>
+            <option>6 guests</option>
+            <option>7 guests</option>
+            <option>8 guests</option>
+          </select>
+        </div>
+        <button className="w-full bg-accent text-accent-foreground py-3 font-medium hover:bg-accent/90 transition-colors text-lg">
+          Reserve
+        </button>
+        <p className="text-center text-sm text-muted-foreground">
+          You won't be charged yet
+        </p>
+      </div>
+
+      {/* Price Breakdown */}
+      <div className="mt-6 space-y-3">
+        <div className="flex items-center justify-between text-primary">
+          <span className="underline">
+            ₹{price.toLocaleString()} × 2 nights
+          </span>
+          <span>₹{(price * 2).toLocaleString()}</span>
+        </div>
+        <div className="flex items-center justify-between text-primary">
+          <span className="underline">Cleaning fee</span>
+          <span>₹2,500</span>
+        </div>
+        <div className="flex items-center justify-between text-primary">
+          <span className="underline">Service fee</span>
+          <span>₹3,200</span>
+        </div>
+        <div className="flex items-center justify-between text-primary">
+          <span className="underline">Taxes</span>
+          <span>₹1,840</span>
+        </div>
+        <div className="pt-4 border-t border-border flex items-center justify-between font-semibold text-primary text-lg">
+          <span>Total</span>
+          <span>₹{(price * 2 + 2500 + 3200 + 1840).toLocaleString()}</span>
+        </div>
+      </div>
+
+      {/* Cancellation Policy */}
+      <div className="mt-6 pt-6 border-t border-border">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Calendar className="w-4 h-4" />
+          <span>{cancellationPolicy}</span>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -406,7 +493,7 @@ export default function ActivityDetailsAirBnb(
           </div>
 
           {/* House Rules */}
-          <div className="py-6">
+          <div className="py-6 border-b border-border">
             <h2 className="text-xl font-semibold text-primary mb-4">
               House rules
             </h2>
@@ -422,10 +509,11 @@ export default function ActivityDetailsAirBnb(
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Booking Card */}
-        <div className="lg:col-span-1">
+          <FAQSection />
+        </div>
+        {/* Booking Card - Desktop Only */}
+        <div className="lg:col-span-1 hidden lg:block">
           <div className="sticky top-24 border border-border p-6 shadow-lg bg-card">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-baseline gap-2">
@@ -446,91 +534,77 @@ export default function ActivityDetailsAirBnb(
               </div>
             </div>
 
-            {/* Booking Form */}
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-0 border border-border overflow-hidden">
-                <div className="p-3 border-r border-border">
-                  <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    Check-in
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full mt-1 bg-transparent text-primary focus:outline-none text-sm"
-                    defaultValue="2025-08-29"
-                  />
-                </div>
-                <div className="p-3">
-                  <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    Check-out
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full mt-1 bg-transparent text-primary focus:outline-none text-sm"
-                    defaultValue="2025-08-31"
-                  />
-                </div>
-              </div>
-              <div className="border border-border p-3">
-                <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  Guests
-                </label>
-                <select className="w-full mt-1 bg-transparent text-primary focus:outline-none text-sm">
-                  <option>1 guest</option>
-                  <option>2 guests</option>
-                  <option>3 guests</option>
-                  <option>4 guests</option>
-                  <option>5 guests</option>
-                  <option>6 guests</option>
-                  <option>7 guests</option>
-                  <option>8 guests</option>
-                </select>
-              </div>
-              <button className="w-full bg-accent text-accent-foreground py-3 font-medium hover:bg-accent/90 transition-colors text-lg">
-                Reserve
-              </button>
-              <p className="text-center text-sm text-muted-foreground">
-                You won't be charged yet
-              </p>
-            </div>
-
-            {/* Price Breakdown */}
-            <div className="mt-6 space-y-3">
-              <div className="flex items-center justify-between text-primary">
-                <span className="underline">
-                  ₹{price.toLocaleString()} × 2 nights
-                </span>
-                <span>₹{(price * 2).toLocaleString()}</span>
-              </div>
-              <div className="flex items-center justify-between text-primary">
-                <span className="underline">Cleaning fee</span>
-                <span>₹2,500</span>
-              </div>
-              <div className="flex items-center justify-between text-primary">
-                <span className="underline">Service fee</span>
-                <span>₹3,200</span>
-              </div>
-              <div className="flex items-center justify-between text-primary">
-                <span className="underline">Taxes</span>
-                <span>₹1,840</span>
-              </div>
-              <div className="pt-4 border-t border-border flex items-center justify-between font-semibold text-primary text-lg">
-                <span>Total</span>
-                <span>
-                  ₹{(price * 2 + 2500 + 3200 + 1840).toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            {/* Cancellation Policy */}
-            <div className="mt-6 pt-6 border-t border-border">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="w-4 h-4" />
-                <span>{cancellationPolicy}</span>
-              </div>
-            </div>
+            <BookingForm />
           </div>
         </div>
       </div>
+
+      {/* Mobile/Tablet Fixed Bottom Button */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border p-4 z-40">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center gap-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-semibold text-primary">
+                ₹{price.toLocaleString()}
+              </span>
+              {originalPrice && (
+                <span className="text-sm text-muted-foreground line-through">
+                  ₹{originalPrice.toLocaleString()}
+                </span>
+              )}
+              <span className="text-sm text-muted-foreground">/night</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Star className="w-4 h-4 text-accent fill-current" />
+              <span className="text-sm font-medium">{rating}</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowBookingModal(true)}
+            className="bg-accent text-accent-foreground px-6 py-3 font-medium hover:bg-accent/90 transition-colors rounded-lg"
+          >
+            Reserve Now
+          </button>
+        </div>
+      </div>
+
+      {/* Booking Modal - Mobile/Tablet */}
+      {showBookingModal && (
+        <div className="lg:hidden fixed inset-0 bg-black/50 z-50 flex items-end">
+          <div className="bg-white w-full max-h-[90vh] overflow-y-auto rounded-t-xl">
+            <div className="sticky top-0 bg-white border-b border-border p-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-primary">Reserve</h2>
+              <button
+                onClick={() => setShowBookingModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold text-primary">
+                    ₹{price.toLocaleString()}
+                  </span>
+                  {originalPrice && (
+                    <span className="text-lg text-muted-foreground line-through">
+                      ₹{originalPrice.toLocaleString()}
+                    </span>
+                  )}
+                  <span className="text-muted-foreground">/night</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 text-accent fill-current" />
+                  <span className="font-medium">{rating}</span>
+                  <span className="text-muted-foreground">({reviews})</span>
+                </div>
+              </div>
+              <BookingForm className="pb-6" />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Photo Modal */}
       {showAllPhotos && (
@@ -558,10 +632,8 @@ export default function ActivityDetailsAirBnb(
           </div>
         </div>
       )}
-      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto mt-24"></div>
-      <FAQSection />
-      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto mb-24 mt-6"></div>
-      <ReviewsSection />
+
+      <ReviewsSection className="pt-16 pb-20 lg:pb-16" />
     </div>
   );
 }

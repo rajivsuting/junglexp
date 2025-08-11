@@ -21,7 +21,7 @@ export default function HomePage() {
           className="object-cover object-center absolute inset-0 z-0"
         /> */}
         <ImageSlideshow />
-        <div className="relative grid grid-cols-1 z-10 mx-8 md:mx-24">
+        <div className="relative grid grid-cols-1 z-10 mx-4 sm:mx-6 lg:mx-24">
           <p className="text-sm md:text-[16px] font-light mb-4 text-white">
             DISCOVER . EXPLORE . EXPERIENCE
           </p>

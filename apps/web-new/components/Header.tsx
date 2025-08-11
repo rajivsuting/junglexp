@@ -36,7 +36,7 @@ export default function Header({
           {/* Overlay */}
 
           {/* Header Content */}
-          <div className="relative z-10 h-full flex items-center justify-between px-8">
+          <div className="relative z-10 h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
             {/* Left: Logo/Title Section */}
             <div className="flex-shrink-0">
               <h1 className="text-2xl font-bold text-white tracking-wider mb-1">
