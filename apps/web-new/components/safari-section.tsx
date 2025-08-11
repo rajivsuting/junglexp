@@ -105,7 +105,9 @@ export function SafariSection() {
             alt="Jeep Safari"
             className="w-full h-[32rem] object-cover"
           />
-          <div className="absolute top-1/2 right-8 -translate-y-1/2 bg-white/95 backdrop-blur-sm shadow-xl p-8 max-w-md w-full flex flex-col items-start gap-4">
+
+          {/* Desktop Overlay */}
+          <div className="hidden md:block absolute top-1/2 right-8 -translate-y-1/2 bg-white/95 backdrop-blur-sm shadow-xl p-8 max-w-md w-full flex flex-col items-start gap-4">
             <h3 className="text-3xl font-bold text-[#877B4E] mb-2">
               Jeep Safari
             </h3>
@@ -125,6 +127,33 @@ export function SafariSection() {
             <button className="px-8 py-3 bg-[#2F2F2F] text-white hover:bg-[#444444] transition-colors">
               Explore Jeep Safari
             </button>
+          </div>
+
+          {/* Mobile Overlay */}
+          <div className="md:hidden absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6">
+            <div className="bg-white/95 backdrop-blur-sm shadow-xl p-4">
+              <h3 className="text-xl font-bold text-[#877B4E] mb-2">
+                Jeep Safari
+              </h3>
+              <p className="text-[#6B705C] mb-3 font-light text-sm">
+                Experience the thrill of exploring the wild on an exciting Jeep
+                Safari!
+              </p>
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-xl font-bold text-primary">
+                  ₹6,000{" "}
+                  <span className="text-sm font-normal text-[#9B8B6C]">
+                    /Jeep
+                  </span>
+                </div>
+                <div className="text-xs text-[#9B8B6C] font-light">
+                  max. 6 People
+                </div>
+              </div>
+              <button className="w-full px-6 py-3 bg-[#2F2F2F] text-white hover:bg-[#444444] transition-colors">
+                Explore Jeep Safari
+              </button>
+            </div>
           </div>
         </div>
 

@@ -111,7 +111,12 @@ export default function HomePage() {
             <video
               autoPlay
               loop
+              controls={false}
               muted
+              webkit-playsinline="true"
+              x-webkit-airplay="allow"
+              preload="metadata"
+              disablePictureInPicture
               className="flex-1 flex object-cover"
               src="https://video.wixstatic.com/video/5265be_ef0152dfff594d299e5363f2742b4853/720p/mp4/file.mp4"
             />
@@ -162,6 +167,11 @@ export default function HomePage() {
             <video
               autoPlay
               loop
+              controls={false}
+              webkit-playsinline="true"
+              x-webkit-airplay="allow"
+              preload="metadata"
+              disablePictureInPicture
               muted
               className="flex flex-1 object-cover"
               src="https://video.wixstatic.com/video/5265be_a0ccfaab6d554b358651c0877c8f5ffd/720p/mp4/file.mp4"
