@@ -6,12 +6,13 @@ import ImageSlideshow from '@/components/ImageSlideshow';
 import LodgesSection from '@/components/LodgesSection';
 import Map from '@/components/Map';
 import ReviewsSection from '@/components/ReviewsSection';
+import { SafariSection } from '@/components/safari-section';
 
 export default function HomePage() {
   return (
     <div className="bg-background text-foreground font-sans">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-start overflow-hidden">
+      <section className="relative min-h-[90dvh] flex items-center justify-start overflow-hidden">
         {/* <Image
           src="/a-rugged-open-top-safari-jeep-with-tourists-wearin.png"
           alt="Elephants drinking in Pan in Jim Corbett"
@@ -173,6 +174,9 @@ export default function HomePage() {
       <LodgesSection />
       <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
       <ForestStaysSection />
+      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
+
+      <SafariSection />
 
       {/* Map Section (Placeholder) */}
       <Map />

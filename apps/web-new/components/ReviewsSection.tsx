@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from 'next/image';
 
 const ReviewsSection = () => {
   const reviews = [
@@ -57,7 +57,7 @@ const ReviewsSection = () => {
 
   return (
     <div className="self-center w-full">
-      <div className="w-full bg-card rounded-sm p-4 font-mono mb-6">
+      <div className="w-full bg-card p-4 font-mono mb-6">
         <div className="flex items-center justify-center gap-2 mb-1">
           <div className="w-6 h-6">
             <svg viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ const ReviewsSection = () => {
           {reviews.map((review, index) => (
             <div
               key={index}
-              className="p-6 rounded-lg bg-card flex-none w-full sm:w-[calc(50%-8px)] lg:w-[calc(20%-13px)] snap-start"
+              className="p-6 bg-card flex-none w-full sm:w-[calc(50%-8px)] lg:w-[calc(20%-13px)] snap-start"
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="relative w-12 h-12">
@@ -162,7 +162,7 @@ const ReviewsSection = () => {
               behavior: "smooth",
             });
           }}
-          className="absolute left-[-12px] top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-50 transition-colors z-10 opacity-0 group-hover:opacity-100"
+          className="absolute left-[-12px] top-1/2 -translate-y-1/2 bg-white p-2 shadow-md hover:bg-gray-50 transition-colors z-10 opacity-0 group-hover:opacity-100"
           aria-label="Previous review"
         >
           <svg
@@ -188,7 +188,7 @@ const ReviewsSection = () => {
               behavior: "smooth",
             });
           }}
-          className="absolute right-[-12px] top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-50 transition-colors z-10 opacity-0 group-hover:opacity-100"
+          className="absolute right-[-12px] top-1/2 -translate-y-1/2 bg-white  p-2 shadow-md hover:bg-gray-50 transition-colors z-10 opacity-0 group-hover:opacity-100"
           aria-label="Next review"
         >
           <svg
