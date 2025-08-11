@@ -177,6 +177,15 @@
   animation-play-state: paused;
 }
 
+/* Play button animation delays */
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
 /* @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -370,4 +379,8 @@ a {
     user-select: none;
     cursor: pointer;
   }
+}
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
 }

@@ -1,4 +1,5 @@
-import Image from 'next/image';
+import { PlayCircle } from 'lucide-react';
+import Link from 'next/link';
 
 import ForestStaysSection from '@/components/ForestStaysSection';
 import ImageSlideshow from '@/components/ImageSlideshow';
@@ -32,10 +33,28 @@ export default function HomePage() {
               National Park
             </span>
           </p>
-          <button className="px-6 py-2 border-2 w-fit border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
-            Find Lodges
-          </button>
+          <div className="flex items-center gap-4">
+            <button className="px-6 py-2 border-2 w-fit border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
+              Find Lodges
+            </button>
+          </div>
         </div>
+        {/* Animated Play Button */}
+        <Link href="/reels" className="group absolute right-6 bottom-6">
+          <div className="relative w-24 h-24 flex items-center justify-center">
+            {/* Outer circle - largest with animation */}
+            <div className="absolute w-24 h-24 border-25 border-white rounded-full opacity-30 animate-ping animation-delay-1000"></div>
+
+            {/* Middle circle with different animation */}
+            <div className="absolute w-20 h-20 border-2 border-white rounded-full opacity-50 animate-pulse animation-delay-500"></div>
+
+            {/* Inner circle with ping animation */}
+            <div className="absolute w-16 h-16 border-3 border-white rounded-full opacity-70 animate-ping"></div>
+
+            {/* Play button core */}
+            <PlayCircle className="w-12 h-12 text-white" />
+          </div>
+        </Link>
       </section>
 
       {/* Main Hwange Information Section */}
