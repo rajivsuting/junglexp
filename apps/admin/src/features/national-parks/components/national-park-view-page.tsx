@@ -1,10 +1,11 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { getNationalParkById } from "@repo/actions/parks.actions";
+import { getNationalParkById } from '@repo/actions/parks.actions';
 
-import NationalParkForm from "./national-park-form";
+import NationalParkForm from './national-park-form';
 
-import type { TNationalParkWithCity } from "@repo/db/schema/types";
+import type { TNationalPark } from "@repo/db/schema/types";
+
 type TNationalParkViewPageProps = {
   parkId: string;
 };
@@ -12,7 +13,7 @@ type TNationalParkViewPageProps = {
 const NationalParkViewPage = async (props: TNationalParkViewPageProps) => {
   const { parkId } = props;
 
-  let NationalPark: TNationalParkWithCity | null = null;
+  let NationalPark: TNationalPark | null = null;
   let pageTitle = "Create New Product";
 
   if (parkId !== "new") {
@@ -24,8 +25,6 @@ const NationalParkViewPage = async (props: TNationalParkViewPageProps) => {
 
     pageTitle = "Edit Product";
   }
-
-  console.log("NationalPark", NationalPark);
 
   return <NationalParkForm initialData={NationalPark} pageTitle={pageTitle} />;
 };

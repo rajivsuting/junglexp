@@ -23,7 +23,6 @@ type TCitiesSelectProps<T extends FieldValues> = {
 
 const getCities = async (stateId: number) => {
   const cities = await fetch(`/api/v1/cities?state=${stateId}`, {
-    cache: "force-cache",
     next: {
       tags: ["cities"],
       revalidate: 60 * 60, // Cache for 1 hour

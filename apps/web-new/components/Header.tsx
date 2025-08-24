@@ -1,5 +1,7 @@
-import Link from 'next/link';
-import React from 'react';
+import Link from "next/link";
+import React, { Suspense } from "react";
+
+import TopBar from "./TopBar";
 
 const navLinks = [
   { name: "Home", href: "#" },
@@ -10,7 +12,7 @@ const navLinks = [
   { name: "Contact Us", href: "#" },
 ];
 
-export default function Header({
+export default async function Header({
   transparent = true,
 }: {
   transparent?: boolean;
@@ -20,11 +22,7 @@ export default function Header({
       <input type="checkbox" id="menu-toggle" className="menu-toggle" />
 
       <header className="relative">
-        {/* Top Bar */}
-        <div className="bg-[#8B9467] text-white text-center py-3 text-xs md:text-xs tracking-[0.3em] font-medium">
-          * YOUR NUMBER 1 GUIDE TO THE BEST EXPERIENCES IN JIM CORBETT NATIONAL
-          PARK *
-        </div>
+        <TopBar />
 
         {/* Main Header with background image */}
         <div
@@ -38,15 +36,14 @@ export default function Header({
           {/* Header Content */}
           <div className="relative z-10 h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
             {/* Left: Logo/Title Section */}
-            <div className="flex-shrink-0">
+            <Link href="/" className="flex-shrink-0">
               <h1 className="text-2xl font-bold text-white tracking-wider mb-1">
                 eTroupers
               </h1>
               <p className="text-sm text-white font-light">
                 Specialists in Jim Corbett National Park
               </p>
-            </div>
-
+            </Link>
             {/* Desktop Navigation */}
             <nav className="hidden xl:flex space-x-8">
               {navLinks.map((link) => (

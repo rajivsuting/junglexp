@@ -7,21 +7,34 @@ import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-h
 import { CellAction } from './cell-action';
 
 import type { Column, ColumnDef } from "@tanstack/react-table";
-import type { TNationalParkWithCity } from "@repo/db/index";
+import type { TNationalPark, TParkImage } from "@repo/db/index";
 
-export const columns: ColumnDef<TNationalParkWithCity>[] = [
+export const columns: ColumnDef<TNationalPark>[] = [
+  {
+    id: "id",
+    accessorKey: "id",
+    header: "ID",
+    size: 50,
+    cell: ({ row }) => <div>{row.original.id}</div>,
+  },
   {
     accessorKey: "image",
     header: "Image",
     cell: ({ row }) => {
+      const img = row.original.images?.[0]?.image.small_url;
       return (
         <div className="relative w-10 aspect-square">
-          <Image
-            src={row.getValue("image")}
-            alt={row.getValue("name")}
-            fill
-            className="rounded-md"
-          />
+          {!img ? (
+            <div className="w-full h-full bg-gray-200 rounded-md"></div>
+          ) : (
+            <Image
+              src={img}
+              unoptimized
+              alt={row.getValue("name")}
+              fill
+              className="rounded-md"
+            />
+          )}
         </div>
       );
     },
@@ -29,12 +42,10 @@ export const columns: ColumnDef<TNationalParkWithCity>[] = [
   {
     id: "name",
     accessorKey: "name",
-    header: ({ column }: { column: Column<TNationalParkWithCity, unknown> }) => (
+    header: ({ column }: { column: Column<TNationalPark, unknown> }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
-    cell: ({ cell }) => (
-      <div>{cell.getValue<TNationalParkWithCity["name"]>()}</div>
-    ),
+    cell: ({ cell }) => <div>{cell.getValue<TNationalPark["name"]>()}</div>,
     meta: {
       label: "Destination Name",
       placeholder: "Search destinations...",
@@ -46,11 +57,11 @@ export const columns: ColumnDef<TNationalParkWithCity>[] = [
   {
     id: "city",
     accessorKey: "city",
-    header: ({ column }: { column: Column<TNationalParkWithCity, unknown> }) => (
+    header: ({ column }: { column: Column<TNationalPark, unknown> }) => (
       <DataTableColumnHeader column={column} title="Category" />
     ),
     cell: ({ cell }) => {
-      const city = cell.getValue<TNationalParkWithCity["city"]>();
+      const city = cell.getValue<TNationalPark["city"]>();
       return (
         <div>
           {city.name} - {city.state.name}

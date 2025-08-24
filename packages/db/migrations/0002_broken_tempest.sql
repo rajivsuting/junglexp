@@ -1,1 +1,0 @@
-ALTER TABLE "cities" ADD COLUMN "city_code" varchar(10);

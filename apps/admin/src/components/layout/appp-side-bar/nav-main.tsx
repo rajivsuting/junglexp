@@ -1,22 +1,23 @@
 "use client";
-import { Compass, MapPinHouse } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Compass, MapPin, MapPinHouse } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
 
 const items = [
   {
     title: "Nation Parks",
     url: "/national-parks",
     icon: MapPinHouse,
+  },
+  {
+    title: "Zones",
+    url: "/zones",
+    icon: MapPin,
   },
   {
     title: "Tours",
@@ -30,7 +31,7 @@ export function NavMain() {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Safari</SidebarGroupLabel>
+      <SidebarGroupLabel>Nation Parks</SidebarGroupLabel>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           {items.map((item) => (

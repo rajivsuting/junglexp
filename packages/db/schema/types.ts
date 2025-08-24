@@ -1,16 +1,31 @@
 import type { TCity } from "./city";
+import type { TFaqsBase } from "./faqs";
+import type { THotelAmenitiesBase } from "./hotel-amenities";
+import type {
+  THotelBase,
+  THotelImageBase,
+  THotelPolicyBase,
+  THotelSaftyFeatureBase,
+} from "./hotels";
 import type { TImage } from "./image";
-import type { TNationalPark } from "./park";
+import type { TNationalParkBase, TParkImageBase } from "./park";
+import type { TPolicyBase } from "./policies";
+import type { TSaftyFeatureBase } from "./safty-features";
 import type { TSouvenirBase, TSouvenirImageBase } from "./souvenirs";
 import type { TState } from "./state";
-import type { TTourImageBase, TTourBase, TTourPricingBase } from "./tour";
+import type { TZoneBase } from "./zones";
 
 export type TCityWithState = TCity & {
   state: TState;
 };
 
-export type TNationalParkWithCity = TNationalPark & {
+export type TParkImage = TParkImageBase & {
+  image: TImage;
+};
+
+export type TNationalPark = TNationalParkBase & {
   city: TCityWithState;
+  images: TParkImage[];
 };
 
 export type TSouvenirWithImage = TSouvenirBase & {
@@ -26,7 +41,28 @@ export type TSouvenir = TSouvenirBase & {
   park: TNationalPark;
 };
 
-export type TTour = TTourBase & {
-  images: TTourImageBase & { image: TImage }[];
-  pricing: TTourPricingBase;
+export type TZone = TZoneBase & {
+  park: TNationalParkBase;
+};
+
+export type THotelImage = THotelImageBase & {
+  image: TImage;
+};
+
+export type THotelPolicy = THotelPolicyBase & {
+  policy: TPolicyBase;
+};
+
+export type THotelSaftyFeature = THotelSaftyFeatureBase & {
+  saftyFeature: TSaftyFeatureBase;
+};
+
+export type THotel = THotelBase & {
+  zone: TZone;
+  images: THotelImage[];
+  includes: THotelAmenitiesBase[];
+  excludes: THotelAmenitiesBase[];
+  policies: THotelPolicy[];
+  safetyFeatures: THotelSaftyFeature[];
+  faqs: TFaqsBase[];
 };

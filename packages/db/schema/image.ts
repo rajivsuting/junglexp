@@ -1,4 +1,5 @@
 import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const Images = pgTable("images", {
   id: serial("id").primaryKey(),
@@ -11,6 +12,12 @@ export const Images = pgTable("images", {
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
+
+/**
+--------------------------------------- Validations ---------------------------------------
+*/
+export const insertImageSchema = createSelectSchema(Images);
+export const selectHotelImageSchema = createInsertSchema(Images);
 
 /**
 --------------------------------------- Typescript Definations ---------------------------------------

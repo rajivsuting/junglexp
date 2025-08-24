@@ -1,10 +1,22 @@
 import { relations } from "drizzle-orm";
 
+import { Amenities } from "./amenities";
 import { Cities } from "./city";
+import { Faqs } from "./faqs";
+import { HotelAmenities } from "./hotel-amenities";
+import {
+  HotelImages,
+  HotelPolicies,
+  Hotels,
+  HotelSaftyFeatures,
+} from "./hotels";
 import { Images } from "./image";
-import { NationalParks } from "./park";
+import { NationalParks, ParkImages } from "./park";
+import { Policies } from "./policies";
+import { SaftyFeatures } from "./safty-features";
 import { SouvenirImages, Souvenirs } from "./souvenirs";
 import { States } from "./state";
+import { Zones } from "./zones";
 
 export const statesRelations = relations(States, ({ many }) => ({
   cities: many(Cities),
@@ -17,13 +29,121 @@ export const citiesRelations = relations(Cities, ({ one }) => ({
   }),
 }));
 
-export const nationalParksRelations = relations(NationalParks, ({ one }) => ({
-  city: one(Cities, {
-    fields: [NationalParks.city_id],
-    references: [Cities.id],
+export const nationalParksRelations = relations(
+  NationalParks,
+  ({ one, many }) => ({
+    city: one(Cities, {
+      fields: [NationalParks.city_id],
+      references: [Cities.id],
+    }),
+    images: many(ParkImages),
+    zones: many(Zones),
+  })
+);
+
+export const zonesRelations = relations(Zones, ({ one, many }) => ({
+  park: one(NationalParks, {
+    fields: [Zones.park_id],
+    references: [NationalParks.id],
+  }),
+  hotels: many(Hotels),
+}));
+
+export const parkImagesRelations = relations(ParkImages, ({ one }) => ({
+  park: one(NationalParks, {
+    fields: [ParkImages.park_id],
+    references: [NationalParks.id],
+  }),
+  image: one(Images, {
+    fields: [ParkImages.image_id],
+    references: [Images.id],
   }),
 }));
 
+/**
+--------------------------------------- Hotels ---------------------------------------
+*/
+export const hotelRelations = relations(Hotels, ({ one, many }) => ({
+  zone: one(Zones, {
+    fields: [Hotels.zone_id],
+    references: [Zones.id],
+  }),
+  policies: many(HotelPolicies),
+  saftyFeatures: many(HotelSaftyFeatures),
+  amenities: many(HotelAmenities),
+  faqs: many(Faqs),
+  images: many(HotelImages),
+}));
+
+export const hotelImagesRelations = relations(HotelImages, ({ one }) => ({
+  hotel: one(Hotels, {
+    fields: [HotelImages.hotel_id],
+    references: [Hotels.id],
+  }),
+  image: one(Images, {
+    fields: [HotelImages.image_id],
+    references: [Images.id],
+  }),
+}));
+
+export const hotelAmenitiesRelations = relations(HotelAmenities, ({ one }) => ({
+  hotel: one(Hotels, {
+    fields: [HotelAmenities.hotel_id],
+    references: [Hotels.id],
+  }),
+  amenity: one(Amenities, {
+    fields: [HotelAmenities.amenity_id],
+    references: [Amenities.id],
+  }),
+}));
+
+export const faqsRelations = relations(Faqs, ({ one }) => ({
+  hotel: one(Hotels, {
+    fields: [Faqs.hotelId],
+    references: [Hotels.id],
+  }),
+  park: one(NationalParks, {
+    fields: [Faqs.parkId],
+    references: [NationalParks.id],
+  }),
+}));
+
+export const hotelPoliciesRelations = relations(HotelPolicies, ({ one }) => ({
+  hotel: one(Hotels, {
+    fields: [HotelPolicies.hotel_id],
+    references: [Hotels.id],
+  }),
+  policy: one(Policies, {
+    fields: [HotelPolicies.policy_id],
+    references: [Policies.id],
+  }),
+}));
+
+export const hotelSaftyFeaturesRelations = relations(
+  HotelSaftyFeatures,
+  ({ one }) => ({
+    hotel: one(Hotels, {
+      fields: [HotelSaftyFeatures.hotel_id],
+      references: [Hotels.id],
+    }),
+    feature: one(SaftyFeatures, {
+      fields: [HotelSaftyFeatures.safty_feature_id],
+      references: [SaftyFeatures.id],
+    }),
+  })
+);
+
+export const saftyFeatureRelations = relations(SaftyFeatures, ({ many }) => ({
+  hotels: many(HotelSaftyFeatures),
+}));
+
+export const amenityRelations = relations(Amenities, ({ many }) => ({
+  hotel: many(HotelAmenities),
+}));
+
+/**
+--------------------------------------- Souvenirs ---------------------------------------
+*/
 export const imageRelations = relations(Images, ({ many }) => ({
   souvenir_images: many(SouvenirImages),
 }));

@@ -1,1 +1,0 @@
-ALTER TABLE "souvenirs" ALTER COLUMN "slug" DROP DEFAULT;

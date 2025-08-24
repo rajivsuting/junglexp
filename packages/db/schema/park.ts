@@ -1,20 +1,13 @@
-import {
-  index,
-  integer,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { index, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
-import { Cities } from "./city";
+import { Cities } from './city';
+import { Images } from './image';
 
 export const NationalParks = pgTable(
   "national_parks",
   {
     id: serial("id").primaryKey(),
-    uid: text("uid").notNull().default("gen_random_uuid()"),
 
     city_id: integer("city_id")
       .references(() => Cities.id)
@@ -22,7 +15,7 @@ export const NationalParks = pgTable(
     name: text("name").notNull(),
     slug: text("slug").unique().notNull(),
 
-    image: text("image").notNull(),
+    description: text("description").notNull(),
 
     created_at: timestamp("created_at", { precision: 0 }).defaultNow(),
     updated_at: timestamp("updated_at", { precision: 0 })
@@ -35,6 +28,17 @@ export const NationalParks = pgTable(
   ]
 );
 
+export const ParkImages = pgTable("park_images", {
+  id: serial("id").primaryKey(),
+  park_id: integer("park_id")
+    .references(() => NationalParks.id, { onDelete: "cascade" })
+    .notNull(),
+  image_id: integer("image_id")
+    .references(() => Images.id)
+    .notNull(),
+  order: integer("order").notNull(),
+});
+
 /**
 --------------------------------------- Valiation Schemas ---------------------------------------
 */
@@ -44,10 +48,13 @@ export const nationaParkInsertSchema = createInsertSchema(NationalParks, {
 
 export const nationaParkSelectSchema = createSelectSchema(NationalParks);
 
+export const parkImagesInsertSchema = createInsertSchema(ParkImages);
 /** 
 --------------------------------------- Type Definations ---------------------------------------
 */
-export type TNationalPark = typeof NationalParks.$inferSelect;
+export type TNationalParkBase = typeof NationalParks.$inferSelect;
 export type TNewNationalPark = typeof NationalParks.$inferInsert;
 
 export type TNationalParkInsert = typeof nationaParkInsertSchema;
+
+export type TParkImageBase = typeof ParkImages.$inferSelect;

@@ -1,14 +1,36 @@
-import { PlayCircle } from 'lucide-react';
-import Link from 'next/link';
+import { PlayCircle } from "lucide-react";
+import Link from "next/link";
+import { Suspense } from "react";
 
-import ForestStaysSection from '@/components/ForestStaysSection';
-import ImageSlideshow from '@/components/ImageSlideshow';
-import LodgesSection from '@/components/LodgesSection';
-import Map from '@/components/Map';
-import ReviewsSection from '@/components/ReviewsSection';
-import { SafariSection } from '@/components/safari-section';
+import ForestStaysSection from "@/components/ForestStaysSection";
+import ImageSlideshow from "@/components/ImageSlideshow";
+import LodgesSection from "@/components/LodgesSection";
+import Map from "@/components/Map";
+import ReviewsSection from "@/components/ReviewsSection";
+import { SafariSection } from "@/components/safari-section";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
-export default function HomePage() {
+export const generateMetadata = async () => {
+  const park = await getNationalParkBySlug("jim-corbet-national-park");
+  return {
+    title: park?.name,
+    description: park?.description,
+    openGraph: {
+      title: park?.name,
+      description: park?.description,
+      images: park?.images.map((image) => image.image.small_url),
+    },
+  };
+};
+
+export default async function HomePage() {
+  const park = await getNationalParkBySlug("jim-corbet-national-park");
+  console.log("park", park);
+
+  if (!park) {
+    return null;
+  }
+
   return (
     <div className="bg-background text-foreground font-sans">
       {/* Hero Section */}
@@ -20,7 +42,9 @@ export default function HomePage() {
           priority
           className="object-cover object-center absolute inset-0 z-0"
         /> */}
-        <ImageSlideshow />
+        <ImageSlideshow
+          images={park?.images.map((image) => image.image) || []}
+        />
         <div className="relative grid grid-cols-1 z-10 mx-4 sm:mx-6 lg:mx-24">
           <p className="text-sm md:text-[16px] font-light mb-4 text-white">
             DISCOVER . EXPLORE . EXPERIENCE
@@ -66,26 +90,11 @@ export default function HomePage() {
           </h1>
 
           <div className="space-y-6 text-primary font-light">
-            <p className="text-lg max-w-4xl mx-auto">
-              Home to the Big 5 and a mere 2 hours from Victoria Falls lies the
-              famous Jim Corbett National Park.
-            </p>
-
-            <p className="text-lg max-w-4xl mx-auto">
-              Indias largest National Park offers excellent wildlife viewing and
-              has the highest diversity of mammals of any National Park in
-              Africa.
-            </p>
-
-            <p className="text-lg max-w-4xl mx-auto">
-              During a visit one may enjoy sightings of Lion, Leopard, Cheetah,
-              Wild Dog and more.
-            </p>
-
-            <p className="text-lg max-w-4xl mx-auto">
-              Activities range from Game Drives, Night Drives, Photographic and
-              Walking Safaris.
-            </p>
+            {park?.description.split("\n").map((line, index) => (
+              <p key={index} className="text-lg max-w-4xl mx-auto">
+                {line}
+              </p>
+            ))}
 
             <div className="pt-6">
               <p className="text-lg max-w-4xl mx-auto">
@@ -181,9 +190,13 @@ export default function HomePage() {
       </section>
 
       {/* Lodges Section */}
-      <LodgesSection />
+      <Suspense>
+        <LodgesSection park={park as any} />
+      </Suspense>
       <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
-      <ForestStaysSection />
+      <Suspense>
+        <ForestStaysSection park={park as any} />
+      </Suspense>
       <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
 
       <SafariSection />

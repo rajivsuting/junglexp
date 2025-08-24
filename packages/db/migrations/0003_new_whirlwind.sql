@@ -1,0 +1,1 @@
+ALTER TABLE "park_images" ADD PRIMARY KEY ("image_id");

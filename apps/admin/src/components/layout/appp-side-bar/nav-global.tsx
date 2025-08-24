@@ -1,21 +1,17 @@
 "use client";
-import { Cog, Compass } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Cog, Compass } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
 
 const items = [
   {
-    title: "Header Promotions",
-    url: "/top-promotions",
+    title: "Promotions",
+    url: "/promotions",
     icon: Cog,
   },
 ];
@@ -25,7 +21,7 @@ export function NavGlobal() {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Global</SidebarGroupLabel>
+      <SidebarGroupLabel>Website</SidebarGroupLabel>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           {items.map((item) => (

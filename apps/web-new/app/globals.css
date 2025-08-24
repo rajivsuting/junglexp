@@ -46,7 +46,7 @@
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 0;
   --dark-corvid: #3a3a30;
   --card: #f9f9f9;
   --card-foreground: #4b5320;
@@ -119,8 +119,21 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    /* Allow natural scroll behavior */
+    height: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
+    /* Essential for iOS overscroll behavior */
+    /* min-height: 100vh; */
+    -webkit-overflow-scrolling: touch;
+    /* Explicitly enable rubber band scrolling on iOS */
+    overflow: auto;
+    /* Ensure overscroll is not disabled */
+    overscroll-behavior: auto;
   }
 }
 
@@ -185,109 +198,6 @@
 .animation-delay-1000 {
   animation-delay: 1s;
 }
-
-/* @import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
-
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 14.3% 4.1%;
-    --primary: 24 9.8% 10%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 60 4.8% 95.9%;
-    --secondary-foreground: 24 9.8% 10%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
-    --accent: 60 4.8% 95.9%;
-    --accent-foreground: 24 9.8% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
-    --ring: 20 14.3% 4.1%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-  }
-
-  .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 60 9.1% 97.8%;
-    --primary-foreground: 24 9.8% 10%;
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
-    --ring: 24 5.7% 82.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.imgDark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-
-  .imgLight {
-    display: none;
-  }
-  .imgDark {
-    display: unset;
-  }
-} */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* Mobile Menu Styles */
 .menu-toggle {
@@ -383,4 +293,81 @@ a {
 
 @utility no-scrollbar {
   @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
+@keyframes topBarSlide {
+  0% {
+    transform: translateY(0%);
+  }
+  20% {
+    transform: translateY(-25%);
+  }
+  40% {
+    transform: translateY(-50%);
+  }
+  60% {
+    transform: translateY(-75%);
+  }
+  80% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(-125%);
+  }
+}
+
+/* TopBar in/out animations */
+@keyframes topbar-in {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes topbar-out {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.animate-topbar-in {
+  animation: topbar-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-topbar-out {
+  animation: topbar-out 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Server-driven TopBar per-item window timeline
+   Each item uses the same animation with different delays to create a carousel.
+   0-10%: slide in (0.5s)
+   10-90%: visible (4s)
+   90-100%: slide out (0.5s)
+*/
+@keyframes topbar-item-window {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  90% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
 }

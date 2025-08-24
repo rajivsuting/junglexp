@@ -1,0 +1,1 @@
+ALTER TABLE "national_parks" ADD COLUMN "description" text NOT NULL;

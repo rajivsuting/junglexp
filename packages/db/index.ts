@@ -1,18 +1,31 @@
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/neon-http";
 
+import { Amenities } from "./schema/amenities";
 import { Cities } from "./schema/city";
+import { Faqs } from "./schema/faqs";
+import { HotelAmenities } from "./schema/hotel-amenities";
+import {
+  HotelImages,
+  HotelPolicies,
+  Hotels,
+  HotelSaftyFeatures,
+} from "./schema/hotels";
 import { Images } from "./schema/image";
-import { NationalParks } from "./schema/park";
+import { NationalParks, ParkImages } from "./schema/park";
+import { Policies } from "./schema/policies";
+import { Promotions } from "./schema/promotions";
 import * as relations from "./schema/relations";
+import { SaftyFeatures } from "./schema/safty-features";
 import { SouvenirImages, Souvenirs } from "./schema/souvenirs";
 import { States } from "./schema/state";
 import { Users } from "./schema/user";
+import { Zones } from "./schema/zones";
 
 export * from "drizzle-orm";
 export { nationaParkInsertSchema } from "./schema/park";
 export type { TUser, TNewUser } from "./schema/user";
-export type { TNationalPark, TNewNationalPark } from "./schema/park";
+export type { TNationalParkBase, TNewNationalPark } from "./schema/park";
 export type { TState, TNewState } from "./schema/state";
 export type { TCity, TNewCity } from "./schema/city";
 export * from "./schema/types";
@@ -25,6 +38,18 @@ export const schemaWithoutRelations = {
   Images,
   Souvenirs,
   SouvenirImages,
+  ParkImages,
+  HotelAmenities,
+  Amenities,
+  Policies,
+  Faqs,
+  SaftyFeatures,
+  HotelSaftyFeatures,
+  HotelImages,
+  Hotels,
+  Zones,
+  HotelPolicies,
+  Promotions,
 };
 
 export const schema = {

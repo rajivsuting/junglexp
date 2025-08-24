@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import '../globals.css';
+import "../globals.css";
 
-import { Montserrat } from 'next/font/google';
+import { Montserrat } from "next/font/google";
 
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import { Toaster } from '@/components/ui/sonner';
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Jim Corbett Resorts - Book Your Ideal Stay",

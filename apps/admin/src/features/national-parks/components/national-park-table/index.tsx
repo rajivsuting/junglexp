@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { parseAsInteger, useQueryState } from "nuqs";
+import Link from 'next/link';
+import { parseAsInteger, useQueryState } from 'nuqs';
 
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/table/data-table";
-import { DataTableToolbar } from "@/components/ui/table/data-table-toolbar";
-import { useDataTable } from "@/hooks/use-data-table";
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/table/data-table';
+import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
+import { useDataTable } from '@/hooks/use-data-table';
 
 import type { ColumnDef } from "@tanstack/react-table";
 

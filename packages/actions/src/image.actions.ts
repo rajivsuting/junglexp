@@ -1,6 +1,8 @@
 "use server";
-import { db, inArray } from "@repo/db";
-import { Images } from "@repo/db/schema/image";
+import { db, inArray } from '@repo/db';
+import { Images } from '@repo/db/schema/image';
+
+import { bucket, toObjectNameFromUrl } from './libs/gcs';
 
 import type { TNewImage } from "@repo/db/schema/image";
 
@@ -25,14 +27,29 @@ export const createImages = async (data: TNewImage[]) => {
 };
 
 export const deleteImages = async (imageIds: number[]) => {
-  const result = await db
+  console.log("imageIds", imageIds);
+
+  const deleted = await db
     .delete(Images)
     .where(inArray(Images.id, imageIds))
     .returning();
 
-  if (!result[0]) {
-    throw new Error("Failed to delete images");
+  console.log("deleted", deleted);
+
+  const objectNames = new Set<string>();
+  for (const img of deleted) {
+    if (img.small_url) objectNames.add(toObjectNameFromUrl(img.small_url));
+    if (img.medium_url) objectNames.add(toObjectNameFromUrl(img.medium_url));
+    if (img.large_url) objectNames.add(toObjectNameFromUrl(img.large_url));
+    if (img.original_url)
+      objectNames.add(toObjectNameFromUrl(img.original_url));
   }
 
-  return result;
+  console.log("objectNames", objectNames);
+
+  return Promise.allSettled(
+    Array.from(objectNames).map(async (name) => {
+      return bucket.file(name).delete();
+    })
+  );
 };

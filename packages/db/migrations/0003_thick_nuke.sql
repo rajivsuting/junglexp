@@ -1,1 +1,0 @@
-ALTER TABLE "cities" DROP COLUMN "city_code";

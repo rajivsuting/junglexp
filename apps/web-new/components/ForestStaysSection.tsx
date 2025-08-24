@@ -1,54 +1,27 @@
+import { Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 
-interface Lodge {
-  name: string;
-  img: string;
-  description?: string;
-}
+import { cn } from "@/lib/utils";
+import { getHotelsByParkId } from "@repo/actions/hotels.actions";
 
-const lodges: Lodge[] = [
-  {
-    name: "VERNEYS CAMP",
-    img: "https://static.wixstatic.com/media/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg/v1/fill/w_577,h_325,q_90,enc_avif,quality_auto/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg",
-    description: "Luxury tented safari camp with stunning views",
-  },
-  {
-    name: "DAVISONS CAMP",
-    img: "https://static.wixstatic.com/media/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg/v1/fill/w_577,h_325,q_90,enc_avif,quality_auto/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg",
-    description: "Classic safari lodge with elephant viewing",
-  },
-  {
-    name: "DETEEMA SPRINGS CAMP",
-    img: "https://static.wixstatic.com/media/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg/v1/fill/w_577,h_325,q_90,enc_avif,quality_auto/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg",
-    description: "Intimate camp overlooking natural springs",
-  },
-  // Add more lodges for continuous scrolling effect
-  {
-    name: "VERNEYS CAMP",
-    img: "https://static.wixstatic.com/media/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg/v1/fill/w_577,h_325,q_90,enc_avif,quality_auto/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg",
-    description: "Luxury tented safari camp with stunning views",
-  },
-  {
-    name: "DAVISONS CAMP",
-    img: "https://static.wixstatic.com/media/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg/v1/fill/w_577,h_325,q_90,enc_avif,quality_auto/b2fe2e_0d093ad501044a88b7864338fc104905~mv2.jpg",
-    description: "Classic safari lodge with elephant viewing",
-  },
-];
+import type { TNationalPark } from "@repo/db/index";
 
-export default function ForestStaysSection() {
-  // Double the lodges for seamless infinite scroll
-  const allLodges = [...lodges, ...lodges];
-
+export default async function ForestStaysSection({
+  park,
+}: {
+  park: TNationalPark;
+}) {
+  const forestStays = await getHotelsByParkId(park.id, "forest");
   return (
     <section className="py-16 overflow-hidden">
       <div className="mx-auto">
         <h2 className="text-primary text-center text-3xl font-light mb-8">
-          TOP FOREST STAYS IN <span className="font-bold">JIM CORBETT</span>
+          TOP FOREST STAYS IN <span className="font-bold">{park.name}</span>
         </h2>
 
         <p className="text-center text-primary text-lg mb-16 max-w-4xl mx-auto">
-          We've picked the Top Forest stays in Corbett National Park Tour for
-          you to choose from below so you can unwind while on vacation. These
+          We've picked the Top Forest stays in {park.name} Tour for you to
+          choose from below so you can unwind while on vacation. These
           particular resorts are highly regarded for their features, services,
           cuisine, activities, and other aspects.
         </p>
@@ -58,22 +31,33 @@ export default function ForestStaysSection() {
             className="flex gap-4 animate-[scroll_40s_linear_infinite] hover:[animation-play-state:paused!important]"
             style={{ width: "max-content" }}
           >
-            {allLodges.map((lodge, index) => (
+            {forestStays.map((stay, index) => (
               <button
-                key={`${lodge.name}-${index}`}
+                key={`${stay.name}-${index}`}
                 className="group w-[calc(100vw_-_32px)] md:w-[550px] cursor-pointer flex-shrink-0"
                 tabIndex={0}
               >
-                <div className="relative aspect-video w-full overflow-hidden">
-                  <Image
-                    src={lodge.img}
-                    alt={lodge.name}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
+                <div
+                  className={cn(
+                    "relative aspect-video w-full overflow-hidden",
+                    stay.images[0]?.image?.original_url
+                      ? ""
+                      : "flex items-center justify-center"
+                  )}
+                >
+                  {!stay.images[0]?.image?.original_url ? (
+                    <ImageIcon className="w-12 h-12 text-gray-400" />
+                  ) : (
+                    <Image
+                      src={stay.images[0]?.image?.original_url}
+                      alt={stay.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  )}
                 </div>
                 <h3 className="text-sm py-3 bg-dark-corvid text-white text-center">
-                  {lodge.name}
+                  {stay.name}
                 </h3>
               </button>
             ))}
@@ -82,7 +66,7 @@ export default function ForestStaysSection() {
 
         <div className="mt-16 text-center">
           <button className="px-8 py-3 bg-[#2F2F2F] text-white hover:bg-[#444444] transition-colors">
-            ALL LODGES
+            ALL FOREST STAYS
           </button>
         </div>
       </div>

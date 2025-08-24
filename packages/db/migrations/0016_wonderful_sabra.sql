@@ -1,0 +1,1 @@
+ALTER TYPE "public"."hotel_type" ADD VALUE 'home';

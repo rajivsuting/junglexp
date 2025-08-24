@@ -7,11 +7,25 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     label?: string;
     placeholder?: string;
-    variant?: FilterVariant;
+    variant?: FilterVariant | "asyncSelect" | "asyncMultiSelect";
     options?: Option[];
     range?: [number, number];
     unit?: string;
     icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+    fetchOptions?: (ctx: {
+      column?: import("@tanstack/table-core").Column<TData, TValue>;
+    }) => Promise<Option[]>;
+
+    searchOptions?: (
+      query: string,
+      ctx: { column?: import("@tanstack/table-core").Column<TData, TValue> }
+    ) => Promise<Option[]>;
+
+    // optional transform before render
+    mapOptions?: (options: Option[]) => Option[];
+
+    // search debounce
+    searchDebounceMs?: number;
   }
 }
 

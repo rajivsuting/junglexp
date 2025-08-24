@@ -12,6 +12,8 @@ import { DataTableSliderFilter } from '@/components/ui/table/data-table-slider-f
 import { DataTableViewOptions } from '@/components/ui/table/data-table-view-options';
 import { cn } from '@/lib/utils';
 
+import { DataTableAsyncFacetedFilter } from './data-table-async-faceted-filter';
+
 interface DataTableToolbarProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;
 }
@@ -136,6 +138,21 @@ function DataTableToolbarFilter<TData>({
               title={columnMeta.label ?? column.id}
               options={columnMeta.options ?? []}
               multiple={columnMeta.variant === "multiSelect"}
+            />
+          );
+
+        case "asyncSelect":
+        case "asyncMultiSelect":
+          return (
+            <DataTableAsyncFacetedFilter
+              column={column}
+              title={columnMeta.label ?? column.id}
+              multiple={columnMeta.variant === "asyncMultiSelect"}
+              fetchOptions={columnMeta.fetchOptions}
+              searchOptions={columnMeta.searchOptions}
+              initialOptions={columnMeta.options}
+              searchDebounceMs={columnMeta.searchDebounceMs}
+              mapOptions={columnMeta.mapOptions}
             />
           );
 

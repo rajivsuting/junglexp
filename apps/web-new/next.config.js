@@ -6,6 +6,7 @@ const nextConfig = {
       new URL("https://lh3.googleusercontent.com/**"),
       new URL("https://static.wixstatic.com/**"),
       new URL("https://a0.muscache.com/**"),
+      new URL("https://storage.googleapis.com/etrouper-image-bucket/**"),
     ],
   },
 };

@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   title: "Jim Corbett Resorts - Book Your Ideal Stay",
   description:
     "Experience the wilderness and luxury in India's oldest national park. Book your perfect stay at Jim Corbett Resorts with safaris, adventure activities, and premium accommodations.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    // Allow some zoom for better overscroll behavior
+    maximumScale: 5,
+    userScalable: true,
+  },
 };
 
 const montserrat = Montserrat({
@@ -19,7 +26,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

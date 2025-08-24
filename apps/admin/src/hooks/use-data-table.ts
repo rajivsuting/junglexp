@@ -1,25 +1,13 @@
 "use client";
-import {
-  parseAsArrayOf,
-  parseAsInteger,
-  parseAsString,
-  useQueryState,
-  useQueryStates,
-} from "nuqs";
-import * as React from "react";
+import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState, useQueryStates } from 'nuqs';
+import * as React from 'react';
 
-import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
-import { getSortingStateParser } from "@/lib/parsers";
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import { getSortingStateParser } from '@/lib/parsers';
 import {
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+    getCoreRowModel, getFacetedMinMaxValues, getFacetedRowModel, getFacetedUniqueValues,
+    getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable
+} from '@tanstack/react-table';
 
 import type { Parser, UseQueryStateOptions } from "nuqs";
 
@@ -194,6 +182,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   const [filterValues, setFilterValues] = useQueryStates(filterParsers);
 
+  console.log("filterValues", filterValues);
+
   const debouncedSetFilterValues = useDebouncedCallback(
     (values: typeof filterValues) => {
       void setPage(1);
@@ -259,6 +249,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     },
     [debouncedSetFilterValues, filterableColumns, enableAdvancedFilter]
   );
+
+  console.log("tableProps", tableProps.data);
 
   const table = useReactTable({
     ...tableProps,
