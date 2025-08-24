@@ -13,7 +13,7 @@ const HotelViewPage = async (props: THotelViewPageProps) => {
   const { hotelId } = props;
 
   let Hotel: THotel | null = null;
-  let pageTitle = "Create New Product";
+  let pageTitle = "Create New Hotel";
   let mode: "create" | "edit" = "create";
 
   if (hotelId !== "new") {
@@ -23,7 +23,7 @@ const HotelViewPage = async (props: THotelViewPageProps) => {
       notFound();
     }
 
-    pageTitle = "Edit Product";
+    pageTitle = "Update Hotel";
     mode = "edit";
   }
   console.log("Hotel", Hotel);

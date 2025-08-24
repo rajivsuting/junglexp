@@ -1,8 +1,8 @@
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-import { getNationalParkById } from '@repo/actions/parks.actions';
+import { getNationalParkById } from "@repo/actions/parks.actions";
 
-import NationalParkForm from './national-park-form';
+import NationalParkForm from "./national-park-form";
 
 import type { TNationalPark } from "@repo/db/schema/types";
 
@@ -14,7 +14,7 @@ const NationalParkViewPage = async (props: TNationalParkViewPageProps) => {
   const { parkId } = props;
 
   let NationalPark: TNationalPark | null = null;
-  let pageTitle = "Create New Product";
+  let pageTitle = "Create New National Park";
 
   if (parkId !== "new") {
     NationalPark = await getNationalParkById(parkId);
@@ -23,7 +23,7 @@ const NationalParkViewPage = async (props: TNationalParkViewPageProps) => {
       notFound();
     }
 
-    pageTitle = "Edit Product";
+    pageTitle = "Update National Park";
   }
 
   return <NationalParkForm initialData={NationalPark} pageTitle={pageTitle} />;
