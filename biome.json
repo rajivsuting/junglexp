@@ -28,5 +28,10 @@
       "tsconfig.json",
       ".turbo"
     ]
+  },
+  "css": {
+    "linter": {
+      "enabled": false
+    }
   }
 }

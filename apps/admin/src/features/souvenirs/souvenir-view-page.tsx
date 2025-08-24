@@ -26,7 +26,7 @@ const SouvenirViewPage = async (props: TSouvenirViewPageProps) => {
     pageTitle = "Edit Souvenir";
   }
 
-  return <SouvenirForm initialData={data} pageTitle={pageTitle} />;
+  return <SouvenirForm />;
 };
 
 export default SouvenirViewPage;

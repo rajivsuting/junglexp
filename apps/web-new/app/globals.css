@@ -128,7 +128,6 @@
   body {
     @apply bg-background text-foreground;
     /* Essential for iOS overscroll behavior */
-    /* min-height: 100vh; */
     -webkit-overflow-scrolling: touch;
     /* Explicitly enable rubber band scrolling on iOS */
     overflow: auto;

@@ -27,11 +27,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createNewHotel, updateHotel } from "@repo/actions/hotels.actions";
+import { hotelTypeEnum } from "@repo/db/schema/hotels";
 
 import { NationalParkSelect } from "./national-park-select";
 import { ZoneSelect } from "./zone-select";
 
-import type { THotelBase } from "@repo/db/schema/hotels";
 import type { THotel } from "@repo/db/index";
 
 // Hotel types based on schema
@@ -50,7 +50,7 @@ const hotelDetailsSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   park_id: z.string().min(1, "National Park is required"),
   zone_id: z.string().min(1, "Zone is required"),
-  hotel_type: z.enum(["resort", "forest"], {
+  hotel_type: z.enum(hotelTypeEnum.enumValues, {
     required_error: "Hotel type is required",
   }),
   rating: z.coerce.number().min(1, "Rating is required").max(5),
@@ -120,16 +120,18 @@ export const HotelDetailsSection = ({
     };
   }, [initialData]);
 
-  const form = useForm<HotelDetailsFormData>(
-    useMemo(
-      () => ({
-        resolver: zodResolver(hotelDetailsSchema),
-        defaultValues: defaultValues,
-        mode: "onChange", // Enable validation on change for better UX
-      }),
-      [defaultValues]
-    )
-  );
+  const form = useForm<HotelDetailsFormData>({
+    resolver: zodResolver(hotelDetailsSchema),
+    defaultValues: {
+      name: initialData?.name || "",
+      description: initialData?.description || "",
+      park_id: initialData?.zone?.park.id.toString(),
+      zone_id: initialData?.zone_id?.toString() || "",
+      hotel_type: initialData?.hotel_type || undefined,
+      rating: initialData?.rating || 1,
+    },
+    mode: "onChange", // Enable validation on change for better UX
+  });
 
   console.log(form.getValues());
 

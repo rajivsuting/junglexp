@@ -1,26 +1,31 @@
 "use client";
-import { Loader2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { FileUploader } from '@/components/file-uploader';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileUploader } from "@/components/file-uploader";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { uploadFilesWithProgress } from '@/lib/upload-files';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createPark } from '@repo/actions/parks.actions';
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { uploadFilesWithProgress } from "@/lib/upload-files";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createPark } from "@repo/actions/parks.actions";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
 
-import CitiesSelect from './cities-select';
-import StatesSelect from './states-select';
+import CitiesSelect from "./cities-select";
+import StatesSelect from "./states-select";
 
 import type { TNationalPark } from "@repo/db/schema/types";
 
@@ -254,7 +259,7 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
                     <FormLabel>Images</FormLabel>
                     <FormControl>
                       <FileUploader
-                        value={field.value as unknown as FormImage[]}
+                        value={field.value as unknown as any}
                         onValueChange={field.onChange}
                         maxFiles={8}
                         maxSize={MAX_FILE_SIZE}
