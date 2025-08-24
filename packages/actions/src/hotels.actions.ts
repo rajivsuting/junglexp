@@ -1,5 +1,5 @@
 "use server";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, count, eq, ilike, inArray } from "drizzle-orm";
 
 import { db } from "@repo/db/index";
 import {
@@ -16,6 +16,7 @@ import { Zones } from "@repo/db/schema/zones";
 
 import type { THotelType, TNewHotel } from "@repo/db/schema/hotels";
 import type { TImage } from "@repo/db/schema/image";
+import type { THotel } from "@repo/db/schema/types";
 
 export const getHotelsByParkSlug = async (slug: string) => {
   const hotels = await db
@@ -419,4 +420,37 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
     zone: hotel.zone,
     images: hotel.hotel.id ? imagesByHotelId[hotel.hotel.id] || [] : [],
   }));
+};
+
+export const getHotels = async (filters: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}) => {
+  const { page = 1, limit = 10, search } = filters;
+
+  const hotels = await db.query.Hotels.findMany({
+    where: and(search ? ilike(Hotels.name, `%${search}%`) : undefined),
+    limit: limit,
+    offset: (page - 1) * limit,
+    with: {
+      zone: {
+        with: {
+          park: true,
+        },
+      },
+      images: {
+        with: {
+          image: true,
+        },
+      },
+    },
+  });
+
+  const total = await db
+    .select({ count: count() })
+    .from(Hotels)
+    .where(and(ilike(Hotels.name, `%${search}%`)));
+
+  return { hotels: hotels as unknown as THotel[], total: total[0]?.count || 0 };
 };

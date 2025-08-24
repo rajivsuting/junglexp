@@ -1,12 +1,16 @@
 "use client";
-import { Compass, MapPin, MapPinHouse } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Compass, Hotel, MapPin, MapPinHouse } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
-    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton,
-    SidebarMenuItem
-} from '@/components/ui/sidebar';
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 const items = [
   {
@@ -20,9 +24,9 @@ const items = [
     icon: MapPin,
   },
   {
-    title: "Tours",
-    url: "#",
-    icon: Compass,
+    title: "Hotels",
+    url: "/hotels",
+    icon: Hotel,
   },
 ];
 

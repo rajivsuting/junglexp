@@ -10,6 +10,7 @@ import {
   Search,
   Settings,
 } from "lucide-react";
+import Link from "next/link";
 import { Suspense } from "react";
 
 import {
@@ -136,9 +137,9 @@ export function AppSidebar() {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <Link href="/">
                 <span className="text-base font-semibold">eTroupers</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -146,8 +147,8 @@ export function AppSidebar() {
       <SidebarContent>
         <NavGlobal />
         <NavMain />
-        <NavOthers />
-        <NavDocuments items={data.documents} />
+        {/* <NavOthers /> */}
+        {/* <NavDocuments items={data.documents} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
