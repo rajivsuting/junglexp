@@ -1,13 +1,10 @@
-import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
-
-import { Hotels } from './hotels';
+import { pgTable, serial, text } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 
 export const SaftyFeatures = pgTable("safty_features", {
   id: serial("id").primaryKey(),
   label: text("label").notNull(),
   icon: text("icon").notNull(),
-  order: integer("order").notNull(),
 });
 
 /**

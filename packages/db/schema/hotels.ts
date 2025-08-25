@@ -1,10 +1,11 @@
-import { integer, pgEnum, pgTable, serial, text } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+import { integer, pgEnum, pgTable, serial, text } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
-import { Images } from "./image";
-import { Policies } from "./policies";
-import { SaftyFeatures } from "./safty-features";
-import { Zones } from "./zones";
+import { Faqs } from './faqs';
+import { Images } from './image';
+import { Policies } from './policies';
+import { SaftyFeatures } from './safty-features';
+import { Zones } from './zones';
 
 // Define a Postgres enum named "park_status" with allowed values
 export const hotelTypeEnum = pgEnum("hotel_type", ["resort", "forest", "home"]);
@@ -55,6 +56,18 @@ export const HotelSaftyFeatures = pgTable("hotel_safty_features", {
   hotel_id: integer("hotel_id").references(() => Hotels.id, {
     onDelete: "cascade",
   }),
+  order: integer("order").notNull(),
+});
+
+export const HotelFaqs = pgTable("hotel_faqs", {
+  id: serial("id").primaryKey(),
+  faq_id: integer("faq_id").references(() => Faqs.id, {
+    onDelete: "cascade",
+  }),
+  hotel_id: integer("hotel_id").references(() => Hotels.id, {
+    onDelete: "cascade",
+  }),
+  order: integer("order").notNull(),
 });
 
 /**
@@ -83,3 +96,6 @@ export type THotelSaftyFeatureBase = typeof HotelSaftyFeatures.$inferSelect;
 export type TNewHotelSaftyFeature = typeof HotelSaftyFeatures.$inferInsert;
 
 export type THotelType = (typeof hotelTypeEnum.enumValues)[number];
+
+export type THotelFaqBase = typeof HotelFaqs.$inferSelect;
+export type TNewHotelFaq = typeof HotelFaqs.$inferInsert;

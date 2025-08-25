@@ -8,6 +8,7 @@ export const HotelAmenities = pgTable("hotel_amenities", {
   id: serial("id").primaryKey(),
   hotel_id: integer("hotel_id").references(() => Hotels.id),
   amenity_id: integer("amenity_id").references(() => Amenities.id),
+  order: integer("order").notNull(),
 });
 
 /**

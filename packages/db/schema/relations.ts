@@ -5,6 +5,7 @@ import { Cities } from "./city";
 import { Faqs } from "./faqs";
 import { HotelAmenities } from "./hotel-amenities";
 import {
+  HotelFaqs,
   HotelImages,
   HotelPolicies,
   Hotels,
@@ -71,7 +72,7 @@ export const hotelRelations = relations(Hotels, ({ one, many }) => ({
   policies: many(HotelPolicies),
   saftyFeatures: many(HotelSaftyFeatures),
   amenities: many(HotelAmenities),
-  faqs: many(Faqs),
+  faqs: many(HotelFaqs),
   images: many(HotelImages),
 }));
 
@@ -97,14 +98,14 @@ export const hotelAmenitiesRelations = relations(HotelAmenities, ({ one }) => ({
   }),
 }));
 
-export const faqsRelations = relations(Faqs, ({ one }) => ({
+export const hotelFaqsRelations = relations(HotelFaqs, ({ one }) => ({
   hotel: one(Hotels, {
-    fields: [Faqs.hotelId],
+    fields: [HotelFaqs.hotel_id],
     references: [Hotels.id],
   }),
-  park: one(NationalParks, {
-    fields: [Faqs.parkId],
-    references: [NationalParks.id],
+  faq: one(Faqs, {
+    fields: [HotelFaqs.faq_id],
+    references: [Faqs.id],
   }),
 }));
 

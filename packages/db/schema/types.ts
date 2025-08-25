@@ -1,3 +1,4 @@
+import type { TAmenityBase } from "./amenities";
 import type { TCity } from "./city";
 import type { TFaqsBase } from "./faqs";
 import type { THotelAmenitiesBase } from "./hotel-amenities";
@@ -54,7 +55,19 @@ export type THotelPolicy = THotelPolicyBase & {
 };
 
 export type THotelSaftyFeature = THotelSaftyFeatureBase & {
-  saftyFeature: TSaftyFeatureBase;
+  feature: TSaftyFeatureBase;
+};
+
+export type THotelAmenity = THotelAmenitiesBase & {
+  amenity: TAmenityBase;
+};
+
+export type THotelFaq = {
+  id: number;
+  faq_id: number;
+  hotel_id: number;
+  order: number;
+  faq: TFaqsBase;
 };
 
 export type THotel = THotelBase & {
@@ -63,6 +76,7 @@ export type THotel = THotelBase & {
   includes: THotelAmenitiesBase[];
   excludes: THotelAmenitiesBase[];
   policies: THotelPolicy[];
-  safetyFeatures: THotelSaftyFeature[];
-  faqs: TFaqsBase[];
+  saftyFeatures: THotelSaftyFeature[];
+  amenities: THotelAmenity[];
+  faqs: THotelFaq[];
 };

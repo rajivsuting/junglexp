@@ -204,6 +204,11 @@ export const getHotelById = async (hotelId: number) => {
           feature: true,
         },
       },
+      amenities: {
+        with: {
+          amenity: true,
+        },
+      },
     },
   });
   return hotel as any;

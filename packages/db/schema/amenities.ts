@@ -1,13 +1,10 @@
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
-import { Hotels } from "./hotels";
-
 export const Amenities = pgTable("amenities", {
   id: serial("id").primaryKey(),
   label: text("label").notNull(),
   icon: text("icon").notNull(),
-  order: integer("order").notNull(),
 });
 
 /**
