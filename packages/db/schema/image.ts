@@ -8,6 +8,7 @@ export const Images = pgTable("images", {
   large_url: text("large_url").notNull(),
   original_url: text("original_url").notNull(),
   created_at: timestamp("created_at", { precision: 0 }).defaultNow(),
+  alt_text: text("alt_text").notNull().default(""),
   updated_at: timestamp("updated_at", { precision: 0 })
     .defaultNow()
     .$onUpdate(() => new Date()),

@@ -17,6 +17,7 @@ export interface TImage {
   medium_url: string;
   large_url: string;
   original_url: string;
+  alt_text: string;
 }
 
 // If you still want to keep variants, derive them client-side if needed.

@@ -1,21 +1,16 @@
 "use server";
-import { and, count, eq, ilike, inArray } from "drizzle-orm";
+import { and, count, eq, ilike, inArray } from 'drizzle-orm';
 
-import { db } from "@repo/db/index";
-import { HotelAmenities } from "@repo/db/schema/hotel-amenities";
+import { db } from '@repo/db/index';
+import { HotelAmenities } from '@repo/db/schema/hotel-amenities';
 import {
-  HotelFaqs,
-  HotelImages,
-  HotelPolicies,
-  Hotels,
-  HotelSaftyFeatures,
-  hotelTypeEnum,
-  insertHotelSchema,
-} from "@repo/db/schema/hotels";
-import { Images } from "@repo/db/schema/image";
-import { NationalParks } from "@repo/db/schema/park";
-import { Policies } from "@repo/db/schema/policies";
-import { Zones } from "@repo/db/schema/zones";
+    HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures, hotelTypeEnum,
+    insertHotelSchema
+} from '@repo/db/schema/hotels';
+import { Images } from '@repo/db/schema/image';
+import { NationalParks } from '@repo/db/schema/park';
+import { Policies } from '@repo/db/schema/policies';
+import { Zones } from '@repo/db/schema/zones';
 
 import type { THotelType, TNewHotel } from "@repo/db/schema/hotels";
 import type { TImage } from "@repo/db/schema/image";
@@ -265,6 +260,108 @@ export const getHotelImages = async (hotelId: number) => {
       image: true,
     },
   });
+};
+
+export const updateHotelImages = async (
+  hotelId: number,
+  imageUpdates: Array<{
+    image_id: number;
+    order: number;
+    alt_text?: string;
+  }>
+) => {
+  // Get existing hotel images
+  const existing = await db
+    .select()
+    .from(HotelImages)
+    .where(eq(HotelImages.hotel_id, hotelId));
+
+  const existingImageIds = existing
+    .filter((img) => img.image_id !== null)
+    .map((img) => img.image_id as number);
+
+  const newImageIds = imageUpdates.map((update) => update.image_id);
+
+  // Identify images to delete (existing not in new list)
+  const imagesToDelete = existingImageIds.filter(
+    (existingImageId) => !newImageIds.includes(existingImageId)
+  );
+
+  // Identify images to create (new not in existing list)
+  const imagesToCreate = imageUpdates.filter(
+    (update) => !existingImageIds.includes(update.image_id)
+  );
+
+  const operations = [];
+
+  // Delete removed images
+  if (imagesToDelete.length > 0) {
+    operations.push(
+      db
+        .delete(HotelImages)
+        .where(
+          and(
+            eq(HotelImages.hotel_id, hotelId),
+            inArray(HotelImages.image_id, imagesToDelete)
+          )
+        )
+    );
+  }
+
+  // Create new images
+  if (imagesToCreate.length > 0) {
+    const newImages = imagesToCreate.map((update) => ({
+      hotel_id: hotelId,
+      image_id: update.image_id,
+      order: update.order,
+    }));
+    operations.push(db.insert(HotelImages).values(newImages));
+  }
+
+  // Update order for existing images
+  const imagesToUpdate = existing.filter(
+    (img) => img.image_id !== null && newImageIds.includes(img.image_id)
+  );
+
+  for (const img of imagesToUpdate) {
+    if (img.image_id !== null) {
+      const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
+      if (updateData && img.order !== updateData.order) {
+        operations.push(
+          db
+            .update(HotelImages)
+            .set({ order: updateData.order })
+            .where(eq(HotelImages.id, img.id))
+        );
+      }
+    }
+  }
+
+  // Execute all operations
+  if (operations.length > 0) {
+    await Promise.all(operations);
+  }
+
+  // Update alt text for images if provided
+  const imageAltTextUpdates = imageUpdates.filter(
+    (update) => update.alt_text !== undefined
+  );
+  if (imageAltTextUpdates.length > 0) {
+    const altTextOperations = imageAltTextUpdates.map((update) =>
+      db
+        .update(Images)
+        .set({ alt_text: update.alt_text })
+        .where(eq(Images.id, update.image_id))
+    );
+    await Promise.all(altTextOperations);
+  }
+
+  // Return updated hotel images
+  return await db
+    .select()
+    .from(HotelImages)
+    .where(eq(HotelImages.hotel_id, hotelId))
+    .orderBy(HotelImages.order);
 };
 
 export const updateHotelPolicies = async (

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FileUploader } from "@/components/file-uploader";
+import { FileUploader, hasValidImages } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ImagesArraySchema } from "@/lib/image-schema";
 import { uploadFilesWithProgress } from "@/lib/upload-files";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPark } from "@repo/actions/parks.actions";
@@ -27,55 +28,13 @@ import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
 import CitiesSelect from "./cities-select";
 import StatesSelect from "./states-select";
 
+import type {
+  NewFormImage,
+  FormImage,
+  ExistingFormImage,
+} from "@/lib/image-schema";
+import type { FormImage as FileUploaderFormImage } from "@/components/file-uploader";
 import type { TNationalPark } from "@repo/db/schema/types";
-
-// --------------------
-// Image union schemas
-// --------------------
-const ExistingImageSchema = z.object({
-  _type: z.literal("existing"),
-  image_id: z.number(),
-  order: z.number().int().nonnegative(),
-  small_url: z.string().url(),
-  medium_url: z.string().url(),
-  large_url: z.string().url(),
-  original_url: z.string().url(),
-});
-
-const NewImageSchema = z.object({
-  _type: z.literal("new"),
-  _tmpId: z.string(),
-  previewUrl: z.string(),
-  file: z.any(), // File
-  mime_type: z.string(),
-  size: z.number(),
-});
-
-type ExistingFormImage = z.infer<typeof ExistingImageSchema>;
-type NewFormImage = z.infer<typeof NewImageSchema>;
-type FormImage = ExistingFormImage | NewFormImage;
-
-// --------------------
-// Images array schema with validations for new items only
-// --------------------
-const ImagesArraySchema = z
-  .array(z.union([ExistingImageSchema, NewImageSchema]))
-  .min(1, "At least one image is required.")
-  .refine(
-    (items) =>
-      items
-        .filter((i): i is NewFormImage => i._type === "new")
-        .every((i) => i.size <= MAX_FILE_SIZE),
-    "Max file size is 5MB."
-  )
-  .refine(
-    (items) =>
-      items
-        .filter((i): i is NewFormImage => i._type === "new")
-        .every((i) => ACCEPTED_IMAGE_TYPES.includes(i.mime_type)),
-    ".jpg, .jpeg, .png and .webp files are accepted."
-  );
-
 // --------------------
 // Form schema
 // --------------------
@@ -112,6 +71,7 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
           medium_url: pi.image.medium_url,
           large_url: pi.image.large_url,
           original_url: pi.image.original_url,
+          alt_text: "", // TODO: Get from database when alt_text is added to schema
         })),
       description: initialData?.description || "",
       city_id: initialData?.city_id?.toString() ?? "",
@@ -127,6 +87,13 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
   const [progresses, setProgresses] = useState<Record<string, number>>({});
   const [isImagesUploading, setIsImagesUploading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+
+  // Watch images to validate alt text
+  const images = form.watch("images");
+  const hasValidAltText = useMemo(() => {
+    return hasValidImages(images as FileUploaderFormImage[]);
+  }, [images]);
 
   // --------------------
   // Upload only new files; expect server to return created TImage per file
@@ -170,6 +137,14 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
   // Submit: upload new, compute diff, call create/update
   // --------------------
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    // Mark that user has attempted to submit
+    setHasAttemptedSubmit(true);
+
+    // Check if images have valid alt text
+    if (!hasValidAltText) {
+      return; // Stop submission if alt text is invalid
+    }
+
     try {
       setIsUpdating(true);
 
@@ -266,6 +241,7 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
                         multiple
                         progresses={progresses}
                         disabled={isImagesUploading}
+                        showValidation={hasAttemptedSubmit}
                       />
                     </FormControl>
                     <FormMessage />
@@ -343,6 +319,12 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
                   : "Creating Park..."
                 : "Submit"}
             </Button>
+
+            {!hasValidAltText && images.length > 0 && hasAttemptedSubmit && (
+              <p className="text-sm text-red-600 mt-2">
+                ⚠️ Please add alt text to all images before submitting
+              </p>
+            )}
           </form>
         </Form>
       </CardContent>

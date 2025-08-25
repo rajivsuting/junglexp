@@ -1,0 +1,1 @@
+ALTER TABLE "images" ALTER COLUMN "alt_text" SET DEFAULT '';
