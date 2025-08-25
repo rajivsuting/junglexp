@@ -6,6 +6,7 @@ import { Cities } from "./schema/city";
 import { Faqs } from "./schema/faqs";
 import { HotelAmenities } from "./schema/hotel-amenities";
 import {
+  HotelFaqs,
   HotelImages,
   HotelPolicies,
   Hotels,
@@ -50,6 +51,7 @@ export const schemaWithoutRelations = {
   Zones,
   HotelPolicies,
   Promotions,
+  HotelFaqs,
 };
 
 export const schema = {

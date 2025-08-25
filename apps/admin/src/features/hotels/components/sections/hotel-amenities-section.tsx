@@ -99,6 +99,8 @@ export const HotelAmenitiesSection = ({
         displayAmenities,
       });
 
+      console.log("onSave", onSave);
+
       if (onSave) {
         await onSave(data);
       }

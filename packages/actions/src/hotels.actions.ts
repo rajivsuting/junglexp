@@ -2,10 +2,13 @@
 import { and, count, eq, ilike, inArray } from "drizzle-orm";
 
 import { db } from "@repo/db/index";
+import { HotelAmenities } from "@repo/db/schema/hotel-amenities";
 import {
+  HotelFaqs,
   HotelImages,
   HotelPolicies,
   Hotels,
+  HotelSaftyFeatures,
   hotelTypeEnum,
   insertHotelSchema,
 } from "@repo/db/schema/hotels";
@@ -209,6 +212,11 @@ export const getHotelById = async (hotelId: number) => {
           amenity: true,
         },
       },
+      faqs: {
+        with: {
+          faq: true,
+        },
+      },
     },
   });
   return hotel as any;
@@ -338,13 +346,15 @@ export const updateHotelPolicies = async (
     }
   }
 
+  console.log("operations", operations);
+
   // Execute all operations
   if (operations.length > 0) {
     await Promise.all(operations);
   }
 
   // Return updated policies using database query with join
-  return await db
+  return db
     .select({
       id: HotelPolicies.id,
       hotel_id: HotelPolicies.hotel_id,
@@ -458,4 +468,252 @@ export const getHotels = async (filters: {
     .where(and(ilike(Hotels.name, `%${search}%`)));
 
   return { hotels: hotels as unknown as THotel[], total: total[0]?.count || 0 };
+};
+
+export const updateHotelAmenities = async (
+  hotelId: number,
+  amenityIds: number[]
+) => {
+  console.log("amenityIds", amenityIds);
+
+  // Get existing hotel amenities
+  const existing = await db
+    .select()
+    .from(HotelAmenities)
+    .where(eq(HotelAmenities.hotel_id, hotelId));
+
+  const existingAmenityIds = existing
+    .filter((amenity) => amenity.amenity_id !== null)
+    .map((amenity) => amenity.amenity_id as number);
+
+  // Find amenities to create (new amenity IDs not in existing)
+  const amenitiesToCreate = amenityIds.filter(
+    (amenityId) => !existingAmenityIds.includes(amenityId)
+  );
+
+  // Find amenities to delete (existing amenity IDs not in new list)
+  const amenitiesToDelete = existingAmenityIds.filter(
+    (existingAmenityId) => !amenityIds.includes(existingAmenityId)
+  );
+
+  const operations = [];
+
+  // Delete amenities that are no longer needed
+  if (amenitiesToDelete.length > 0) {
+    const deleteOperation = db
+      .delete(HotelAmenities)
+      .where(
+        and(
+          eq(HotelAmenities.hotel_id, hotelId),
+          inArray(HotelAmenities.amenity_id, amenitiesToDelete)
+        )
+      );
+    operations.push(deleteOperation);
+  }
+
+  // Create new amenities
+  if (amenitiesToCreate.length > 0) {
+    const newAmenities = amenitiesToCreate.map((amenityId) => ({
+      hotel_id: hotelId,
+      amenity_id: amenityId,
+      order: amenityIds.indexOf(amenityId),
+    }));
+
+    const createOperation = db.insert(HotelAmenities).values(newAmenities);
+    operations.push(createOperation);
+  }
+
+  // Update order for existing amenities that remain
+  const amenitiesToUpdate = existing.filter(
+    (amenity) =>
+      amenity.amenity_id !== null && amenityIds.includes(amenity.amenity_id)
+  );
+
+  for (const amenity of amenitiesToUpdate) {
+    if (amenity.amenity_id !== null) {
+      const newOrder = amenityIds.indexOf(amenity.amenity_id);
+      if (amenity.order !== newOrder) {
+        const updateOperation = db
+          .update(HotelAmenities)
+          .set({ order: newOrder })
+          .where(eq(HotelAmenities.id, amenity.id));
+        operations.push(updateOperation);
+      }
+    }
+  }
+
+  // Execute all operations
+  if (operations.length > 0) {
+    await Promise.all(operations);
+  }
+
+  // Return updated amenities
+  return await db
+    .select()
+    .from(HotelAmenities)
+    .where(eq(HotelAmenities.hotel_id, hotelId))
+    .orderBy(HotelAmenities.order);
+};
+
+export const updateHotelSafetyFeatures = async (
+  hotelId: number,
+  safetyFeatureIds: number[]
+) => {
+  // Get existing hotel safety features
+  const existing = await db
+    .select()
+    .from(HotelSaftyFeatures)
+    .where(eq(HotelSaftyFeatures.hotel_id, hotelId));
+
+  const existingSafetyFeatureIds = existing
+    .filter((feature) => feature.safty_feature_id !== null)
+    .map((feature) => feature.safty_feature_id as number);
+
+  // Find safety features to create (new feature IDs not in existing)
+  const featuresToCreate = safetyFeatureIds.filter(
+    (featureId) => !existingSafetyFeatureIds.includes(featureId)
+  );
+
+  // Find safety features to delete (existing feature IDs not in new list)
+  const featuresToDelete = existingSafetyFeatureIds.filter(
+    (existingFeatureId) => !safetyFeatureIds.includes(existingFeatureId)
+  );
+
+  const operations = [];
+
+  // Delete safety features that are no longer needed
+  if (featuresToDelete.length > 0) {
+    const deleteOperation = db
+      .delete(HotelSaftyFeatures)
+      .where(
+        and(
+          eq(HotelSaftyFeatures.hotel_id, hotelId),
+          inArray(HotelSaftyFeatures.safty_feature_id, featuresToDelete)
+        )
+      );
+    operations.push(deleteOperation);
+  }
+
+  // Create new safety features
+  if (featuresToCreate.length > 0) {
+    const newFeatures = featuresToCreate.map((featureId) => ({
+      hotel_id: hotelId,
+      safty_feature_id: featureId,
+      order: safetyFeatureIds.indexOf(featureId),
+    }));
+
+    const createOperation = db.insert(HotelSaftyFeatures).values(newFeatures);
+    operations.push(createOperation);
+  }
+
+  // Update order for existing safety features that remain
+  const featuresToUpdate = existing.filter(
+    (feature) =>
+      feature.safty_feature_id !== null &&
+      safetyFeatureIds.includes(feature.safty_feature_id)
+  );
+
+  for (const feature of featuresToUpdate) {
+    if (feature.safty_feature_id !== null) {
+      const newOrder = safetyFeatureIds.indexOf(feature.safty_feature_id);
+      if (feature.order !== newOrder) {
+        const updateOperation = db
+          .update(HotelSaftyFeatures)
+          .set({ order: newOrder })
+          .where(eq(HotelSaftyFeatures.id, feature.id));
+        operations.push(updateOperation);
+      }
+    }
+  }
+
+  // Execute all operations
+  if (operations.length > 0) {
+    await Promise.all(operations);
+  }
+
+  // Return updated safety features
+  return await db
+    .select()
+    .from(HotelSaftyFeatures)
+    .where(eq(HotelSaftyFeatures.hotel_id, hotelId))
+    .orderBy(HotelSaftyFeatures.order);
+};
+
+export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
+  // Get existing hotel FAQs
+  const existing = await db
+    .select()
+    .from(HotelFaqs)
+    .where(eq(HotelFaqs.hotel_id, hotelId));
+
+  const existingFaqIds = existing
+    .filter((faq) => faq.faq_id !== null)
+    .map((faq) => faq.faq_id as number);
+
+  // Find FAQs to create (new FAQ IDs not in existing)
+  const faqsToCreate = faqIds.filter(
+    (faqId) => !existingFaqIds.includes(faqId)
+  );
+
+  // Find FAQs to delete (existing FAQ IDs not in new list)
+  const faqsToDelete = existingFaqIds.filter(
+    (existingFaqId) => !faqIds.includes(existingFaqId)
+  );
+
+  const operations = [];
+
+  // Delete FAQs that are no longer needed
+  if (faqsToDelete.length > 0) {
+    const deleteOperation = db
+      .delete(HotelFaqs)
+      .where(
+        and(
+          eq(HotelFaqs.hotel_id, hotelId),
+          inArray(HotelFaqs.faq_id, faqsToDelete)
+        )
+      );
+    operations.push(deleteOperation);
+  }
+
+  // Create new FAQs
+  if (faqsToCreate.length > 0) {
+    const newFaqs = faqsToCreate.map((faqId) => ({
+      hotel_id: hotelId,
+      faq_id: faqId,
+      order: faqIds.indexOf(faqId),
+    }));
+
+    const createOperation = db.insert(HotelFaqs).values(newFaqs);
+    operations.push(createOperation);
+  }
+
+  // Update order for existing FAQs that remain
+  const faqsToUpdate = existing.filter(
+    (faq) => faq.faq_id !== null && faqIds.includes(faq.faq_id)
+  );
+
+  for (const faq of faqsToUpdate) {
+    if (faq.faq_id !== null) {
+      const newOrder = faqIds.indexOf(faq.faq_id);
+      if (faq.order !== newOrder) {
+        const updateOperation = db
+          .update(HotelFaqs)
+          .set({ order: newOrder })
+          .where(eq(HotelFaqs.id, faq.id));
+        operations.push(updateOperation);
+      }
+    }
+  }
+
+  // Execute all operations
+  if (operations.length > 0) {
+    await Promise.all(operations);
+  }
+
+  // Return updated FAQs
+  return await db
+    .select()
+    .from(HotelFaqs)
+    .where(eq(HotelFaqs.hotel_id, hotelId))
+    .orderBy(HotelFaqs.order);
 };

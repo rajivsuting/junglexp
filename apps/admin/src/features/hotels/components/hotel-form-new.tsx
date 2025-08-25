@@ -5,7 +5,13 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { updateHotel, updateHotelPolicies } from "@repo/actions/hotels.actions";
+import {
+  updateHotel,
+  updateHotelAmenities,
+  updateHotelFaqs,
+  updateHotelPolicies,
+  updateHotelSafetyFeatures,
+} from "@repo/actions/hotels.actions";
 
 import {
   HotelAmenitiesSection,
@@ -217,6 +223,7 @@ export default function HotelForm({
                     "include",
                     data.selectedPolicies
                   );
+                  return;
                 }}
                 hotelId={hotelId}
               />
@@ -251,7 +258,24 @@ export default function HotelForm({
               showNext={getNextSection("amenities") !== null}
               onNext={() => goToNextSection("amenities")}
             >
-              <HotelAmenitiesSection hotelId={hotelId} />
+              <HotelAmenitiesSection
+                initialData={initialData}
+                onSave={async (data) => {
+                  console.log("onSave");
+
+                  try {
+                    const res = await updateHotelAmenities(
+                      Number(hotelId),
+                      data.selectedAmenities
+                    );
+                    console.log("res", res);
+                  } catch (error) {
+                    console.error("Error updating hotel amenities", error);
+                  }
+                  return;
+                }}
+                hotelId={hotelId}
+              />
             </CollapsibleSection>
 
             {/* Safety Features Section */}
@@ -262,7 +286,17 @@ export default function HotelForm({
               showNext={getNextSection("safetyFeatures") !== null}
               onNext={() => goToNextSection("safetyFeatures")}
             >
-              <HotelSafetyFeaturesSection hotelId={hotelId} />
+              <HotelSafetyFeaturesSection
+                initialData={initialData}
+                hotelId={hotelId}
+                onSave={async (data) => {
+                  await updateHotelSafetyFeatures(
+                    Number(hotelId),
+                    data.selectedSafetyFeatures
+                  );
+                  return;
+                }}
+              />
             </CollapsibleSection>
 
             {/* FAQs Section */}
@@ -272,7 +306,14 @@ export default function HotelForm({
               onToggle={() => toggleSection("faqs")}
               showNext={false}
             >
-              <HotelFaqsSection hotelId={hotelId} />
+              <HotelFaqsSection
+                initialData={initialData}
+                onSave={async (data) => {
+                  await updateHotelFaqs(Number(hotelId), data.selectedFaqs);
+                  return;
+                }}
+                hotelId={hotelId}
+              />
             </CollapsibleSection>
           </>
         )}
