@@ -36,7 +36,7 @@ export function ZonesTable<TData, TValue>({
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table}>
-        <Link href="/national-parks/new">
+        <Link href="/zones/new">
           <Button>Create a Zone</Button>
         </Link>
       </DataTableToolbar>

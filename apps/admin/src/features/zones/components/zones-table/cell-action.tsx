@@ -2,6 +2,7 @@
 import { Edit, MoreVertical, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { deleteZone } from '@repo/actions/zones.actions';
 
 import type { TZone } from "@repo/db";
 
@@ -19,20 +21,27 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    try {
+      setLoading(true);
+      await deleteZone(data.id);
+      toast.success("Zone deleted successfully");
+      setOpen(false);
+      router.refresh();
+    } catch (error) {
+      console.error("Error deleting zone:", error);
+      toast.error("Failed to delete zone");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
-      {/* <AlertDialog
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onConfirm}
-        loading={loading}
-      /> */}
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -44,7 +53,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+            <AlertDialogAction onClick={onConfirm} disabled={loading}>
+              {loading ? "Deleting..." : "Continue"}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -58,9 +69,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => router.push(`/national-parks/${data.id}`)}
-          >
+          <DropdownMenuItem onClick={() => router.push(`/zones/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
           <DropdownMenuItem
