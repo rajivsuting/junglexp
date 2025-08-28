@@ -13,6 +13,7 @@
     "db:push": "yarn workspace @repo/db drizzle-kit push",
     "db:studio": "yarn workspace @repo/db drizzle-kit studio",
     "db:seed": "yarn workspace @repo/db seed",
+    "db:pull": "yarn workspace @repo/db drizzle-kit pull",
     "admin": "yarn workspace admin",
     "drizzle": "yarn workspace @repo/db drizzle-kit"
   },

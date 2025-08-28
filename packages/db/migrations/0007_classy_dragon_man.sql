@@ -1,1 +1,0 @@
-DROP TABLE "hotel_safty_features" CASCADE;

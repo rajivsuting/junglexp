@@ -1,21 +1,34 @@
 "use server";
-import { and, count, eq, ilike, inArray } from 'drizzle-orm';
-
-import { db } from '@repo/db/index';
-import { HotelAmenities } from '@repo/db/schema/hotel-amenities';
 import {
-    HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures, hotelTypeEnum,
-    insertHotelSchema
-} from '@repo/db/schema/hotels';
-import { Images } from '@repo/db/schema/image';
-import { NationalParks } from '@repo/db/schema/park';
-import { Policies } from '@repo/db/schema/policies';
-import { Zones } from '@repo/db/schema/zones';
+  and,
+  count,
+  eq,
+  getTableColumns,
+  ilike,
+  inArray,
+  sql,
+} from "drizzle-orm";
+
+import { db } from "@repo/db/index";
+import { HotelAmenities } from "@repo/db/schema/hotel-amenities";
+import {
+  HotelFaqs,
+  HotelImages,
+  HotelPolicies,
+  Hotels,
+  HotelSaftyFeatures,
+  hotelTypeEnum,
+  insertHotelSchema,
+} from "@repo/db/schema/hotels";
+import { Images } from "@repo/db/schema/image";
+import { NationalParks } from "@repo/db/schema/park";
+import { PlaceImages, Places } from "@repo/db/schema/places";
+import { Policies } from "@repo/db/schema/policies";
+import { Zones } from "@repo/db/schema/zones";
 
 import type { THotelType, TNewHotel } from "@repo/db/schema/hotels";
 import type { TImage } from "@repo/db/schema/image";
-import type { THotel } from "@repo/db/schema/types";
-
+import type { THotel, TPlaceImage } from "@repo/db/schema/types";
 export const getHotelsByParkSlug = async (slug: string) => {
   const hotels = await db
     .select({
@@ -156,7 +169,10 @@ export const createNewHotel = async (hotel: TNewHotel) => {
     ...hotel,
   });
 
-  const [newHotel] = await db.insert(Hotels).values(parsedHotel).returning();
+  const [newHotel] = await db
+    .insert(Hotels)
+    .values(parsedHotel as any)
+    .returning();
 
   if (!newHotel) {
     return new Error("Failed to create hotel");
@@ -813,4 +829,58 @@ export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
     .from(HotelFaqs)
     .where(eq(HotelFaqs.hotel_id, hotelId))
     .orderBy(HotelFaqs.order);
+};
+
+export const getNearbyPlacesToHotel = async (
+  hotelId: number,
+  limit: number = 10
+) => {
+  const hGeom = sql`(SELECT ${Hotels.location} FROM ${Hotels} WHERE ${Hotels.id} = ${hotelId})`;
+
+  const imagesAgg = sql<TPlaceImage[]>`
+  COALESCE(
+    json_agg(
+      json_build_object(
+        'image_id', ${PlaceImages.image_id},
+        'id',       ${PlaceImages.id},
+        'order',    ${PlaceImages.order},
+        'image',    json_build_object(
+          'id',            ${Images.id},
+          'small_url',     ${Images.small_url},
+          'medium_url',    ${Images.medium_url},
+          'large_url',     ${Images.large_url},
+          'original_url',  ${Images.original_url},
+          'alt_text',      ${Images.alt_text}
+        )
+      )
+      ORDER BY ${PlaceImages.order} ASC
+    ) FILTER (WHERE ${PlaceImages.id} IS NOT NULL),
+    '[]'
+  )
+`;
+
+  const rows = await db
+    .select({
+      ...getTableColumns(Places),
+      distance_in_meters: sql<number>`ST_Distance(${Places.location}::geography, ${hGeom}::geography)`,
+      images: imagesAgg,
+    })
+
+    .from(Places)
+    .leftJoin(PlaceImages, eq(PlaceImages.place_id, Places.id))
+    .leftJoin(Images, eq(Images.id, PlaceImages.image_id))
+    .groupBy(Places.id) // one row per place
+    .orderBy(sql`${Places.location} <-> ${hGeom}`) // KNN nearest
+    .limit(limit);
+
+  const response = [];
+
+  for (const row of rows) {
+    response.push({
+      ...row,
+      // image: row.image,
+    });
+  }
+
+  return response;
 };

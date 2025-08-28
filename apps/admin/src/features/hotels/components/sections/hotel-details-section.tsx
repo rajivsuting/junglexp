@@ -54,6 +54,14 @@ const hotelDetailsSchema = z.object({
     required_error: "Hotel type is required",
   }),
   rating: z.coerce.number().min(1, "Rating is required").max(5),
+  latitude: z.coerce
+    .number()
+    .min(-90, "Latitude must be between -90 and 90")
+    .max(90, "Latitude must be between -90 and 90"),
+  longitude: z.coerce
+    .number()
+    .min(-180, "Longitude must be between -180 and 180")
+    .max(180, "Longitude must be between -180 and 180"),
 });
 
 type HotelDetailsFormData = z.infer<typeof hotelDetailsSchema>;
@@ -117,6 +125,8 @@ export const HotelDetailsSection = ({
       zone_id: initialData?.zone_id?.toString() || "",
       hotel_type: initialData?.hotel_type || undefined,
       rating: initialData?.rating || 1,
+      latitude: initialData?.location?.x || 0,
+      longitude: initialData?.location?.y || 0,
     };
   }, [initialData]);
 
@@ -129,6 +139,8 @@ export const HotelDetailsSection = ({
       zone_id: initialData?.zone_id?.toString() || "",
       hotel_type: initialData?.hotel_type || undefined,
       rating: initialData?.rating || 1,
+      latitude: initialData?.location?.x || 0,
+      longitude: initialData?.location?.y || 0,
     },
     mode: "onChange", // Enable validation on change for better UX
   });
@@ -170,6 +182,7 @@ export const HotelDetailsSection = ({
             name: data.name,
             description: data.description,
             slug: slug,
+            location: { x: data.longitude, y: data.latitude },
           });
           toast.success("Hotel updated successfully");
 
@@ -193,6 +206,7 @@ export const HotelDetailsSection = ({
         zone_id: Number(data.zone_id),
         hotel_type: data.hotel_type,
         rating: data.rating,
+        location: { x: data.longitude, y: data.latitude },
       });
       toast.success("Hotel created successfully");
 
@@ -329,6 +343,51 @@ export const HotelDetailsSection = ({
                       disabled={isSubmitting}
                     />
                   </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Location Coordinates */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Latitude */}
+          <FormField
+            control={form.control}
+            name="latitude"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Latitude *</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Enter latitude (e.g., 29.5523)"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Longitude */}
+          <FormField
+            control={form.control}
+            name="longitude"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Longitude *</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Enter longitude (e.g., 78.8832)"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

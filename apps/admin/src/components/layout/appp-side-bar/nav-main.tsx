@@ -1,5 +1,12 @@
 "use client";
-import { Compass, Hotel, MapPin, MapPinHouse } from "lucide-react";
+import {
+  BedDouble,
+  Compass,
+  Hotel,
+  Landmark,
+  MapPin,
+  MapPinHouse,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -22,11 +29,6 @@ const items = [
     title: "Zones",
     url: "/zones",
     icon: MapPin,
-  },
-  {
-    title: "Hotels",
-    url: "/hotels",
-    icon: Hotel,
   },
 ];
 

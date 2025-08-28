@@ -1,8 +1,15 @@
-import { index, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import {
+  index,
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
-import { Cities } from './city';
-import { Images } from './image';
+import { Cities } from "./city";
+import { Images } from "./image";
 
 export const NationalParks = pgTable(
   "national_parks",
@@ -23,8 +30,8 @@ export const NationalParks = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
-    index("slug_idx").on(table.slug),
-    index("name_idx").on(table.name),
+    index("national_parks_slug_idx").on(table.slug),
+    index("national_parks_name_idx").on(table.name),
   ]
 );
 

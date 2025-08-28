@@ -34,7 +34,7 @@ export const Souvenirs = pgTable(
   },
   (table) => [
     index("souvenirs_name_idx").on(table.name),
-    index("souvenirs_id_idx").on(table.park_id),
+    index("souvenirs_park_id_idx").on(table.park_id),
     index("souvenirs_slug_idx").on(table.slug),
     index("souvenirs_is_available_idx").on(table.is_available),
     index("souvenirs_name_availability_idx").on(table.name, table.is_available),

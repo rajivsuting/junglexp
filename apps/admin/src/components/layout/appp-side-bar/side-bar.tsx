@@ -26,8 +26,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { NavDocuments } from "./nav-documents";
 import { NavGlobal } from "./nav-global";
+import { NavHotels } from "./nav-hotels";
 import { NavMain } from "./nav-main";
-import { NavOthers } from "./nav-others";
+import { NavPlaces } from "./nav-places";
 import { NavUser } from "./nav-user";
 
 const data = {
@@ -147,6 +148,8 @@ export function AppSidebar() {
       <SidebarContent>
         <NavGlobal />
         <NavMain />
+        <NavHotels />
+        <NavPlaces />
         {/* <NavOthers /> */}
         {/* <NavDocuments items={data.documents} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}

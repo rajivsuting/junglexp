@@ -1,1 +1,0 @@
-ALTER TABLE "park_images" ADD COLUMN "order" integer NOT NULL;

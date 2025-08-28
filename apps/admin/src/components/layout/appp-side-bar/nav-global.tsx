@@ -1,18 +1,22 @@
 "use client";
-import { Cog, Compass } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Star } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
-    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton,
-    SidebarMenuItem
-} from '@/components/ui/sidebar';
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 const items = [
   {
     title: "Promotions",
     url: "/promotions",
-    icon: Cog,
+    icon: Star,
   },
 ];
 

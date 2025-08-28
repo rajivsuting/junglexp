@@ -1,10 +1,10 @@
 "use server";
-import { db, inArray } from '@repo/db';
-import { Images } from '@repo/db/schema/image';
+import { db, eq, inArray, sql } from "@repo/db";
+import { Images } from "@repo/db/schema/image";
 
-import { bucket, toObjectNameFromUrl } from './libs/gcs';
+import { bucket, toObjectNameFromUrl } from "./libs/gcs";
 
-import type { TNewImage } from "@repo/db/schema/image";
+import type { TImage, TNewImage } from "@repo/db/schema/image";
 
 export const createImage = async (data: TNewImage) => {
   const result = await db.insert(Images).values(data).returning();
@@ -52,4 +52,23 @@ export const deleteImages = async (imageIds: number[]) => {
       return bucket.file(name).delete();
     })
   );
+};
+
+export const updateImages = async (rows: Pick<TImage, "id" | "alt_text">[]) => {
+  const result = await db
+    .insert(Images)
+    .values(rows as any)
+    .onConflictDoUpdate({
+      target: Images.id, // assumes id is unique/PK
+      set: {
+        alt_text: sql`excluded.alt_text`,
+      },
+    })
+    .returning();
+
+  if (!result[0]) {
+    throw new Error("Failed to update image");
+  }
+
+  return result[0];
 };

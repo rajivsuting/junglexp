@@ -2,27 +2,17 @@
 
 import type { Option } from "@/types/data-table";
 import type { Column } from "@tanstack/react-table";
-import { Check, PlusCircle, XCircle } from "lucide-react";
-import * as React from "react";
+import { Check, PlusCircle, XCircle } from 'lucide-react';
+import * as React from 'react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+    Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -155,7 +145,14 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <Check />
                     </div>
                     {option.icon && <option.icon />}
-                    <span className="truncate">{option.label}</span>
+                    <div className="flex flex-col">
+                      <span className="truncate">{option.label}</span>
+                      {option.description && (
+                        <span className="text-xs text-muted-foreground truncate">
+                          {option.description}
+                        </span>
+                      )}
+                    </div>
                     {option.count && (
                       <span className="ml-auto font-mono text-xs">
                         {option.count}

@@ -13,7 +13,9 @@ import {
 } from "./hotels";
 import { Images } from "./image";
 import { NationalParks, ParkImages } from "./park";
+import { PlaceImages, Places } from "./places";
 import { Policies } from "./policies";
+import { RoomAmenities, RoomImages, RoomPlans, Rooms } from "./rooms";
 import { SaftyFeatures } from "./safty-features";
 import { SouvenirImages, Souvenirs } from "./souvenirs";
 import { States } from "./state";
@@ -50,6 +52,21 @@ export const zonesRelations = relations(Zones, ({ one, many }) => ({
   hotels: many(Hotels),
 }));
 
+export const placesRelations = relations(Places, ({ many }) => ({
+  images: many(PlaceImages),
+}));
+
+export const placeImagesRelations = relations(PlaceImages, ({ one }) => ({
+  place: one(Places, {
+    fields: [PlaceImages.place_id],
+    references: [Places.id],
+  }),
+  image: one(Images, {
+    fields: [PlaceImages.image_id],
+    references: [Images.id],
+  }),
+}));
+
 export const parkImagesRelations = relations(ParkImages, ({ one }) => ({
   park: one(NationalParks, {
     fields: [ParkImages.park_id],
@@ -74,6 +91,7 @@ export const hotelRelations = relations(Hotels, ({ one, many }) => ({
   amenities: many(HotelAmenities),
   faqs: many(HotelFaqs),
   images: many(HotelImages),
+  rooms: many(Rooms),
 }));
 
 export const hotelImagesRelations = relations(HotelImages, ({ one }) => ({
@@ -165,5 +183,47 @@ export const souvenirImageRelations = relations(SouvenirImages, ({ one }) => ({
   image: one(Images, {
     fields: [SouvenirImages.image_id],
     references: [Images.id],
+  }),
+}));
+
+/**
+--------------------------------------- Rooms ---------------------------------------
+*/
+export const roomRelations = relations(Rooms, ({ one, many }) => ({
+  hotel: one(Hotels, {
+    fields: [Rooms.hotel_id],
+    references: [Hotels.id],
+  }),
+  images: many(RoomImages),
+  amenities: many(RoomAmenities),
+  plans: many(RoomPlans),
+}));
+
+export const roomImagesRelations = relations(RoomImages, ({ one }) => ({
+  room: one(Rooms, {
+    fields: [RoomImages.room_id],
+    references: [Rooms.id],
+  }),
+  image: one(Images, {
+    fields: [RoomImages.image_id],
+    references: [Images.id],
+  }),
+}));
+
+export const roomAmenitiesRelations = relations(RoomAmenities, ({ one }) => ({
+  room: one(Rooms, {
+    fields: [RoomAmenities.room_id],
+    references: [Rooms.id],
+  }),
+  amenity: one(Amenities, {
+    fields: [RoomAmenities.amenity_id],
+    references: [Amenities.id],
+  }),
+}));
+
+export const roomPlansRelations = relations(RoomPlans, ({ one }) => ({
+  room: one(Rooms, {
+    fields: [RoomPlans.room_id],
+    references: [Rooms.id],
   }),
 }));

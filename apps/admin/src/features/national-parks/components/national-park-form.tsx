@@ -22,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImagesArraySchema } from "@/lib/image-schema";
 import { uploadFilesWithProgress } from "@/lib/upload-files";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createPark } from "@repo/actions/parks.actions";
+import { createPark, updateParkImages } from "@repo/actions/parks.actions";
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
 
 import CitiesSelect from "./cities-select";
@@ -71,7 +71,7 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
           medium_url: pi.image.medium_url,
           large_url: pi.image.large_url,
           original_url: pi.image.original_url,
-          alt_text: "", // TODO: Get from database when alt_text is added to schema
+          alt_text: pi.image.alt_text, // TODO: Get from database when alt_text is added to schema
         })),
       description: initialData?.description || "",
       city_id: initialData?.city_id?.toString() ?? "",
@@ -208,6 +208,17 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
         },
         initialData?.id
       );
+      if (initialData) {
+        // Update place images (handles create, update, delete, reorder)
+        await updateParkImages(
+          initialData?.id,
+          final.map((f) => ({
+            image_id: (f.img as ExistingFormImage).image_id,
+            order: f.order,
+            alt_text: (f.img as ExistingFormImage).alt_text,
+          }))
+        );
+      }
       console.log("park", park);
       toast.success("National Park created successfully");
     } finally {

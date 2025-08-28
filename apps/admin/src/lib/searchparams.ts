@@ -1,6 +1,11 @@
 import {
-    createSearchParamsCache, createSerializer, parseAsBoolean, parseAsInteger, parseAsString
-} from 'nuqs/server';
+  createSearchParamsCache,
+  createSerializer,
+  parseAsArrayOf,
+  parseAsBoolean,
+  parseAsInteger,
+  parseAsString,
+} from "nuqs/server";
 
 export const searchParams = {
   page: parseAsInteger.withDefault(1),
@@ -8,6 +13,7 @@ export const searchParams = {
   name: parseAsString,
   availability: parseAsBoolean,
   park: parseAsString,
+  hotel: parseAsArrayOf(parseAsString),
   // advanced filter
   // filters: getFiltersStateParser().withDefault([]),
   // joinOperator: parseAsStringEnum(['and', 'or']).withDefault('and')

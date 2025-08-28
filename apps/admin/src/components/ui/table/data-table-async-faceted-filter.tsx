@@ -1,16 +1,26 @@
 "use client";
 
-import { Check, Loader2, PlusCircle, XCircle } from 'lucide-react';
-import * as React from 'react';
+import { Check, Loader2, PlusCircle, XCircle } from "lucide-react";
+import * as React from "react";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
-    Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator
-} from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 import type { Column } from "@tanstack/react-table";
 import type { Option } from "@/types/data-table";
@@ -127,6 +137,8 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
 
   const onItemSelect = React.useCallback(
     (option: Option, isSelected: boolean) => {
+      console.log("column", column, option, isSelected);
+
       if (!column) return;
 
       if (multiple) {
@@ -264,7 +276,14 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
                       <Check className="h-3.5 w-3.5" />
                     </div>
                     {option.icon && <option.icon />}
-                    <span className="truncate">{option.label}</span>
+                    <div className="flex flex-col">
+                      <span className="truncate">{option.label}</span>
+                      {option.description && (
+                        <span className="text-xs text-muted-foreground truncate">
+                          {option.description}
+                        </span>
+                      )}
+                    </div>
                     {typeof option.count !== "undefined" && (
                       <span className="ml-auto font-mono text-xs">
                         {option.count}

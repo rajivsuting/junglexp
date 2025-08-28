@@ -284,13 +284,13 @@ export const FileUploader: React.FC<Props> = ({
       )}
 
       {/* Success feedback */}
-      {showValidation && validation.isValid && value.length > 0 && (
+      {/* {showValidation && validation.isValid && value.length > 0 && (
         <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
           <p className="text-sm font-medium text-green-800">
             ✓ All images have valid alt text
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

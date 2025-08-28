@@ -1,1 +1,0 @@
-ALTER TABLE "hotel_amenities" ALTER COLUMN "hotel_id" DROP NOT NULL;

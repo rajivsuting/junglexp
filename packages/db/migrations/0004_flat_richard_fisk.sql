@@ -1,0 +1,1 @@
+CREATE INDEX "cities_state_id_idx" ON "cities" USING btree ("state_id");

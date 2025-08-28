@@ -5,155 +5,43 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1748967175018,
-      "tag": "0000_peaceful_quicksilver",
+      "when": 1756334650426,
+      "tag": "0000_dear_jazinda",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1749043129892,
-      "tag": "0001_useful_deathstrike",
+      "when": 1756334663368,
+      "tag": "0001_careless_speed",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1749043264291,
-      "tag": "0002_broken_tempest",
+      "when": 1756334680081,
+      "tag": "0002_parallel_radioactive_man",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "7",
-      "when": 1749043380167,
-      "tag": "0003_thick_nuke",
+      "when": 1756334776708,
+      "tag": "0003_futuristic_pandemic",
       "breakpoints": true
     },
     {
       "idx": 4,
       "version": "7",
-      "when": 1749140332302,
-      "tag": "0004_grey_lady_mastermind",
+      "when": 1756335403753,
+      "tag": "0004_flat_richard_fisk",
       "breakpoints": true
     },
     {
       "idx": 5,
       "version": "7",
-      "when": 1749142100159,
-      "tag": "0005_ancient_loners",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1749142529486,
-      "tag": "0006_redundant_archangel",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1749182485287,
-      "tag": "0007_abnormal_king_bedlam",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1749182527780,
-      "tag": "0008_flawless_golden_guardian",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1749193433825,
-      "tag": "0009_red_scarlet_witch",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1749194059790,
-      "tag": "0010_redundant_arclight",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1756023472513,
-      "tag": "0011_slimy_slapstick",
-      "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "7",
-      "when": 1756023782786,
-      "tag": "0012_exotic_randall_flagg",
-      "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "7",
-      "when": 1756025281058,
-      "tag": "0013_workable_brood",
-      "breakpoints": true
-    },
-    {
-      "idx": 14,
-      "version": "7",
-      "when": 1756029394638,
-      "tag": "0014_oval_green_goblin",
-      "breakpoints": true
-    },
-    {
-      "idx": 15,
-      "version": "7",
-      "when": 1756029561609,
-      "tag": "0015_condemned_thunderbolts",
-      "breakpoints": true
-    },
-    {
-      "idx": 16,
-      "version": "7",
-      "when": 1756031444052,
-      "tag": "0016_wonderful_sabra",
-      "breakpoints": true
-    },
-    {
-      "idx": 17,
-      "version": "7",
-      "when": 1756099790321,
-      "tag": "0017_loving_moon_knight",
-      "breakpoints": true
-    },
-    {
-      "idx": 18,
-      "version": "7",
-      "when": 1756101773315,
-      "tag": "0018_sloppy_stardust",
-      "breakpoints": true
-    },
-    {
-      "idx": 19,
-      "version": "7",
-      "when": 1756102264071,
-      "tag": "0019_luxuriant_red_shift",
-      "breakpoints": true
-    },
-    {
-      "idx": 20,
-      "version": "7",
-      "when": 1756132350547,
-      "tag": "0020_harsh_thing",
-      "breakpoints": true
-    },
-    {
-      "idx": 21,
-      "version": "7",
-      "when": 1756132358294,
-      "tag": "0021_dear_umar",
+      "when": 1756343440749,
+      "tag": "0005_special_black_widow",
       "breakpoints": true
     }
   ]

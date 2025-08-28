@@ -1,18 +1,15 @@
 "use server";
-import { and, count, eq, ilike, inArray } from "drizzle-orm";
+import { and, count, eq, ilike, inArray } from 'drizzle-orm';
 
-import { db, schema } from "@repo/db";
-import { Images } from "@repo/db/schema/image";
+import { db, schema } from '@repo/db';
+import { Images } from '@repo/db/schema/image';
 import {
-  NationalParks,
-  nationaParkInsertSchema,
-  ParkImages,
-  parkImagesInsertSchema,
-} from "@repo/db/schema/park";
+    NationalParks, nationaParkInsertSchema, ParkImages, parkImagesInsertSchema
+} from '@repo/db/schema/park';
 
-import { deleteImages } from "./image.actions";
-import { getOrSet } from "./libs/cache";
-import { nationalParkBySlugKey } from "./libs/keys";
+import { deleteImages } from './image.actions';
+import { getOrSet } from './libs/cache';
+import { nationalParkBySlugKey } from './libs/keys';
 
 import type {
   TNewNationalPark,
@@ -375,4 +372,106 @@ export const createPark = async (
       images: responseImages,
     },
   };
+};
+
+export const updateParkImages = async (
+  parkId: number,
+  imageUpdates: Array<{
+    image_id: number;
+    order: number;
+    alt_text?: string;
+  }>
+) => {
+  // Get existing place images
+  const existing = await db
+    .select()
+    .from(ParkImages)
+    .where(eq(ParkImages.park_id, parkId));
+
+  const existingImageIds = existing
+    .filter((img) => img.image_id !== null)
+    .map((img) => img.image_id as number);
+
+  const newImageIds = imageUpdates.map((update) => update.image_id);
+
+  // Identify images to delete (existing not in new list)
+  const imagesToDelete = existingImageIds.filter(
+    (existingImageId) => !newImageIds.includes(existingImageId)
+  );
+
+  // Identify images to create (new not in existing list)
+  const imagesToCreate = imageUpdates.filter(
+    (update) => !existingImageIds.includes(update.image_id)
+  );
+
+  const operations = [];
+
+  // Delete removed images
+  if (imagesToDelete.length > 0) {
+    operations.push(
+      db
+        .delete(ParkImages)
+        .where(
+          and(
+            eq(ParkImages.park_id, parkId),
+            inArray(ParkImages.image_id, imagesToDelete)
+          )
+        )
+    );
+  }
+
+  // Create new images
+  if (imagesToCreate.length > 0) {
+    const newImages = imagesToCreate.map((update) => ({
+      park_id: parkId,
+      image_id: update.image_id,
+      order: update.order,
+    }));
+    operations.push(db.insert(ParkImages).values(newImages));
+  }
+
+  // Update order for existing images
+  const imagesToUpdate = existing.filter(
+    (img) => img.image_id !== null && newImageIds.includes(img.image_id)
+  );
+
+  for (const img of imagesToUpdate) {
+    if (img.image_id !== null) {
+      const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
+      if (updateData && img.order !== updateData.order) {
+        operations.push(
+          db
+            .update(ParkImages)
+            .set({ order: updateData.order })
+            .where(eq(ParkImages.id, img.id))
+        );
+      }
+    }
+  }
+
+  // Execute all operations
+  if (operations.length > 0) {
+    await Promise.all(operations);
+  }
+
+  // Update alt text for images if provided
+  const imageAltTextUpdates = imageUpdates.filter(
+    (update) => update.alt_text !== undefined
+  );
+  if (imageAltTextUpdates.length > 0) {
+    const altTextOperations = imageAltTextUpdates.map((update) =>
+      db
+        .update(Images)
+        .set({ alt_text: update.alt_text })
+        .where(eq(Images.id, update.image_id))
+    );
+    await Promise.all(altTextOperations);
+  }
+
+  // Return updated place images
+  return await db
+    .select()
+    .from(ParkImages)
+    .where(eq(ParkImages.park_id, parkId))
+    .orderBy(ParkImages.order);
 };
