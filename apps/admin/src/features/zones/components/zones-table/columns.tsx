@@ -1,10 +1,10 @@
 "use client";
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
-import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
-import { getNationalParks } from '@repo/actions/parks.actions';
+import { DataTableColumnHeader } from "@/components/ui/table/data-table-column-header";
+import { getNationalParks } from "@repo/actions/parks.actions";
 
-import { CellAction } from './cell-action';
+import { CellAction } from "./cell-action";
 
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import type { TZone } from "@repo/db/index";
@@ -37,7 +37,12 @@ export const columns: ColumnDef<TZone>[] = [
     header: ({ column }: { column: Column<TZone, unknown> }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
-    cell: ({ cell }) => <div>{cell.getValue<TZone["description"]>()}</div>,
+
+    cell: ({ cell }) => (
+      <div className="max-w-[250px] truncate">
+        {cell.getValue<TZone["description"]>()}
+      </div>
+    ),
   },
   {
     id: "park",

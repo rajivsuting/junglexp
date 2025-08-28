@@ -1,34 +1,24 @@
 "use client";
 
-import { Loader2, Plus, X } from "lucide-react";
-import { DynamicIcon } from "lucide-react/dynamic";
-import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2, Plus, X } from 'lucide-react';
+import { DynamicIcon } from 'lucide-react/dynamic';
+import { useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { IconSelectFormField } from "@/components/icon-select";
-import { Button } from "@/components/ui/button";
+import { IconSelectFormField } from '@/components/icon-select';
+import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+    Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle
+} from '@/components/ui/dialog';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createAmenities } from "@repo/actions/amenities.actions";
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createAmenities } from '@repo/actions/amenities.actions';
 
 import type { TAmenityBase } from "@repo/db/schema/amenities";
 import type { IconName } from "lucide-react/dynamic";

@@ -100,6 +100,8 @@ export default function RoomImagesSection({
         (img: FormImage) => img._type === "new"
       ) as NewFormImage[];
 
+      const uploadedImageMap = new Map<string, number>(); // tmpId -> imageId
+
       if (newImages.length > 0) {
         setIsUploading(true);
         const uploadResults = await uploadFilesWithProgress(
@@ -108,73 +110,74 @@ export default function RoomImagesSection({
             setUploadProgress(progress);
           }
         );
+        console.log("uploadResults", uploadResults);
 
+        const imageData = uploadResults.map((result, index) => ({
+          small_url: result.image.small_url,
+          medium_url: result.image.medium_url,
+          large_url: result.image.large_url,
+          original_url: result.image.original_url,
+          alt_text: newImages[index]!.alt_text,
+        }));
         // 2) Create image records and get actual IDs
-        const createdImages = await createImages(
-          uploadResults.map((result) => ({
-            small_url: result.image.small_url,
-            medium_url: result.image.medium_url,
-            large_url: result.image.large_url,
-            original_url: result.image.original_url,
-            alt_text: result.image.alt_text,
-          }))
-        );
+        const createdImages = await createImages(imageData);
 
-        // 3) Replace new images with existing ones in the form data
-        const final = images.map((img: FormImage, index: number) => {
-          if (img._type === "new") {
-            const newImage = newImages.find((ni) => ni._tmpId === img._tmpId);
-            const createdImage = createdImages.find(
-              (ci) => ci.small_url === newImage?.file.small_url
-            );
-            const actualImageId = createdImage?.id;
+        // Map tmpId to actual image ID
+        createdImages.forEach((img, index) => {
+          uploadedImageMap.set(newImages[index]!._tmpId, img.id);
+        });
+        setIsUploading(false);
+      }
 
-            if (!actualImageId) {
-              throw new Error(
-                `Failed to find uploaded image for ${img._tmpId}`
-              );
-            }
-            return {
-              image_id: actualImageId,
-              order: index,
-              alt_text: img.alt_text,
-            };
-          }
+      // 2) Compute final ordered list with actual image IDs
+      const final = images.map((img, idx) => {
+        if (img._type === "existing") {
           return {
             image_id: img.image_id,
-            order: img.order,
+            order: idx,
             alt_text: img.alt_text,
           };
-        });
-
-        // 4) Identify images to delete (those that were removed from the form)
-        const initialImageIds = new Set(
-          (initialData?.images ?? [])
-            .map((pi) => pi.image_id)
-            .filter((id): id is number => id !== null)
-        );
-        const currentImageIds = new Set(final.map((f) => f.image_id));
-        const imagesToDelete = [...initialImageIds].filter(
-          (id) => !currentImageIds.has(id)
-        );
-
-        // 5) Delete orphaned images from the database
-        if (imagesToDelete.length > 0) {
-          await deleteImages(imagesToDelete);
+        } else {
+          // New image - get the actual image ID from upload
+          const actualImageId = uploadedImageMap.get(img._tmpId);
+          if (!actualImageId) {
+            throw new Error(`Failed to find uploaded image for ${img._tmpId}`);
+          }
+          return {
+            image_id: actualImageId,
+            order: idx,
+            alt_text: img.alt_text,
+          };
         }
+      });
 
-        // 6) Update room images (handles create, update, delete, reorder)
-        await updateRoomImages(Number(roomId), final);
+      // 3) Identify images to delete (those that were removed from the form)
+      const initialImageIds = new Set(
+        (initialData?.images ?? [])
+          .map((pi) => pi.image_id)
+          .filter((id): id is number => id !== null)
+      );
+      const currentImageIds = new Set(final.map((f) => f.image_id));
+      const imagesToDelete = [...initialImageIds].filter(
+        (id) => !currentImageIds.has(id)
+      );
 
-        if (onSave) {
-          await onSave(data);
-        }
-
-        toast.success("Images saved successfully");
-
-        // Reset upload progress
-        setUploadProgress({});
+      // 5) Delete orphaned images from the database
+      if (imagesToDelete.length > 0) {
+        await deleteImages(imagesToDelete);
       }
+
+      // 6) Update room images (handles create, update, delete, reorder)
+      await updateRoomImages(Number(roomId), final);
+
+      if (onSave) {
+        await onSave(data);
+      }
+
+      toast.success("Images saved successfully");
+
+      // Reset upload progress
+      setUploadProgress({});
     } catch (error) {
       console.error("Error saving images:", error);
       toast.error("Failed to save images. Please try again.");

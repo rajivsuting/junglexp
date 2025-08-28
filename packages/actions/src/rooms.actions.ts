@@ -1,7 +1,17 @@
 "use server";
-import { and, count, eq, ilike, inArray, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  eq,
+  getTableColumns,
+  ilike,
+  inArray,
+  or,
+  sql,
+} from "drizzle-orm";
 
 import { db, schema } from "@repo/db";
+import { Hotels } from "@repo/db/schema/hotels";
 import {
   RoomAmenities,
   roomAmenitiesInsertSchema,
@@ -20,7 +30,6 @@ import type {
   TNewRoomAmenity,
   TNewRoomPlan,
 } from "@repo/db/schema/rooms";
-
 type TGetRoomsFilters = {
   search?: string | undefined;
   page?: number;
@@ -61,13 +70,25 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
     .leftJoin(schema.Hotels, eq(Rooms.hotel_id, schema.Hotels.id))
     .where(where);
 
+  // Ensure page and limit are valid numbers and calculate safe offset
+  const page = Math.max(1, filters.page || 1);
+  const limit = Math.max(1, filters.limit || 10);
+  const offset = (page - 1) * limit;
+  console.log("offset", offset);
+
+  console.log("Pagination values:", { page, limit, offset });
+
   const rooms = await db.query.Rooms.findMany({
     where,
-    limit: filters.limit,
-    offset:
-      filters.page && filters.limit ? (filters.page - 1) * filters.limit : 0,
+    limit,
+    offset,
     with: {
       hotel: {
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+        },
         with: {
           zone: {
             with: {
@@ -75,7 +96,12 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
             },
           },
         },
+        extras: {
+          lat: sql<number>`ST_X(${schema.Hotels.location})`.as("lat"),
+          lon: sql<number>`ST_Y(${schema.Hotels.location})`.as("lon"),
+        },
       },
+
       images: {
         with: {
           image: true,
@@ -146,12 +172,21 @@ export const getRoomById = async (roomId: number) => {
       where: eq(schema.Rooms.id, roomId),
       with: {
         hotel: {
+          columns: {
+            id: true,
+            name: true,
+            description: true,
+          },
           with: {
             zone: {
               with: {
                 park: true,
               },
             },
+          },
+          extras: {
+            lat: sql<number>`ST_X(${schema.Hotels.location})`.as("lat"),
+            lon: sql<number>`ST_Y(${schema.Hotels.location})`.as("lon"),
           },
         },
         images: {

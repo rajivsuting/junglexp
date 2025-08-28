@@ -1,24 +1,33 @@
 "use client";
 
-import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
-    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { getHotels } from '@repo/actions/hotels.actions';
-import { createRoom, updateRoom } from '@repo/actions/rooms.actions';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { getHotels } from "@repo/actions/hotels.actions";
+import { createRoom, updateRoom } from "@repo/actions/rooms.actions";
 
 import type { TRoomBase } from "@repo/db/schema/rooms";
 import type { THotel } from "@repo/db/schema/types";
@@ -149,22 +158,26 @@ export default function RoomDetailsSection({
             control={form.control}
             name="hotel_id"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full max-w-[400px]">
                 <FormLabel>Hotel *</FormLabel>
                 <Select
                   disabled={isLoading || loadingHotels}
                   onValueChange={(value) => field.onChange(Number(value))}
                   value={field.value?.toString()}
                 >
-                  <FormControl>
-                    <SelectTrigger>
+                  <FormControl className="w-full">
+                    <SelectTrigger className="max-w-full w-full [&>span]:truncate">
                       <SelectValue placeholder="Select a hotel" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {hotels.map((hotel) => (
-                      <SelectItem key={hotel.id} value={hotel.id.toString()}>
-                        {hotel.name} ({hotel.zone?.park?.name})
+                      <SelectItem
+                        className="whitespace-normal break-words"
+                        key={hotel.id}
+                        value={hotel.id.toString()}
+                      >
+                        {hotel.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

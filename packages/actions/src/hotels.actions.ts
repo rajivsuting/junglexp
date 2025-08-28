@@ -230,7 +230,50 @@ export const getHotelById = async (hotelId: number) => {
       },
     },
   });
-  return hotel as any;
+  return hotel;
+};
+
+export const getHotelBySlug = async (slug: string) => {
+  const hotel = await db.query.Hotels.findFirst({
+    where: eq(Hotels.slug, slug),
+    with: {
+      zone: {
+        with: {
+          park: {
+            with: {
+              city: true,
+            },
+          },
+        },
+      },
+      images: {
+        with: {
+          image: true,
+        },
+      },
+      policies: {
+        with: {
+          policy: true,
+        },
+      },
+      saftyFeatures: {
+        with: {
+          feature: true,
+        },
+      },
+      amenities: {
+        with: {
+          amenity: true,
+        },
+      },
+      faqs: {
+        with: {
+          faq: true,
+        },
+      },
+    },
+  });
+  return hotel;
 };
 
 // Hotel Images Management Actions

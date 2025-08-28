@@ -50,7 +50,7 @@ export type TSouvenir = TSouvenirBase & {
 };
 
 export type TZone = TZoneBase & {
-  park: TNationalParkBase;
+  park: TNationalPark;
 };
 
 export type THotelImage = THotelImageBase & {
@@ -89,13 +89,10 @@ export type TPlace = TPlaceBase & {
 export type THotel = THotelBase & {
   zone: TZone;
   images: THotelImage[];
-  includes: THotelAmenitiesBase[];
-  excludes: THotelAmenitiesBase[];
   policies: THotelPolicy[];
   saftyFeatures: THotelSaftyFeature[];
   amenities: THotelAmenity[];
   faqs: THotelFaq[];
-  rooms: TRoom[];
 };
 
 // Room types

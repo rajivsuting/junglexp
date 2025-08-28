@@ -189,7 +189,11 @@ export default function RoomForm({
               showNext={getNextSection("images") !== null}
               onNext={() => goToNextSection("images")}
             >
-              <RoomImagesSection initialData={initialData} roomId={roomId} />
+              <RoomImagesSection
+                onSave={() => {}}
+                initialData={initialData}
+                roomId={roomId}
+              />
             </CollapsibleSection>
 
             {/* Room Plans Section */}
