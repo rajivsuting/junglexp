@@ -1,23 +1,15 @@
 "use client";
 
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  addRoomImages,
-  createRoomPlan,
-  deleteRoomPlan,
-  updateRoom,
-  updateRoomPlan,
-} from "@repo/actions/rooms.actions";
+    addRoomImages, createRoomPlan, deleteRoomPlan, updateRoom, updateRoomPlan
+} from '@repo/actions/rooms.actions';
 
-import {
-  RoomDetailsSection,
-  RoomImagesSection,
-  RoomPlansSection,
-} from "./sections";
+import { RoomDetailsSection, RoomImagesSection, RoomPlansSection } from './sections';
 
 import type { TRoom } from "@repo/db/schema/types";
 import type { TRoomBase } from "@repo/db/schema/rooms";
@@ -189,11 +181,7 @@ export default function RoomForm({
               showNext={getNextSection("images") !== null}
               onNext={() => goToNextSection("images")}
             >
-              <RoomImagesSection
-                onSave={() => {}}
-                initialData={initialData}
-                roomId={roomId}
-              />
+              <RoomImagesSection initialData={initialData} roomId={roomId} />
             </CollapsibleSection>
 
             {/* Room Plans Section */}

@@ -1,14 +1,14 @@
-import { PlayCircle } from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
+import { PlayCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
-import ForestStaysSection from "@/components/ForestStaysSection";
-import ImageSlideshow from "@/components/ImageSlideshow";
-import LodgesSection from "@/components/LodgesSection";
-import Map from "@/components/Map";
-import ReviewsSection from "@/components/ReviewsSection";
-import { SafariSection } from "@/components/safari-section";
-import { getNationalParkBySlug } from "@repo/actions/parks.actions";
+import ForestStaysSection from '@/components/ForestStaysSection';
+import ImageSlideshow from '@/components/ImageSlideshow';
+import LodgesSection from '@/components/LodgesSection';
+import Map from '@/components/Map';
+import ReviewsSection from '@/components/ReviewsSection';
+import { SafariSection } from '@/components/safari-section';
+import { getNationalParkBySlug } from '@repo/actions/parks.actions';
 
 export const generateMetadata = async () => {
   const park = await getNationalParkBySlug("jim-corbet-national-park");
@@ -25,7 +25,6 @@ export const generateMetadata = async () => {
 
 export default async function HomePage() {
   const park = await getNationalParkBySlug("jim-corbet-national-park");
-  console.log("park", park);
 
   if (!park) {
     return null;
@@ -139,17 +138,17 @@ export default async function HomePage() {
               {[
                 {
                   title: "RESORT STAYS",
-                  href: `/parks/${park.slug}/stays/resort`,
+                  href: `/parks/${park.slug}/stays?stay-type=resort`,
                   color: "bg-[#6B705C]",
                 },
                 {
                   title: "FOREST STAYS",
-                  href: `/parks/${park.slug}/stays/forest`,
+                  href: `/parks/${park.slug}/stays?stay-type=forest`,
                   color: "bg-[#A5A58D]",
                 },
                 {
                   title: "SAFARIS & ACTIVITIES",
-                  href: `/parks/${park.slug}/safaris-and-activities`,
+                  href: `/parks/${park.slug}/activities`,
                   color: "bg-[#2F2F2F]",
                 },
               ].map((link) => (

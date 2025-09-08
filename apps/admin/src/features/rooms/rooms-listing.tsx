@@ -1,8 +1,8 @@
-import { searchParamsCache } from "@/lib/searchparams";
-import { getRooms } from "@repo/actions/rooms.actions";
+import { searchParamsCache } from '@/lib/searchparams';
+import { getRooms } from '@repo/actions/rooms.actions';
 
-import { RoomsTable } from "./components/rooms-table";
-import { columns } from "./components/rooms-table/columns";
+import { RoomsTable } from './components/rooms-table';
+import { columns } from './components/rooms-table/columns';
 
 const RoomsListing = async () => {
   const page = searchParamsCache.get("page");
@@ -14,10 +14,9 @@ const RoomsListing = async () => {
     page,
     limit: pageLimit,
     ...(search && { search }),
-    ...(hotel &&
-      hotel.length > 0 && {
-        hotel_id: hotel.length === 1 ? Number(hotel[0]) : hotel.map(Number),
-      }),
+    ...(hotel && {
+      hotel_id: Number(hotel),
+    }),
   };
 
   const { rooms, total } = await getRooms(filters);

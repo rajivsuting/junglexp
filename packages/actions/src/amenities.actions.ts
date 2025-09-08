@@ -1,6 +1,6 @@
 "use server";
-import { db } from '@repo/db/index';
-import { Amenities, insertAmenitiesSchema } from '@repo/db/schema/amenities';
+import { db } from "@repo/db";
+import { Amenities, insertAmenitiesSchema } from "@repo/db/schema/amenities";
 
 import type { TNewAmenity } from "@repo/db/schema/amenities";
 

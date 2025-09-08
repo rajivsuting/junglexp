@@ -1,11 +1,11 @@
-import { use } from 'react';
+import { use } from "react";
 
-import { searchParamsCache } from '@/lib/searchparams';
-import { getNationalParks } from '@repo/actions/parks.actions';
-import { getZones } from '@repo/actions/zones.actions';
+import { searchParamsCache } from "@/lib/searchparams";
+import { getNationalParks } from "@repo/actions/parks.actions";
+import { getZones } from "@repo/actions/zones.actions";
 
-import { ZonesTable } from './components/zones-table';
-import { columns } from './components/zones-table/columns';
+import { ZonesTable } from "./components/zones-table";
+import { columns } from "./components/zones-table/columns";
 
 const ZonesListing = async () => {
   const park = searchParamsCache.get("park");
@@ -17,7 +17,7 @@ const ZonesListing = async () => {
     page,
     limit: pageLimit,
     ...(search && { search }),
-    ...(park && { park: Number(park) }),
+    ...(park && park.length > 0 && { park: Number(park[0]) }),
   };
 
   const { zones, total } = await getZones(filters);

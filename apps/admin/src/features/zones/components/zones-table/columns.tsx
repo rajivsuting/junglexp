@@ -74,28 +74,6 @@ export const columns: ColumnDef<TZone>[] = [
           label: p.name,
         }));
       },
-
-      // Tell the toolbar “this column has a select filter; here’s how to populate it”
-      // populateFn: populateParks,
-      // // Store only the park id in the column filter
-      // toFilterValue: (opt) => opt.value,
-      // // Render label in the toolbar button for either an option or a raw filter value
-      // showFn: (v) => {
-      //   // If toolbar passes an option, prefer its label
-      //   if (v && typeof v === "object" && "label" in (v as any)) {
-      //     return (v as SelectOption).label;
-      //   }
-      //   // Otherwise v is probably the saved id; show id as fallback until resolved
-      //   return String(v ?? "Select park");
-      // },
-      // // Resolve id -> name when options aren’t loaded (e.g., after refresh)
-      // fromFilterValueToLabel: async (value: unknown) => {
-      //   if (!value) return null;
-      //   const res = await fetch(`/api/parks/${value}`, { cache: "no-store" });
-      //   if (!res.ok) return null;
-      //   const park = await res.json();
-      //   return park?.name ?? null;
-      // },
     },
   },
 

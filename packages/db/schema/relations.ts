@@ -1,5 +1,13 @@
 import { relations } from "drizzle-orm";
 
+import {
+  Activities,
+  ActivityAmenities,
+  ActivityImages,
+  ActivityItinerary,
+  ActivityPackages,
+  ActivityPolicies,
+} from "./activities";
 import { Amenities } from "./amenities";
 import { Cities } from "./city";
 import { Faqs } from "./faqs";
@@ -41,6 +49,7 @@ export const nationalParksRelations = relations(
     }),
     images: many(ParkImages),
     zones: many(Zones),
+    activities: many(Activities),
   })
 );
 
@@ -158,6 +167,7 @@ export const saftyFeatureRelations = relations(SaftyFeatures, ({ many }) => ({
 
 export const amenityRelations = relations(Amenities, ({ many }) => ({
   hotel: many(HotelAmenities),
+  activities: many(ActivityAmenities),
 }));
 
 /**
@@ -165,6 +175,7 @@ export const amenityRelations = relations(Amenities, ({ many }) => ({
 */
 export const imageRelations = relations(Images, ({ many }) => ({
   souvenir_images: many(SouvenirImages),
+  activity_images: many(ActivityImages),
 }));
 
 export const souvenirsRelations = relations(Souvenirs, ({ one, many }) => ({
@@ -227,3 +238,76 @@ export const roomPlansRelations = relations(RoomPlans, ({ one }) => ({
     references: [Rooms.id],
   }),
 }));
+
+/**
+--------------------------------------- Activities ---------------------------------------
+*/
+export const activityRelations = relations(Activities, ({ one, many }) => ({
+  park: one(NationalParks, {
+    fields: [Activities.park_id],
+    references: [NationalParks.id],
+  }),
+  images: many(ActivityImages),
+  policies: many(ActivityPolicies),
+  itinerary: many(ActivityItinerary),
+  amenities: many(ActivityAmenities),
+  packages: many(ActivityPackages),
+}));
+
+export const activityPoliciesRelations = relations(
+  ActivityPolicies,
+  ({ one }) => ({
+    activity: one(Activities, {
+      fields: [ActivityPolicies.activity_id],
+      references: [Activities.id],
+    }),
+    policy: one(Policies, {
+      fields: [ActivityPolicies.policy_id],
+      references: [Policies.id],
+    }),
+  })
+);
+export const activityImagesRelations = relations(ActivityImages, ({ one }) => ({
+  activity: one(Activities, {
+    fields: [ActivityImages.activity_id],
+    references: [Activities.id],
+  }),
+  image: one(Images, {
+    fields: [ActivityImages.image_id],
+    references: [Images.id],
+  }),
+}));
+
+export const activityItineraryRelations = relations(
+  ActivityItinerary,
+  ({ one }) => ({
+    activity: one(Activities, {
+      fields: [ActivityItinerary.activity_id],
+      references: [Activities.id],
+    }),
+  })
+);
+
+export const activityAmenitiesRelations = relations(
+  ActivityAmenities,
+  ({ one }) => ({
+    activity: one(Activities, {
+      fields: [ActivityAmenities.activity_id],
+      references: [Activities.id],
+    }),
+    amenity: one(Amenities, {
+      fields: [ActivityAmenities.amenity_id],
+      references: [Amenities.id],
+    }),
+  })
+);
+
+export const activityPackagesRelations = relations(
+  ActivityPackages,
+  ({ one }) => ({
+    activity: one(Activities, {
+      fields: [ActivityPackages.activity_id],
+      references: [Activities.id],
+    }),
+  })
+);

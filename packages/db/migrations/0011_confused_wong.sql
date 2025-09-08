@@ -1,0 +1,1 @@
+ALTER TABLE "activity_packages" ALTER COLUMN "duration" SET DATA TYPE double precision;

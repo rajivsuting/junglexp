@@ -1,9 +1,9 @@
-import { Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { getHotelsByParkId } from "@repo/actions/hotels.actions";
+import { cn } from '@/lib/utils';
+import { getHotelsByParkId } from '@repo/actions/hotels.actions';
 
 import type { TNationalPark } from "@repo/db/index";
 export default async function LodgesSection({ park }: { park: TNationalPark }) {
@@ -37,7 +37,8 @@ export default async function LodgesSection({ park }: { park: TNationalPark }) {
             style={{ width: "max-content" }}
           >
             {hotels.map((hotel, index) => (
-              <button
+              <Link
+                href={`/stays/${hotel.slug}`}
                 key={`${hotel.name}-${index}`}
                 className="group w-[calc(100vw_-_32px)] md:w-[550px] cursor-pointer flex-shrink-0"
                 tabIndex={0}
@@ -65,7 +66,7 @@ export default async function LodgesSection({ park }: { park: TNationalPark }) {
                 <h3 className="text-sm py-3 bg-dark-corvid text-white text-center">
                   {hotel.name}
                 </h3>
-              </button>
+              </Link>
             ))}
           </div>
         </div>

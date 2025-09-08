@@ -1,13 +1,16 @@
-import { FAQSection } from "@/components/faq-section";
-import ReviewsSection from "@/components/ReviewsSection";
+import { Suspense } from 'react';
 
-import { BookingCardDesktop } from "./components/booking-card/booking-card-desktop";
-import { BookingCardMobile } from "./components/booking-card/booking-cark-mobile";
-import { StayAmenitiesSection } from "./components/stay-amenities-section";
-import { StayImageGallery } from "./components/stay-image-gallery";
-import { StayPoliciesSection } from "./components/stay-policies-section";
-import { StaySaftyFeatures } from "./components/stay-safty-features";
-import { StayTitleSection } from "./components/stay-title-section";
+import { FAQSection } from '@/components/faq-section';
+import ReviewsSection from '@/components/ReviewsSection';
+
+import { BookingCardDesktop } from './components/booking-card/booking-card-desktop';
+import { BookingCardMobile } from './components/booking-card/booking-cark-mobile';
+import { RoomsSectionWrapper } from './components/rooms-section-wrapper';
+import { StayAmenitiesSection } from './components/stay-amenities-section';
+import { StayImageGallery } from './components/stay-image-gallery';
+import { StayPoliciesSection } from './components/stay-policies-section';
+import { StaySaftyFeatures } from './components/stay-safty-features';
+import { StayTitleSection } from './components/stay-title-section';
 
 import type { THotel, THotelPolicy } from "@repo/db/index";
 interface StayDetailsProps {
@@ -160,6 +163,10 @@ export default function StayDetails(props: Partial<StayDetailsProps>) {
           rating={rating || 0}
         />
       </div>
+      {/* Rooms Section */}
+      <Suspense>
+        <RoomsSectionWrapper stay={stay} />
+      </Suspense>
 
       {/* Mobile/Tablet Fixed Bottom Button */}
       <BookingCardMobile

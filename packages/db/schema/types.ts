@@ -1,3 +1,11 @@
+import type {
+  TActivityAmenityBase,
+  TActivityBase,
+  TActivityImageBase,
+  TActivityItineraryBase,
+  TActivityPackageBase,
+  TActivityPolicyBase,
+} from "./activities";
 import type { TAmenityBase } from "./amenities";
 import type { TCity } from "./city";
 import type { TFaqsBase } from "./faqs";
@@ -113,4 +121,25 @@ export type TRoom = TRoomBase & {
   images: TRoomImage[];
   amenities: TRoomAmenity[];
   plans: TRoomPlan[];
+};
+
+export type TActivityImage = TActivityImageBase & {
+  image: TImage;
+};
+
+export type TActivityAmenity = TActivityAmenityBase & {
+  amenity: TAmenityBase;
+};
+
+export type TActivityPolicy = TActivityPolicyBase & {
+  policy: TPolicyBase;
+};
+
+export type TActivity = TActivityBase & {
+  park: TNationalPark;
+  images: TActivityImage[];
+  policies: TActivityPolicy[];
+  itinerary: TActivityItineraryBase[];
+  amenities: TActivityAmenity[];
+  packages: TActivityPackageBase[];
 };

@@ -177,8 +177,11 @@ export default function HomePage() {
                   <Button asChild size="sm">
                     <Link href="/tours">View Tours</Link>
                   </Button>
+                  <Button asChild size="sm">
+                    <Link href="/activites">View Activities</Link>
+                  </Button>
                   <Button asChild variant="outline" size="sm">
-                    <Link href="/tours/new">Add New</Link>
+                    <Link href="/activites/new">Add Activity</Link>
                   </Button>
                 </div>
               </CardContent>

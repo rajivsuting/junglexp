@@ -1,8 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { getHotelById } from "@repo/actions/hotels.actions";
+import { getHotelById } from '@repo/actions/hotels.actions';
 
-import HotelForm from "./hotel-form-new";
+import HotelForm from './hotel-form-new';
 
 import type { THotel } from "@repo/db/schema/types";
 type THotelViewPageProps = {
@@ -12,12 +12,12 @@ type THotelViewPageProps = {
 const HotelViewPage = async (props: THotelViewPageProps) => {
   const { hotelId } = props;
 
-  let Hotel: THotel | null = null;
+  let Hotel: THotel | undefined = undefined;
   let pageTitle = "Create New Hotel";
   let mode: "create" | "edit" = "create";
 
   if (hotelId !== "new") {
-    Hotel = await getHotelById(Number(hotelId));
+    Hotel = (await getHotelById(Number(hotelId))) as any;
 
     if (!Hotel) {
       notFound();
@@ -26,7 +26,6 @@ const HotelViewPage = async (props: THotelViewPageProps) => {
     pageTitle = "Update Hotel";
     mode = "edit";
   }
-  console.log("Hotel", Hotel);
 
   return (
     <HotelForm

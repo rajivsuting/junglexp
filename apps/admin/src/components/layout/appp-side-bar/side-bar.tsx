@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { NavActivites } from "./nav-activites";
 import { NavDocuments } from "./nav-documents";
 import { NavGlobal } from "./nav-global";
 import { NavHotels } from "./nav-hotels";
@@ -149,6 +150,7 @@ export function AppSidebar() {
         <NavGlobal />
         <NavMain />
         <NavHotels />
+        <NavActivites />
         <NavPlaces />
         {/* <NavOthers /> */}
         {/* <NavDocuments items={data.documents} /> */}
