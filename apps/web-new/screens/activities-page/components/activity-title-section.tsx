@@ -50,9 +50,7 @@ export function ActivityTitleSection({
 
   return (
     <div className="mb-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-primary mb-4">
-        {name}
-      </h1>
+      <h1 className="text-3xl font-bold mb-2">{name}</h1>
 
       <div className="flex flex-wrap items-center gap-4 mb-6">
         {/* Rating */}

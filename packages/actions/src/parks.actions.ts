@@ -1,15 +1,18 @@
 "use server";
-import { and, count, eq, ilike, inArray } from 'drizzle-orm';
+import { and, count, eq, ilike, inArray } from "drizzle-orm";
 
-import { db, schema } from '@repo/db';
-import { Images } from '@repo/db/schema/image';
+import { db, schema } from "@repo/db";
+import { Images } from "@repo/db/schema/image";
 import {
-    NationalParks, nationaParkInsertSchema, ParkImages, parkImagesInsertSchema
-} from '@repo/db/schema/park';
+  NationalParks,
+  nationaParkInsertSchema,
+  ParkImages,
+  parkImagesInsertSchema,
+} from "@repo/db/schema/park";
 
-import { deleteImages } from './image.actions';
-import { getOrSet } from './libs/cache';
-import { nationalParkBySlugKey } from './libs/keys';
+import { deleteImages } from "./image.actions";
+import { getOrSet } from "./libs/cache";
+import { nationalParkBySlugKey } from "./libs/keys";
 
 import type {
   TNewNationalPark,
@@ -44,7 +47,6 @@ export const deleteNationalPark = async (parkId: string) => {
 };
 
 export const getNationalParkById = async (parkId: string) => {
-  console.log("parkId", parkId);
   try {
     const park = await db.query.NationalParks.findFirst({
       where: eq(schema.NationalParks.id, Number(parkId)),
@@ -58,6 +60,13 @@ export const getNationalParkById = async (parkId: string) => {
           with: {
             image: true,
           },
+          where: (parkImages, { eq }) => eq(parkImages.is_mobile, false),
+        },
+        mobile_images: {
+          with: {
+            image: true,
+          },
+          where: (parkImages, { eq }) => eq(parkImages.is_mobile, true),
         },
       },
     });
@@ -93,6 +102,13 @@ export const getNationalParkBySlug = async (slug: string) => {
             with: {
               image: true,
             },
+            where: (parkImages, { eq }) => eq(parkImages.is_mobile, false),
+          },
+          mobile_images: {
+            with: {
+              image: true,
+            },
+            where: (parkImages, { eq }) => eq(parkImages.is_mobile, true),
           },
         },
       }),
@@ -108,97 +124,11 @@ type TGetNationalParksFilters = {
   limit?: number;
 };
 
-export const getNationalParks = async (
-  filters: TGetNationalParksFilters = {}
+const upsertImages = async (
+  parkId: number,
+  isMobile: boolean,
+  imagesPayload: CreateParkImagesPayload
 ) => {
-  let where = undefined;
-
-  console.log("filters", filters);
-
-  if (filters.search) {
-    where = ilike(schema.NationalParks.name, `%${filters.search}%`);
-  }
-
-  const totalResponse = await db
-    .select({ count: count() })
-    .from(NationalParks)
-    .where(where);
-
-  const destinations = await db.query.NationalParks.findMany({
-    where,
-    limit: filters.limit,
-    offset:
-      filters.page && filters.limit ? (filters.page - 1) * filters.limit : 0,
-    with: {
-      city: {
-        with: { state: true },
-      },
-      images: {
-        with: {
-          image: true,
-        },
-        // orderBy: (images, { asc }) => [asc(images.order)],
-      },
-    },
-  });
-
-  console.log("destinations", JSON.stringify(destinations, null, 2));
-
-  return {
-    parks: destinations as unknown as TNationalPark[],
-    total: totalResponse[0]?.count ?? 0,
-  };
-};
-
-type NewImageInput = {
-  small_url: string;
-  medium_url: string;
-  large_url: string;
-  original_url: string;
-};
-
-type CreateParkImagesPayload = {
-  existing: Array<{ image_id: number; order: number }>;
-  added: Array<{ image: NewImageInput; order: number }>; // brand-new image to create then attach
-  removed: number[]; // ignored for create
-};
-
-export const createPark = async (
-  data: TNewNationalPark,
-  imagesPayload: CreateParkImagesPayload,
-  parkId?: number
-) => {
-  const parsed = nationaParkInsertSchema.parse(data);
-
-  // 1) Create or fetch park
-  let park: TNationalParkBase;
-  if (parkId) {
-    const found = await db.query.NationalParks.findFirst({
-      where: eq(schema.NationalParks.id, parkId),
-    });
-
-    if (!found) throw new Error("Failed to find park");
-
-    await db
-      .update(NationalParks)
-      .set({
-        name: parsed.name,
-        description: parsed.description,
-        slug: parsed.slug,
-        city_id: parsed.city_id,
-      })
-      .where(eq(schema.NationalParks.id, parkId));
-
-    park = found as TNationalParkBase;
-  } else {
-    const [createdPark] = await db
-      .insert(NationalParks)
-      .values(parsed)
-      .returning();
-    if (!createdPark) throw new Error("Failed to create park");
-    park = createdPark as TNationalParkBase;
-  }
-
   // 2) Insert new Images for any 'added' entries that include full image payload
   const toInsert = imagesPayload.added.filter(
     (a): a is { image: NewImageInput; order: number } => "image" in a
@@ -206,7 +136,7 @@ export const createPark = async (
 
   let insertedImages: { id: number; order: number }[] = [];
   if (toInsert.length > 0) {
-    const imageRows = toInsert.map((a) => a.image);
+    const imageRows = toInsert.map((a) => ({ ...a.image }));
     const created = await db.insert(Images).values(imageRows).returning(); // TImage[]
     if (!created || created.length !== toInsert.length) {
       throw new Error("Failed to insert images");
@@ -273,14 +203,13 @@ export const createPark = async (
       .delete(ParkImages)
       .where(
         and(
-          eq(ParkImages.park_id, park.id),
+          eq(ParkImages.park_id, parkId),
           inArray(ParkImages.image_id, imagesPayload.removed)
         )
       );
 
     try {
       const res = await deleteImages(imagesPayload.removed);
-      console.log("images deleted", res);
     } catch (error) {
       console.error("Error deleting images", error);
     }
@@ -295,7 +224,7 @@ export const createPark = async (
   const currentJoins = await db
     .select()
     .from(ParkImages)
-    .where(eq(ParkImages.park_id, park.id));
+    .where(eq(ParkImages.park_id, parkId));
 
   const currentByImage = new Map<number, (typeof currentJoins)[number]>();
   for (const pj of currentJoins) currentByImage.set(pj.image_id, pj);
@@ -316,9 +245,10 @@ export const createPark = async (
     } else {
       toInsertJoins.push(
         parkImagesInsertSchema.parse({
-          park_id: park.id,
+          park_id: parkId,
           image_id: target.id,
           order: target.order,
+          is_mobile: isMobile,
         })
       );
     }
@@ -333,11 +263,22 @@ export const createPark = async (
       .update(ParkImages)
       .set({ order: u.order })
       .where(
-        and(
-          eq(ParkImages.park_id, park.id),
-          eq(ParkImages.image_id, u.image_id)
-        )
+        and(eq(ParkImages.park_id, parkId), eq(ParkImages.image_id, u.image_id))
       );
+  }
+
+  // Update alt text for existing images if provided
+  const altTextUpdates = imagesPayload.existing.filter(
+    (existing) => existing.alt_text !== undefined
+  );
+  if (altTextUpdates.length > 0) {
+    const altTextOperations = altTextUpdates.map((update) =>
+      db
+        .update(Images)
+        .set({ alt_text: update.alt_text })
+        .where(eq(Images.id, update.image_id))
+    );
+    await Promise.all(altTextOperations);
   }
 
   // 6) Build return payload with joined images
@@ -355,21 +296,129 @@ export const createPark = async (
   const finalJoins = await db
     .select()
     .from(ParkImages)
-    .where(eq(ParkImages.park_id, park.id));
+    .where(eq(ParkImages.park_id, parkId));
 
   const responseImages = finalJoins
     .map((pi) => ({
       image_id: pi.image_id,
       park_id: pi.park_id,
+      is_mobile: pi.is_mobile,
       image: imagesMap.get(pi.image_id) ?? null,
       order: pi.order,
     }))
     .sort((a, b) => a.order - b.order);
 
+  return responseImages;
+};
+
+export const getNationalParks = async (
+  filters: TGetNationalParksFilters = {}
+) => {
+  let where = undefined;
+
+  if (filters.search) {
+    where = ilike(schema.NationalParks.name, `%${filters.search}%`);
+  }
+
+  const totalResponse = await db
+    .select({ count: count() })
+    .from(NationalParks)
+    .where(where);
+
+  const destinations = await db.query.NationalParks.findMany({
+    where,
+    limit: filters.limit,
+    offset:
+      filters.page && filters.limit ? (filters.page - 1) * filters.limit : 0,
+    with: {
+      city: {
+        with: { state: true },
+      },
+      images: {
+        with: {
+          image: true,
+        },
+        where: (parkImages, { eq }) => eq(parkImages.is_mobile, false),
+        // orderBy: (images, { asc }) => [asc(images.order)],
+      },
+      mobile_images: {
+        with: {
+          image: true,
+        },
+        where: (parkImages, { eq }) => eq(parkImages.is_mobile, true),
+        // orderBy: (images, { asc }) => [asc(images.order)],
+      },
+    },
+  });
+
+  return {
+    parks: destinations as unknown as TNationalPark[],
+    total: totalResponse[0]?.count ?? 0,
+  };
+};
+
+type NewImageInput = {
+  small_url: string;
+  medium_url: string;
+  large_url: string;
+  original_url: string;
+};
+
+type CreateParkImagesPayload = {
+  existing: Array<{ image_id: number; order: number; alt_text?: string }>;
+  added: Array<{ image: NewImageInput; order: number }>; // brand-new image to create then attach
+  removed: number[]; // ignored for create
+};
+
+export const createPark = async (
+  data: TNewNationalPark,
+  imagesPayload: CreateParkImagesPayload,
+  mobileImagesPayload: CreateParkImagesPayload,
+  parkId?: number
+) => {
+  const parsed = nationaParkInsertSchema.parse(data);
+
+  // 1) Create or fetch park
+  let park: TNationalParkBase;
+  if (parkId) {
+    const found = await db.query.NationalParks.findFirst({
+      where: eq(schema.NationalParks.id, parkId),
+    });
+
+    if (!found) throw new Error("Failed to find park");
+
+    await db
+      .update(NationalParks)
+      .set({
+        name: parsed.name,
+        description: parsed.description,
+        slug: parsed.slug,
+        city_id: parsed.city_id,
+      })
+      .where(eq(schema.NationalParks.id, parkId));
+
+    park = found as TNationalParkBase;
+  } else {
+    const [createdPark] = await db
+      .insert(NationalParks)
+      .values(parsed)
+      .returning();
+    if (!createdPark) throw new Error("Failed to create park");
+    park = createdPark as TNationalParkBase;
+  }
+
+  const responseImages = await upsertImages(park.id, false, imagesPayload);
+
+  const mobileResponseImages = await upsertImages(
+    park.id,
+    true,
+    mobileImagesPayload
+  );
   return {
     park: {
       ...park,
       images: responseImages,
+      mobile_images: mobileResponseImages,
     },
   };
 };
@@ -427,6 +476,7 @@ export const updateParkImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
+
     operations.push(db.insert(ParkImages).values(newImages));
   }
 

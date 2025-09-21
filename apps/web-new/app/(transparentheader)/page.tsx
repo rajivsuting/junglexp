@@ -42,6 +42,7 @@ export default async function HomePage() {
           className="object-cover object-center absolute inset-0 z-0"
         /> */}
         <ImageSlideshow
+          mobileImages={park?.mobile_images?.map((image) => image.image) || []}
           images={park?.images.map((image) => image.image) || []}
         />
         <div className="relative grid grid-cols-1 z-10 mx-4 sm:mx-6 lg:mx-24">
@@ -125,8 +126,9 @@ export default async function HomePage() {
               x-webkit-airplay="allow"
               preload="metadata"
               disablePictureInPicture
-              className="flex-1 flex object-cover"
-              src="https://video.wixstatic.com/video/5265be_ef0152dfff594d299e5363f2742b4853/720p/mp4/file.mp4"
+              className="flex-1 flex aspect-square object-cover"
+              src="/videos/20230612_150614.mp4"
+              // src="https://video.wixstatic.com/video/5265be_ef0152dfff594d299e5363f2742b4853/720p/mp4/file.mp4"
             />
           </div>
           <div className="max-w-4xl py-32 flex-1 mx-auto px-10">
@@ -171,7 +173,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="flex-1 flex h-full overflow-auto">
+          <div className="flex-1 flex h-full aspect-square overflow-auto">
             <video
               autoPlay
               loop
@@ -182,7 +184,9 @@ export default async function HomePage() {
               disablePictureInPicture
               muted
               className="flex flex-1 object-cover"
-              src="https://video.wixstatic.com/video/5265be_a0ccfaab6d554b358651c0877c8f5ffd/720p/mp4/file.mp4"
+              src="/videos/VID20250129074022.mp4"
+
+              // src="https://video.wixstatic.com/video/5265be_a0ccfaab6d554b358651c0877c8f5ffd/720p/mp4/file.mp4"
             />
           </div>
         </div>
@@ -198,7 +202,9 @@ export default async function HomePage() {
       </Suspense>
       <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
 
-      <SafariSection />
+      <Suspense>
+        <SafariSection park={park as any} />
+      </Suspense>
 
       {/* Map Section (Placeholder) */}
       <Map />
@@ -212,6 +218,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section> */}
+
+      {/* Decorative Divider */}
+      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
 
       {/* Reviews Section */}
       <section className="py-16 bg-white">

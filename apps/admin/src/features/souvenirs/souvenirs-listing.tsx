@@ -14,19 +14,17 @@ const SouvenirsListing = async () => {
   const park = searchParamsCache.get("park");
   const pageLimit = searchParamsCache.get("perPage");
 
-  // const filters: TGetSouvenirsFilters = {
-  //   page,
-  //   limit: pageLimit,
-  //   ...(search && { search }),
-  //   ...(availability && { availability }),
-  //   ...(park && { park }),
-  // };
+  const filters: TGetSouvenirsFilters = {
+    page,
+    limit: pageLimit,
+    ...(search && { search }),
+    ...(availability && { availability }),
+    ...(park && { park }),
+  };
 
-  // const { data, total } = await getSouvenirs(filters);
+  const { data, total } = await getSouvenirs(filters);
 
-  // console.log("data", data);
-  // return <SouvenirsTable data={data} totalItems={total} columns={columns} />;
-  return null;
+  return <SouvenirsTable data={data} totalItems={total} columns={columns} />;
 };
 
 export default SouvenirsListing;

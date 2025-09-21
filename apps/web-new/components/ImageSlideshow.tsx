@@ -1,49 +1,62 @@
 "use client";
 
 import type { TImage } from "@repo/db/schema/image";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
-export default function ImageSlideshow({ images }: { images: TImage[] }) {
+export default function ImageSlideshow({
+  images,
+  mobileImages,
+}: {
+  images: TImage[];
+  mobileImages: TImage[];
+}) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
+    // Use the length of whichever image set has images
+    const totalImages = images.length > 0 ? images.length : mobileImages.length;
+
+    if (totalImages === 0) return;
+
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 6000); // Change image every 5 seconds
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % totalImages);
+    }, 6000); // Change image every 6 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length, mobileImages.length]);
 
   return (
     <div className="absolute inset-0">
+      {/* Desktop/Tablet Images - Hidden on mobile */}
       {images.map((image, index) => (
         <div
           key={image.id}
-          className={`transition-opacity abslute inset-0 duration-2000 ${
+          className={`hidden md:block transition-opacity absolute inset-0 duration-2000 ${
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           }`}
         >
-          {/* <img
-            src={image.original_url}
-            alt=""
-            className="object-cover block w-full h-full object-center"
-            srcSet={
-              `${image.small_url} 480w, ` +
-              `${image.medium_url} 768w, ` +
-              `${image.large_url} 1024w, ` +
-              `${image.original_url} 1280w`
-            }
-            sizes="
-              (min-width: 1280px) 1200px,
-              (min-width: 1024px) 900px,
-              (min-width: 768px) 700px,
-              100vw
-            "
-          /> */}
           <Image
             alt={image.alt_text}
             src={image.original_url}
+            fill
+            className="object-cover object-center"
+            priority={index === 0}
+          />
+        </div>
+      ))}
+
+      {/* Mobile Images - Visible on mobile only */}
+      {mobileImages.map((image, index) => (
+        <div
+          key={`mobile-${image.id}`}
+          className={`block md:hidden transition-opacity absolute inset-0 duration-2000 ${
+            index === currentImageIndex ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <Image
+            src={image.original_url}
+            alt={image.alt_text}
             fill
             className="object-cover object-center"
             priority={index === 0}

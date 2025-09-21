@@ -1,0 +1,1 @@
+ALTER TABLE "park_images" ADD COLUMN "is_mobile" boolean DEFAULT false NOT NULL;

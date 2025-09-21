@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   integer,
   pgTable,
@@ -44,6 +45,7 @@ export const ParkImages = pgTable("park_images", {
     .references(() => Images.id)
     .notNull(),
   order: integer("order").notNull(),
+  is_mobile: boolean("is_mobile").notNull().default(false),
 });
 
 /**

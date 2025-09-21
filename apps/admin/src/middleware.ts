@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import {
   clerkClient,
@@ -7,6 +7,7 @@ import {
 } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher(["/sign-in"]);
+const isSuperAdminRoute = createRouteMatcher(["/users", "/users(.*)"]);
 
 export const config = {
   matcher: [
@@ -34,10 +35,15 @@ export default clerkMiddleware(async (auth, req) => {
 
   const role = (sessionClaims.metadata as any)?.role;
 
-  if (!role || role !== "admin") {
+  if (!role || !["admin", "super_admin"].includes(role)) {
     const client = await clerkClient();
     await client.sessions.revokeSession(sessionId);
     return NextResponse.redirect(new URL("/sign-in", req.url));
+  }
+
+  // Additional check for super-admin routes
+  if (isSuperAdminRoute(req) && role !== "super_admin") {
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   return NextResponse.next();

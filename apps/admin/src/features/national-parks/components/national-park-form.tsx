@@ -1,32 +1,28 @@
 "use client";
-import { Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { FileUploader, hasValidImages } from "@/components/file-uploader";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileUploader, hasValidImages } from '@/components/file-uploader';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { ImagesArraySchema } from "@/lib/image-schema";
-import { uploadFilesWithProgress } from "@/lib/upload-files";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createPark, updateParkImages } from "@repo/actions/parks.actions";
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { ExistingImageSchema, ImagesArraySchema, NewImageSchema } from '@/lib/image-schema';
+import { uploadFilesWithProgress } from '@/lib/upload-files';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createPark, updateParkImages } from '@repo/actions/parks.actions';
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
 
-import CitiesSelect from "./cities-select";
-import StatesSelect from "./states-select";
+import CitiesSelect from './cities-select';
+import StatesSelect from './states-select';
 
 import type {
   NewFormImage,
@@ -35,12 +31,14 @@ import type {
 } from "@/lib/image-schema";
 import type { FormImage as FileUploaderFormImage } from "@/components/file-uploader";
 import type { TNationalPark } from "@repo/db/schema/types";
+import type { TParkImageBase } from "@repo/db/schema/park";
 // --------------------
 // Form schema
 // --------------------
 const formSchema = z.object({
   name: z.string().min(1, "National Park name is required.").max(255),
   images: ImagesArraySchema,
+  mobile_images: ImagesArraySchema,
   description: z.string().min(10, "Description is required."),
   state_id: z.string().refine((value) => value, "State is required."),
   city_id: z.string().refine((value) => value, "City is required."),
@@ -73,12 +71,25 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
           original_url: pi.image.original_url,
           alt_text: pi.image.alt_text, // TODO: Get from database when alt_text is added to schema
         })),
+      mobile_images: (initialData?.mobile_images ?? [])
+        .sort((a, b) => a.order - b.order)
+        .map((pi) => ({
+          _type: "existing" as const,
+          image_id: pi.image_id,
+          order: pi.order,
+          small_url: pi.image.small_url,
+          medium_url: pi.image.medium_url,
+          large_url: pi.image.large_url,
+          original_url: pi.image.original_url,
+          alt_text: pi.image.alt_text, // TODO: Get from database when alt_text is added to schema
+        })),
       description: initialData?.description || "",
       city_id: initialData?.city_id?.toString() ?? "",
       state_id: initialData?.city?.state_id?.toString() ?? "",
     };
   }, [initialData]);
 
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -91,9 +102,15 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
 
   // Watch images to validate alt text
   const images = form.watch("images");
+  const mobileImages = form.watch("mobile_images");
   const hasValidAltText = useMemo(() => {
     return hasValidImages(images as FileUploaderFormImage[]);
   }, [images]);
+  const hasValidMobileAltText = useMemo(() => {
+    return mobileImages
+      ? hasValidImages(mobileImages as FileUploaderFormImage[])
+      : true;
+  }, [mobileImages]);
 
   // --------------------
   // Upload only new files; expect server to return created TImage per file
@@ -116,16 +133,16 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
         },
         "/api/v1/upload-image"
       );
-      console.log("results", results);
 
       return results.map((res: any, idx: number) => ({
         _tmpId: newOnes[idx]!._tmpId,
-        image: res.image as {
+        image: { ...res.image, alt_text: newOnes[idx]!.alt_text } as {
           id: number;
           small_url: string;
           medium_url: string;
           large_url: string;
           original_url: string;
+          alt_text: string;
         },
       }));
     } finally {
@@ -133,6 +150,55 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
     }
   };
 
+  const getFinalImages = async (
+    images: FormImage[],
+    initialImages?: TParkImageBase[]
+  ) => {
+    const uploaded = await uploadNewImages(images);
+
+    const byTmp = new Map(uploaded.map((u) => [u._tmpId, u.image]));
+    const final = images.map((img, idx) => ({ img, order: idx }));
+
+    const initialIds = new Set((initialImages ?? []).map((pi) => pi.image_id));
+    const currentExistingIds = new Set(
+      final
+        .filter((f) => f.img._type === "existing")
+        .map((f) => (f.img as ExistingFormImage).image_id)
+    );
+    const removed: number[] = [...initialIds].filter(
+      (id) => !currentExistingIds.has(id)
+    );
+
+    // 4) Existing with updated order and alt_text
+    const existing = final
+      .filter((f) => f.img._type === "existing")
+      .map((f) => ({
+        image_id: (f.img as ExistingFormImage).image_id,
+        order: f.order,
+        alt_text: (f.img as ExistingFormImage).alt_text,
+      }));
+
+    // 5) Added mapped to uploaded image ids with order
+    const added = final
+      .filter((f) => f.img._type === "new")
+      .map((f) => {
+        const n = f.img as NewFormImage;
+        const created = byTmp.get(n._tmpId);
+
+        if (!created) throw new Error("Missing uploaded image mapping");
+        return { image: created, order: f.order };
+      });
+
+    return {
+      images: {
+        existing: !!initialImages ? existing : [],
+        added,
+        removed: !!initialImages ? removed : [],
+      },
+      final,
+      byTmp,
+    };
+  };
   // --------------------
   // Submit: upload new, compute diff, call create/update
   // --------------------
@@ -141,54 +207,18 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
     setHasAttemptedSubmit(true);
 
     // Check if images have valid alt text
-    if (!hasValidAltText) {
+    if (!hasValidAltText || !hasValidMobileAltText) {
       return; // Stop submission if alt text is invalid
     }
 
     try {
       setIsUpdating(true);
 
-      // 1) Upload only new files to get image ids
-      const uploaded = await uploadNewImages(data.images);
-      console.log("uploaded", uploaded);
-
-      const byTmp = new Map(uploaded.map((u) => [u._tmpId, u.image]));
-
-      // 2) Final ordered list (array order is the source of truth)
-      const final = data.images.map((img, idx) => ({ img, order: idx }));
-
-      console.log("final", final, byTmp);
-
-      // 3) Compute removed image_ids (present initially but not in current existing set)
-      const initialIds = new Set(
-        (initialData?.images ?? []).map((pi) => pi.image_id)
+      const { images } = await getFinalImages(data.images, initialData?.images);
+      const { images: mobileImages } = await getFinalImages(
+        data.mobile_images,
+        initialData?.mobile_images
       );
-      const currentExistingIds = new Set(
-        final
-          .filter((f) => f.img._type === "existing")
-          .map((f) => (f.img as ExistingFormImage).image_id)
-      );
-      const removed: number[] = [...initialIds].filter(
-        (id) => !currentExistingIds.has(id)
-      );
-
-      // 4) Existing with updated order
-      const existing = final
-        .filter((f) => f.img._type === "existing")
-        .map((f) => ({
-          image_id: (f.img as ExistingFormImage).image_id,
-          order: f.order,
-        }));
-
-      // 5) Added mapped to uploaded image ids with order
-      const added = final
-        .filter((f) => f.img._type === "new")
-        .map((f) => {
-          const n = f.img as NewFormImage;
-          const created = byTmp.get(n._tmpId);
-          if (!created) throw new Error("Missing uploaded image mapping");
-          return { image: created, order: f.order };
-        });
 
       const parkPayload = {
         name: data.name,
@@ -199,28 +229,16 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
 
       // Create flow: if your create action expects a different shape, adjust accordingly
       // Option 1: send only added on create; server will attach them in order
+
       const park = await createPark(
         parkPayload,
-        {
-          existing: initialData ? existing : [],
-          added,
-          removed: initialData ? removed : [],
-        },
+        images,
+        mobileImages,
         initialData?.id
       );
-      if (initialData) {
-        // Update place images (handles create, update, delete, reorder)
-        await updateParkImages(
-          initialData?.id,
-          final.map((f) => ({
-            image_id: (f.img as ExistingFormImage).image_id,
-            order: f.order,
-            alt_text: (f.img as ExistingFormImage).alt_text,
-          }))
-        );
-      }
-      console.log("park", park);
+
       toast.success("National Park created successfully");
+      router.refresh();
     } finally {
       setIsUpdating(false);
     }
@@ -253,6 +271,32 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
                         progresses={progresses}
                         disabled={isImagesUploading}
                         showValidation={hasAttemptedSubmit}
+                        id="regular-images-input"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </div>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="mobile_images"
+              render={({ field }) => (
+                <div className="space-y-6">
+                  <FormItem className="w-full">
+                    <FormLabel>Mobile Images</FormLabel>
+                    <FormControl>
+                      <FileUploader
+                        value={field.value as unknown as any}
+                        onValueChange={field.onChange}
+                        maxFiles={8}
+                        maxSize={MAX_FILE_SIZE}
+                        multiple
+                        progresses={progresses}
+                        disabled={isImagesUploading}
+                        showValidation={hasAttemptedSubmit}
+                        id="mobile-images-input"
                       />
                     </FormControl>
                     <FormMessage />
@@ -336,6 +380,14 @@ const NationalParkForm = (props: TNationalParkFormProps) => {
                 ⚠️ Please add alt text to all images before submitting
               </p>
             )}
+            {!hasValidMobileAltText &&
+              mobileImages &&
+              mobileImages.length > 0 &&
+              hasAttemptedSubmit && (
+                <p className="text-sm text-red-600 mt-2">
+                  ⚠️ Please add alt text to all mobile images before submitting
+                </p>
+              )}
           </form>
         </Form>
       </CardContent>

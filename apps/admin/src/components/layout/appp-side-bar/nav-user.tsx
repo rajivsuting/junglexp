@@ -15,14 +15,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { currentUser } from "@clerk/nextjs/server";
 import { getInitials } from "@repo/common-utils/text-utils";
 
 import LogoutButton from "./logout-button";
 
-export async function NavUser() {
-  const user = await currentUser();
+import type { User } from "@clerk/nextjs/server";
 
+export async function NavUser({ user }: { user: User | null }) {
   const initials = getInitials(user?.fullName ?? "");
 
   return (

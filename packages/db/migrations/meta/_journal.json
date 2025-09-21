@@ -85,6 +85,76 @@
       "when": 1756892700740,
       "tag": "0011_confused_wong",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1757316796736,
+      "tag": "0012_perfect_quasar",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1757526016192,
+      "tag": "0013_tough_justin_hammer",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1757526033532,
+      "tag": "0014_windy_cargill",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1757526159014,
+      "tag": "0015_serious_the_spike",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1757526208836,
+      "tag": "0016_complex_wolverine",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1757526426192,
+      "tag": "0017_fresh_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1757528360320,
+      "tag": "0018_mixed_madame_hydra",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1757528438638,
+      "tag": "0019_mighty_thena",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1757763993812,
+      "tag": "0020_damp_abomination",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1758443472336,
+      "tag": "0021_fancy_captain_universe",
+      "breakpoints": true
     }
   ]
 }

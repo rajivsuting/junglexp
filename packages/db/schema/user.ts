@@ -1,6 +1,17 @@
 import {
-    bigint, integer, pgTable, text, timestamp, uniqueIndex, uuid, varchar
-} from 'drizzle-orm/pg-core';
+  bigint,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+
+export const userRoles = pgEnum("user_roles", ["user", "admin", "super_admin"]);
 
 export const Users = pgTable(
   "users",
@@ -13,7 +24,7 @@ export const Users = pgTable(
     phone: varchar("phone", { length: 255 }).unique(),
     first_name: varchar("first_name", { length: 225 }).notNull(),
     last_name: varchar("last_name", { length: 225 }).notNull(),
-    role: integer("role").notNull().default(0),
+    user_role: userRoles("user_role").notNull().default("user"),
     created_at: timestamp("created_at", { precision: 0 })
       .defaultNow()
       .notNull(),
@@ -22,8 +33,15 @@ export const Users = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [uniqueIndex("user_id_unique").on(table.user_id)]
+  (table) => [
+    uniqueIndex("user_id_unique").on(table.user_id),
+    uniqueIndex("email_unique").on(table.email),
+    index("phone_unique").on(table.phone),
+    index("role_unique").on(table.user_role),
+  ]
 );
 
 export type TNewUser = typeof Users.$inferInsert;
-export type TUser = typeof Users.$inferSelect;
+export type TUser = Omit<typeof Users.$inferSelect, "id"> & {
+  id: number;
+};

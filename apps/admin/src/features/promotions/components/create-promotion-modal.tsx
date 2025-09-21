@@ -18,6 +18,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -145,6 +146,11 @@ export function CreatePromotionModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Promotion Link</FormLabel>
+                  <FormDescription>
+                    For internal paths, use a leading slash (e.g., /promotion)
+                    For external URLs, use the full URL (e.g.,
+                    https://example.com/promotion)
+                  </FormDescription>
                   <FormControl>
                     <Input
                       placeholder="https://example.com/promotion or /internal-path"

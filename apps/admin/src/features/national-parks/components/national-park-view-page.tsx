@@ -1,8 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { getNationalParkById } from "@repo/actions/parks.actions";
+import { getNationalParkById } from '@repo/actions/parks.actions';
 
-import NationalParkForm from "./national-park-form";
+import NationalParkForm from './national-park-form';
 
 import type { TNationalPark } from "@repo/db/schema/types";
 
@@ -25,6 +25,8 @@ const NationalParkViewPage = async (props: TNationalParkViewPageProps) => {
 
     pageTitle = "Update National Park";
   }
+
+  console.log("NationalPark", NationalPark);
 
   return <NationalParkForm initialData={NationalPark} pageTitle={pageTitle} />;
 };

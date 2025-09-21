@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import { getHotelsByParkId } from '@repo/actions/hotels.actions';
 import { getNationalParkBySlug } from '@repo/actions/parks.actions';
 
+import type { TRoomBase, TRoomPlan } from "@repo/db/index";
+
 type PageProps = {
   params: Promise<{ "park-id": string }>;
   searchParams: Promise<{ "stay-type": string }>;
@@ -24,13 +26,10 @@ const getPriceTier = (rating: number) => {
 };
 
 // Get price range based on hotel type and rating
-const getPriceRange = (hotelType: string, rating: number) => {
-  const basePrice =
-    hotelType === "resort" ? 400 : hotelType === "forest" ? 300 : 200;
-  const multiplier = Math.max(rating / 5, 0.3); // Minimum multiplier of 0.3
-  const min = Math.round(basePrice * multiplier);
-  const max = Math.round(min * 2);
-  return { min, max };
+const getPriceRange = (rooms: TRoomBase & { plans: TRoomPlan[] }[]) => {
+  const min = Math.min(...rooms.map((r) => r.plans[0]?.price || 0));
+  const max = Math.max(...rooms.map((r) => r.plans[0]?.price || 0));
+  return { min: min === 0 ? (max == 0 ? "NA" : max) : min, max: max };
 };
 
 export default async function AllStaysPage(props: PageProps) {
@@ -138,10 +137,7 @@ export default async function AllStaysPage(props: PageProps) {
               })
               .map((hotel, index) => {
                 const priceTier = getPriceTier(hotel.rating || 0);
-                const priceRange = getPriceRange(
-                  hotel.hotel_type,
-                  hotel.rating || 0
-                );
+                const priceRange = getPriceRange(hotel.rooms as any);
                 const hasImage = hotel.images?.[0]?.image?.original_url;
 
                 return (
@@ -169,13 +165,14 @@ export default async function AllStaysPage(props: PageProps) {
                           <ImageIcon className="w-16 h-16 text-muted-foreground" />
                         )}
 
-                        {/* Price Tier Badge */}
-                        <Badge
-                          variant="default"
-                          className="absolute top-4 left-4 bg-green-700 hover:bg-green-700/90"
-                        >
-                          {priceTier}
-                        </Badge>
+                        {hotel.is_featured && (
+                          <Badge
+                            variant="default"
+                            className="absolute top-4 left-4 bg-green-700 hover:bg-green-700/90"
+                          >
+                            Featured
+                          </Badge>
+                        )}
                       </div>
                     </div>
 
@@ -214,10 +211,13 @@ export default async function AllStaysPage(props: PageProps) {
                       {/* Pricing */}
                       <div className="text-center mb-4">
                         <div className="text-lg font-bold mb-1">
-                          From ${priceRange.min} to ${priceRange.max}
+                          From ${priceRange.min}{" "}
+                          {priceRange.min === priceRange.max
+                            ? ""
+                            : `to ${priceRange.max}`}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          Per person per night
+                          Per room per night
                         </div>
                       </div>
                     </CardContent>
@@ -251,10 +251,12 @@ export default async function AllStaysPage(props: PageProps) {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-              <Button size="lg">Start Planning</Button>
-              <Button variant="outline" size="lg">
-                Contact Us
-              </Button>
+              {/* <Button size="lg">Start Planning</Button> */}
+              <Link href={`/parks/${park.slug}/contact`}>
+                <Button variant="outline" size="lg">
+                  Contact Us
+                </Button>
+              </Link>
             </div>
 
             {/* Quick Links */}

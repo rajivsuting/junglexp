@@ -1,25 +1,14 @@
 "use client";
-import React, { useCallback, useMemo } from "react";
-import { z } from "zod";
+import React, { useCallback, useMemo } from 'react';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  closestCenter,
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  rectSortingStrategy,
-  SortableContext,
-  useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, rectSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
 
 import type { DragEndEvent } from "@dnd-kit/core";
 
@@ -122,6 +111,7 @@ type Props = {
   progresses?: Record<string, number>;
   disabled?: boolean;
   showValidation?: boolean;
+  id?: string; // Add unique ID prop
 };
 
 export const FileUploader: React.FC<Props> = ({
@@ -133,6 +123,7 @@ export const FileUploader: React.FC<Props> = ({
   progresses = {},
   disabled,
   showValidation = false,
+  id = "file-input-hidden", // Default ID
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -229,12 +220,12 @@ export const FileUploader: React.FC<Props> = ({
         }}
         onClick={() => {
           if (disabled) return;
-          document.getElementById("file-input-hidden")?.click();
+          document.getElementById(id)?.click();
         }}
       >
         <p className="text-sm">Click or drag images here</p>
         <input
-          id="file-input-hidden"
+          id={id}
           type="file"
           accept={ACCEPTED_IMAGE_TYPES.join(",")}
           multiple={multiple}

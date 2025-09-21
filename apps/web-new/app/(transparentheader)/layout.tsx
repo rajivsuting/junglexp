@@ -8,7 +8,7 @@ import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Jim Corbett Resorts - Book Your Ideal Stay",
+  title: "Junglexp - Jim Corbett Resorts - Book Your Ideal Stay",
   description:
     "Experience the wilderness and luxury in India's oldest national park. Book your perfect stay at Jim Corbett Resorts with safaris, adventure activities, and premium accommodations.",
   viewport: {

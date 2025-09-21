@@ -5,7 +5,8 @@ import ReviewsSection from '@/components/ReviewsSection';
 
 import { BookingCardDesktop } from './components/booking-card/booking-card-desktop';
 import { BookingCardMobile } from './components/booking-card/booking-cark-mobile';
-import { RoomsSectionWrapper } from './components/rooms-section-wrapper';
+import NearbySection from './components/nearby-section';
+import { RoomsSection } from './components/rooms-section';
 import { StayAmenitiesSection } from './components/stay-amenities-section';
 import { StayImageGallery } from './components/stay-image-gallery';
 import { StayPoliciesSection } from './components/stay-policies-section';
@@ -60,10 +61,10 @@ export default function StayDetails(props: Partial<StayDetailsProps>) {
     stay;
   const { included, excluded } = getInclusions(stay);
 
-  const price = 1000;
+  const price = stay.rooms[0]?.plans[0]?.price;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl text-primary mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
       {/* <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
         <span>Homes</span>
@@ -74,13 +75,10 @@ export default function StayDetails(props: Partial<StayDetailsProps>) {
         <ChevronRight className="w-4 h-4" />
         <span className="text-primary">Candolim</span>
       </div> */}
-
       {/* Title Section */}
       <StayTitleSection name={name} rating={rating} zone={zone} />
-
       {/* Image Gallery */}
       <StayImageGallery images={images} />
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Main Content */}
         <div className="lg:col-span-2">
@@ -155,23 +153,41 @@ export default function StayDetails(props: Partial<StayDetailsProps>) {
           </div> */}
 
           <FAQSection faqs={stay.faqs.map((item) => item.faq)} />
+          <div className="md:hidden">
+            <Suspense>
+              <NearbySection
+                hotelId={stay.id}
+                hotelName={stay.name}
+                city={stay.zone.park.city.name}
+              />
+            </Suspense>
+          </div>
         </div>
         {/* Booking Card - Desktop Only */}
-        <BookingCardDesktop
-          price={price}
-          originalPrice={price}
+        {/* <BookingCardDesktop
+          price={price || 0}
+          originalPrice={price || 0}
           rating={rating || 0}
-        />
+        /> */}
+        <div>
+          <div className="lg:col-span-1 hidden lg:block">
+            <Suspense>
+              <NearbySection
+                hotelId={stay.id}
+                hotelName={stay.name}
+                city={stay.zone.park.city.name}
+              />
+            </Suspense>
+          </div>
+          {/* <BookingCardDesktop price={0} originalPrice={0} rating={0} /> */}
+        </div>
       </div>
       {/* Rooms Section */}
-      <Suspense>
-        <RoomsSectionWrapper stay={stay} />
-      </Suspense>
-
+      <RoomsSection rooms={stay.rooms} />
       {/* Mobile/Tablet Fixed Bottom Button */}
       <BookingCardMobile
-        price={price}
-        originalPrice={price}
+        price={price || 0}
+        originalPrice={price || 0}
         rating={rating || 0}
       />
 

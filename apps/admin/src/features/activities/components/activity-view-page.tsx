@@ -42,7 +42,9 @@ export default function ActivityViewPage({ activity }: ActivityViewPageProps) {
           </Button>
           <div>
             <h1 className="text-3xl font-bold">{activity.name}</h1>
-            <p className="text-muted-foreground">{activity.description}</p>
+            <p className="text-muted-foreground whitespace-pre-wrap">
+              {activity.description}
+            </p>
           </div>
         </div>
         <Button asChild>
@@ -165,7 +167,7 @@ export default function ActivityViewPage({ activity }: ActivityViewPageProps) {
                   </div>
                   <div className="flex-1 pb-4">
                     <h4 className="font-medium">{item.title}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
                       {item.description}
                     </p>
                   </div>

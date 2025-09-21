@@ -1,8 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { getSouvenirById } from "@repo/actions/souvenirs.actions";
+import { getSouvenirById } from '@repo/actions/souvenirs.actions';
 
-import SouvenirForm from "./souvenir-form";
+import SouvenirForm from './souvenir-form';
 
 import type { TSouvenir } from "@repo/db/schema/types";
 
@@ -26,7 +26,7 @@ const SouvenirViewPage = async (props: TSouvenirViewPageProps) => {
     pageTitle = "Edit Souvenir";
   }
 
-  return <SouvenirForm />;
+  return <SouvenirForm initialData={data} pageTitle={pageTitle} />;
 };
 
 export default SouvenirViewPage;

@@ -1,9 +1,9 @@
 // --------------------
 // Image union schemas
 
-import z from "zod";
+import z from 'zod';
 
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
 
 // --------------------
 export const ExistingImageSchema = z.object({
@@ -36,7 +36,7 @@ export type FormImage = ExistingFormImage | NewFormImage;
 // --------------------
 export const ImagesArraySchema = z
   .array(z.union([ExistingImageSchema, NewImageSchema]))
-  .min(1, "At least one image is required.")
+
   .refine(
     (items) =>
       items

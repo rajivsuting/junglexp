@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   doublePrecision,
   geometry,
   index,
@@ -19,6 +20,7 @@ import { Zones } from "./zones";
 
 // Define a Postgres enum named "park_status" with allowed values
 export const hotelTypeEnum = pgEnum("hotel_type", ["resort", "forest", "home"]);
+export const hotelStatusEnum = pgEnum("hotel_status", ["active", "inactive"]);
 
 export const Hotels = pgTable(
   "hotels",
@@ -38,6 +40,8 @@ export const Hotels = pgTable(
       mode: "xy",
       srid: 4326,
     }).notNull(),
+    status: hotelStatusEnum("status").default("active"),
+    is_featured: boolean("is_featured").default(false),
   },
   (table) => [
     index("hotels_location_idx").on(table.location),
@@ -48,6 +52,56 @@ export const Hotels = pgTable(
     index("hotels_rating_idx").on(table.rating),
     index("hotels_hotel_type_rating_idx").on(table.hotel_type, table.rating),
     index("hotels_hotel_type_zone_id_idx").on(table.hotel_type, table.zone_id),
+    index("hotels_is_featured_idx").on(table.is_featured),
+    index("hotels_is_featured_hotel_type_idx").on(
+      table.is_featured,
+      table.hotel_type
+    ),
+    index("hotels_is_featured_hotel_type_zone_id_idx").on(
+      table.is_featured,
+      table.hotel_type,
+      table.zone_id
+    ),
+    index("hotels_is_featured_hotel_type_rating_idx").on(
+      table.is_featured,
+      table.hotel_type,
+      table.rating
+    ),
+    index("hotels_is_featured_hotel_type_zone_id_rating_idx").on(
+      table.is_featured,
+      table.hotel_type,
+      table.zone_id,
+      table.rating
+    ),
+    index("hotels_status_idx").on(table.status),
+    index("hotels_hotels_status_hotel_type_idx").on(
+      table.status,
+      table.hotel_type
+    ),
+    index("hotels_hotels_status_hotel_type_zone_id_idx").on(
+      table.status,
+      table.hotel_type,
+      table.zone_id
+    ),
+    index("hotels_hotels_status_hotel_type_rating_idx").on(
+      table.status,
+      table.hotel_type,
+      table.rating
+    ),
+
+    index("hotels_hotels_status_hotel_type_zone_id_rating_idx").on(
+      table.status,
+      table.hotel_type,
+      table.zone_id,
+      table.rating
+    ),
+    index("hotels_hotels_status_is_featured_hotel_type_zone_id_rating_idx").on(
+      table.status,
+      table.is_featured,
+      table.hotel_type,
+      table.zone_id,
+      table.rating
+    ),
   ]
 );
 

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,7 +28,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createNewHotel, updateHotel } from "@repo/actions/hotels.actions";
-import { hotelTypeEnum } from "@repo/db/schema/hotels";
+import { hotelStatusEnum, hotelTypeEnum } from "@repo/db/schema/hotels";
 
 import { NationalParkSelect } from "./national-park-select";
 import { ZoneSelect } from "./zone-select";
@@ -39,6 +40,12 @@ const HOTEL_TYPES = [
   { value: "resort", label: "Resort" },
   { value: "forest", label: "Forest" },
   { value: "home", label: "Home" },
+] as const;
+
+// Hotel status options
+const HOTEL_STATUS_OPTIONS = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
 ] as const;
 
 // Rating options (1-5 stars)
@@ -62,6 +69,10 @@ const hotelDetailsSchema = z.object({
     .number()
     .min(-180, "Longitude must be between -180 and 180")
     .max(180, "Longitude must be between -180 and 180"),
+  status: z.enum(hotelStatusEnum.enumValues, {
+    required_error: "Hotel status is required",
+  }),
+  is_featured: z.boolean().default(false),
 });
 
 type HotelDetailsFormData = z.infer<typeof hotelDetailsSchema>;
@@ -127,6 +138,8 @@ export const HotelDetailsSection = ({
       rating: initialData?.rating || 1,
       latitude: initialData?.location?.x || 0,
       longitude: initialData?.location?.y || 0,
+      status: initialData?.status || "active",
+      is_featured: initialData?.is_featured || false,
     };
   }, [initialData]);
 
@@ -141,6 +154,8 @@ export const HotelDetailsSection = ({
       rating: initialData?.rating || 1,
       latitude: initialData?.location?.x || 0,
       longitude: initialData?.location?.y || 0,
+      status: initialData?.status || "active",
+      is_featured: initialData?.is_featured || false,
     },
     mode: "onChange", // Enable validation on change for better UX
   });
@@ -182,6 +197,11 @@ export const HotelDetailsSection = ({
             name: data.name,
             description: data.description,
             slug: slug,
+            zone_id: Number(data.zone_id),
+            hotel_type: data.hotel_type,
+            rating: data.rating,
+            status: data.status,
+            is_featured: data.is_featured,
             location: { x: data.longitude, y: data.latitude },
           });
           toast.success("Hotel updated successfully");
@@ -206,6 +226,8 @@ export const HotelDetailsSection = ({
         zone_id: Number(data.zone_id),
         hotel_type: data.hotel_type,
         rating: data.rating,
+        status: data.status,
+        is_featured: data.is_featured,
         location: { x: data.longitude, y: data.latitude },
       });
       toast.success("Hotel created successfully");
@@ -345,6 +367,62 @@ export const HotelDetailsSection = ({
                   </div>
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Status and Featured */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Status */}
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Status *</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  disabled={isSubmitting}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select hotel status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {HOTEL_STATUS_OPTIONS.map((status) => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Is Featured */}
+          <FormField
+            control={form.control}
+            name="is_featured"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Featured Hotel</FormLabel>
+                  <div className="text-sm text-muted-foreground">
+                    Mark this hotel as featured to highlight it on the platform
+                  </div>
+                </div>
               </FormItem>
             )}
           />

@@ -12,9 +12,10 @@ export function RoomsSection({ rooms }: RoomsSectionProps) {
     console.log("Reserved room:", room.id);
     // You can add your reservation logic here
   };
+  console.log("rooms", rooms);
 
   return (
-    <section className="py-8 text-primary">
+    <section id="rooms" className="py-8 text-primary">
       <div className="mb-8">
         <div className="rounded-t-2xl">
           <h2 className="text-xl font-semibold text-primary">Select Room</h2>

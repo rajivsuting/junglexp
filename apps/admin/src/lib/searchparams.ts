@@ -10,6 +10,9 @@ export const searchParams = {
   availability: parseAsBoolean,
   park: parseAsString,
   hotel: parseAsString,
+  role: parseAsString,
+  status: parseAsArrayOf(parseAsString),
+  is_featured: parseAsArrayOf(parseAsString),
   // advanced filter
   // filters: getFiltersStateParser().withDefault([]),
   // joinOperator: parseAsStringEnum(['and', 'or']).withDefault('and')

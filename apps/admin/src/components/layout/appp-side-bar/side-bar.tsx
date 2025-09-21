@@ -25,12 +25,14 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { NavActivites } from "./nav-activites";
-import { NavDocuments } from "./nav-documents";
+import { NavAdmin } from "./nav-admin";
 import { NavGlobal } from "./nav-global";
 import { NavHotels } from "./nav-hotels";
 import { NavMain } from "./nav-main";
 import { NavPlaces } from "./nav-places";
 import { NavUser } from "./nav-user";
+
+import type { User } from "@clerk/nextjs/server";
 
 const data = {
   navMain: [
@@ -129,7 +131,7 @@ const data = {
   ],
 };
 
-export function AppSidebar() {
+export function AppSidebar({ user }: { user: User | null }) {
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader>
@@ -152,32 +154,13 @@ export function AppSidebar() {
         <NavHotels />
         <NavActivites />
         <NavPlaces />
+        {user?.publicMetadata.role === "super_admin" && <NavAdmin />}
         {/* <NavOthers /> */}
         {/* <NavDocuments items={data.documents} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <Suspense
-          fallback={
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <Skeleton className="h-8 w-8 rounded-lg grayscale" />
-                  <div className="grid flex-1 text-left text-sm leading-tight ml-2">
-                    <Skeleton className="h-4 w-[120px] mb-1" />
-                    <Skeleton className="h-3 w-[80px]" />
-                  </div>
-                  <Skeleton className="ml-auto size-4 rounded" />
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          }
-        >
-          <NavUser />
-        </Suspense>
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

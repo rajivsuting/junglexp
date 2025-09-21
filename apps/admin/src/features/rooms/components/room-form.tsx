@@ -9,7 +9,9 @@ import {
     addRoomImages, createRoomPlan, deleteRoomPlan, updateRoom, updateRoomPlan
 } from '@repo/actions/rooms.actions';
 
-import { RoomDetailsSection, RoomImagesSection, RoomPlansSection } from './sections';
+import {
+    RoomAmenitiesSection, RoomDetailsSection, RoomImagesSection, RoomPlansSection
+} from './sections';
 
 import type { TRoom } from "@repo/db/schema/types";
 import type { TRoomBase } from "@repo/db/schema/rooms";
@@ -82,10 +84,12 @@ export default function RoomForm({
   const [sectionsExpanded, setSectionsExpanded] = useState<{
     roomDetails: boolean;
     images: boolean;
+    amenities: boolean;
     plans: boolean;
   }>({
     roomDetails: true,
     images: false,
+    amenities: false,
     plans: false,
   });
 
@@ -93,6 +97,7 @@ export default function RoomForm({
   const sectionOrder: (keyof typeof sectionsExpanded)[] = [
     "roomDetails",
     "images",
+    "amenities",
     "plans",
   ];
 
@@ -182,6 +187,17 @@ export default function RoomForm({
               onNext={() => goToNextSection("images")}
             >
               <RoomImagesSection initialData={initialData} roomId={roomId} />
+            </CollapsibleSection>
+
+            {/* Amenities Section */}
+            <CollapsibleSection
+              title="Amenities"
+              isExpanded={sectionsExpanded.amenities}
+              onToggle={() => toggleSection("amenities")}
+              showNext={getNextSection("amenities") !== null}
+              onNext={() => goToNextSection("amenities")}
+            >
+              <RoomAmenitiesSection initialData={initialData} roomId={roomId} />
             </CollapsibleSection>
 
             {/* Room Plans Section */}

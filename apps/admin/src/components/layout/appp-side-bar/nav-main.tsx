@@ -1,24 +1,14 @@
 "use client";
 import {
-  Activity,
-  BedDouble,
-  Compass,
-  Hotel,
-  Landmark,
-  MapPin,
-  MapPinHouse,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+    Activity, BedDouble, Compass, Hotel, Landmark, MapPin, MapPinHouse, ShoppingBag
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
 
 const items = [
   {
@@ -30,6 +20,11 @@ const items = [
     title: "Zones",
     url: "/zones",
     icon: MapPin,
+  },
+  {
+    title: "Souvenirs",
+    url: "/souvenirs",
+    icon: ShoppingBag,
   },
 ];
 

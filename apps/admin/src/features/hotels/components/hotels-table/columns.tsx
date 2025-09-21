@@ -1,8 +1,9 @@
 "use client";
 import { log } from "console";
-import { Text } from "lucide-react";
+import { Shield, Star, Text } from "lucide-react";
 import Image from "next/image";
 
+import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/table/data-table-column-header";
 
 import { CellAction } from "./cell-action";
@@ -88,6 +89,68 @@ export const columns: ColumnDef<THotel>[] = [
       label: "Park",
       // variant: "multiSelect",
       // options: CATEGORY_OPTIONS,
+    },
+  },
+  {
+    id: "status",
+    accessorKey: "status",
+    header: ({ column }: { column: Column<THotel, unknown> }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ cell }) => {
+      const status = cell.getValue<THotel["status"]>();
+      return (
+        <Badge
+          variant={status === "active" ? "default" : "secondary"}
+          className={
+            status === "active"
+              ? "bg-green-100 text-green-800 hover:bg-green-200"
+              : ""
+          }
+        >
+          {status === "active" ? "Active" : "Inactive"}
+        </Badge>
+      );
+    },
+    enableColumnFilter: true,
+    meta: {
+      label: "Status",
+      variant: "multiSelect",
+      options: [
+        { label: "Active", value: "active" },
+        { label: "Inactive", value: "inactive" },
+      ],
+    },
+  },
+  {
+    id: "is_featured",
+    accessorKey: "is_featured",
+    header: ({ column }: { column: Column<THotel, unknown> }) => (
+      <DataTableColumnHeader column={column} title="Featured" />
+    ),
+    cell: ({ cell }) => {
+      const isFeatured = cell.getValue<THotel["is_featured"]>();
+      return (
+        <div className="flex items-center">
+          {isFeatured ? (
+            <div className="flex items-center text-yellow-600">
+              <Star className="h-4 w-4 mr-1 fill-current" />
+              <span className="text-sm">Featured</span>
+            </div>
+          ) : (
+            <span className="text-sm text-muted-foreground">-</span>
+          )}
+        </div>
+      );
+    },
+    enableColumnFilter: true,
+    meta: {
+      label: "Featured",
+      variant: "multiSelect",
+      options: [
+        { label: "Featured", value: "true" },
+        { label: "Not Featured", value: "false" },
+      ],
     },
   },
 

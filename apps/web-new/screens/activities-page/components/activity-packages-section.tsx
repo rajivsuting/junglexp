@@ -75,9 +75,9 @@ export function ActivityPackagesSection({
                   <div className="text-2xl font-bold text-primary">
                     ₹{pkg.price.toLocaleString()}
                   </div>
-                  <div className="text-sm text-muted-foreground">
+                  {/* <div className="text-sm text-muted-foreground">
                     per person
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -94,7 +94,7 @@ export function ActivityPackagesSection({
                 {pkg.duration && (
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <Clock className="w-4 h-4" />
-                    <span>{pkg.duration}</span>
+                    <span>{pkg.duration} Hours</span>
                   </div>
                 )}
                 {pkg.max_participants && (
@@ -171,7 +171,7 @@ export function ActivityPackagesSection({
         ))}
       </div>
 
-      {selectedPackage && (
+      {/* {selectedPackage && (
         <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
           <div className="flex items-center gap-2 text-primary font-medium">
             <Check className="w-4 h-4" />
@@ -184,7 +184,7 @@ export function ActivityPackagesSection({
             You can proceed with booking using the form on the right.
           </p>
         </div>
-      )}
+      )} */}
     </section>
   );
 }

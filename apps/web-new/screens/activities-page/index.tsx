@@ -1,11 +1,11 @@
 import { FAQSection } from '@/components/faq-section';
 import ReviewsSection from '@/components/ReviewsSection';
 
-import { ActivityAmenitiesSection } from './components/activity-amenities-section';
+import { StayAmenitiesSection } from '../stays-page/components/stay-amenities-section';
+import { StayPoliciesSection } from '../stays-page/components/stay-policies-section';
 import { ActivityImageGallery } from './components/activity-image-gallery';
 import { ActivityItinerarySection } from './components/activity-itinerary-section';
 import { ActivityPackagesSection } from './components/activity-packages-section';
-import { ActivityPoliciesSection } from './components/activity-policies-section';
 import { ActivityTitleSection } from './components/activity-title-section';
 import {
     ActivityBookingCardDesktop
@@ -18,7 +18,6 @@ import type {
   TActivityItineraryBase,
   TActivityPolicy,
 } from "@repo/db/index";
-
 // Define a more flexible type for the activity data we receive
 type ActivityData = {
   id: number;
@@ -104,7 +103,7 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
   const basePrice = packages?.[0]?.price || 1000;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl text-primary mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Title Section */}
       <ActivityTitleSection
         name={name}
@@ -135,13 +134,13 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
           <ActivityItinerarySection itinerary={itinerary as any} />
 
           {/* What's Included Section */}
-          <ActivityPoliciesSection policies={included as any} kind="include" />
+          <StayPoliciesSection policies={included as any} kind="include" />
 
           {/* What's Not Included Section */}
-          <ActivityPoliciesSection policies={excluded as any} kind="exclude" />
+          <StayPoliciesSection policies={excluded as any} kind="exclude" />
 
           {/* Amenities */}
-          <ActivityAmenitiesSection amenities={amenities as any} />
+          <StayAmenitiesSection amenities={amenities as any} />
 
           <FAQSection
             faqs={activity.faqs?.map((item) => item.faq) || ([] as any)}

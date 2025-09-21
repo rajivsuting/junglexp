@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import "../globals.css";
-import "../theme.css";
+import '../globals.css';
+import '../theme.css';
 
-import { Geist } from "next/font/google";
-import { cookies } from "next/headers";
-import NextTopLoader from "nextjs-toploader";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Geist } from 'next/font/google';
+import { cookies } from 'next/headers';
+import NextTopLoader from 'nextjs-toploader';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
-import { AppSidebar } from "@/components/layout/appp-side-bar/side-bar";
-import Header from "@/components/layout/header";
-import Providers from "@/components/layout/providers";
-import ThemeProvider from "@/components/layout/theme-toggle/theme-provider";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
+import { AppSidebar } from '@/components/layout/appp-side-bar/side-bar';
+import Header from '@/components/layout/header';
+import Providers from '@/components/layout/providers';
+import ThemeProvider from '@/components/layout/theme-toggle/theme-provider';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
+import { cn } from '@/lib/utils';
+import { currentUser } from '@clerk/nextjs/server';
 
 const geist = Geist({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
+  const user = await currentUser();
   const activeThemeValue = cookieStore.get("active_theme")?.value;
   const isScaled = activeThemeValue?.endsWith("-scaled");
   return (
@@ -73,7 +75,7 @@ export default async function RootLayout({
             <Providers activeThemeValue={activeThemeValue as string}>
               <Toaster position="top-right" richColors />
               <SidebarProvider>
-                <AppSidebar />
+                <AppSidebar user={user} />
                 <SidebarInset>
                   <Header />
                   {children}

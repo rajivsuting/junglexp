@@ -1,8 +1,8 @@
 "use client";
-import { Check, ChevronDown, X } from "lucide-react";
-import { useState } from "react";
+import { Check, ChevronDown, X } from 'lucide-react';
+import { useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 import type { THotelPolicy } from "@repo/db/index";
 import type { FC } from "react";
@@ -34,8 +34,8 @@ export const StayPoliciesSection: FC<StayPoliciesSectionProps> = (props) => {
 
       <div
         className={cn(
-          "grid grid-cols-1 md:grid-cols-2 gap-3",
-          showIncluded ? "max-h-96 opacity-100 pt-4" : "max-h-0 opacity-0"
+          "grid grid-cols-1 md:grid-cols-2 gap-3 transition-all",
+          showIncluded ? "opacity-100 pt-4" : "max-h-0 opacity-0"
         )}
       >
         {policies.map((item, index) => (

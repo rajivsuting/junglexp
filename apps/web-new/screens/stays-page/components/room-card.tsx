@@ -1,13 +1,16 @@
 "use client";
 
-import { Bed, Car, ChevronLeft, ChevronRight, Coffee, Expand, Users, Wifi } from 'lucide-react';
+import { Bed, ChevronLeft, ChevronRight, Expand } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+
+import { RoomAmenitiesSection } from './room-amenities-section';
 
 import type { TRoom } from "@repo/db/schema/types";
 
@@ -16,8 +19,16 @@ interface RoomCardProps {
   onReserve: () => void;
 }
 
+const mealPlanOptions = {
+  EP: "European Plan (Room only)",
+  CP: "Continental Plan (Room + Breakfast)",
+  MAP: "Modified American Plan (Room + Breakfast + Dinner)",
+  AP: "American Plan (All meals included)",
+} as const;
+
 export function RoomCard({ room, onReserve }: RoomCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedPlanId, setSelectedPlanId] = useState<number | null>();
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % room.images.length);
@@ -29,43 +40,27 @@ export function RoomCard({ room, onReserve }: RoomCardProps) {
     );
   };
 
-  // Helper function to check if amenity exists
-  const hasAmenity = (amenityName: string) => {
-    return room.amenities.some((amenity) =>
-      amenity.amenity?.label?.toLowerCase().includes(amenityName.toLowerCase())
-    );
-  };
-
-  // Helper function to get room pricing (using first plan as example)
-  const getRoomPricing = () => {
-    const firstPlan = room.plans[0];
-    if (!firstPlan) {
-      return {
-        originalPrice: 0,
-        discountedPrice: 0,
-        discount: 0,
-        totalPrice: 0,
-      };
-    }
-
-    const price = Number(firstPlan.price);
-    const discount = 10; // You can calculate this based on your business logic
+  // Pricing from selected plan
+  const pricing = useMemo(() => {
+    const plan =
+      room.plans.find((p) => p.id === selectedPlanId) ?? room.plans[0];
+    if (!plan) return null;
+    const price = Number(plan.price);
+    const discount = 0;
     const discountedPrice = price * (1 - discount / 100);
-    const totalPrice = discountedPrice * 1.18; // Adding 18% tax
-
+    const totalPrice = discountedPrice * 1.18;
     return {
       originalPrice: price,
       discountedPrice: Math.round(discountedPrice),
       discount,
       totalPrice: Math.round(totalPrice),
     };
-  };
+  }, [room.plans, selectedPlanId]);
 
-  const pricing = getRoomPricing();
   const hasImages = room.images && room.images.length > 0;
 
   return (
-    <Card className="overflow-hidden pt-0 shadow-lg">
+    <Card className="overflow-hidden text-primary pt-0 shadow-lg">
       {/* Image Section with Navigation */}
       <div className="relative h-64">
         {hasImages ? (
@@ -112,21 +107,22 @@ export function RoomCard({ room, onReserve }: RoomCardProps) {
         )}
       </div>
 
-      <CardContent className="p-6">
+      <CardContent className="p-6 pt-2">
         {/* Room Name and Rating */}
         <div className="mb-4">
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{room.name}</h3>
-          <div className="flex items-center gap-2">
+          <h3 className="text-xl font-bold mb-2">{room.name}</h3>
+          <span className="text-sm">{room.description}</span>
+          {/* <div className="flex items-center gap-2">
             <Badge className="bg-green-600 hover:bg-green-700 text-white font-bold">
               9.5
             </Badge>
             <span className="text-gray-600 font-medium">Exceptional</span>
             <span className="text-gray-500">4 reviews</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Amenities */}
-        <div className="space-y-2 mb-4">
+        {/* <div className="space-y-2 mb-4">
           {hasAmenity("breakfast") && (
             <div className="flex items-center gap-2 text-green-600">
               <Coffee className="w-4 h-4" />
@@ -139,89 +135,96 @@ export function RoomCard({ room, onReserve }: RoomCardProps) {
               <span className="text-sm">Free self parking</span>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Room Details */}
-        <div className="space-y-2 mb-4 text-gray-700">
-          <div className="flex items-center gap-2">
-            <Expand className="w-4 h-4" />
-            <span className="text-sm">302 sq ft</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            <span className="text-sm">Sleeps {room.capacity}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Bed className="w-4 h-4" />
-            <span className="text-sm">1 King Bed OR 2 Single Beds</span>
-          </div>
-        </div>
 
-        {/* Additional Amenities */}
-        <div className="space-y-2 mb-6">
-          {hasAmenity("dinner") && (
-            <div className="flex items-center gap-2 text-gray-700">
-              <span className="text-sm">✓ Free dinner</span>
-            </div>
-          )}
-          {hasAmenity("wifi") && (
-            <div className="flex items-center gap-2 text-gray-700">
-              <Wifi className="w-4 h-4" />
-              <span className="text-sm">Free WiFi</span>
-            </div>
-          )}
+        {/* Room Amenities (condensed) */}
+        <div className="mb-6">
+          <RoomAmenitiesSection amenities={room.amenities} maxItems={10} />
         </div>
-
-        {/* More Details Link */}
-        <button className="text-blue-600 hover:text-blue-700 font-medium text-sm mb-6 flex items-center gap-1">
-          More details
-          <ChevronRight className="w-4 h-4" />
-        </button>
 
         <Separator className="mb-6" />
 
+        {/* Room Plans - single-select checkbox group */}
+        {room.plans && room.plans.length > 0 ? (
+          <div className="mb-6 space-y-3">
+            <h4 className="text-sm font-semibold">Select a plan</h4>
+            <div className="grid grid-cols-1 gap-2">
+              {room.plans.map((plan) => {
+                const checked = selectedPlanId === plan.id;
+                return (
+                  <button
+                    key={plan.id}
+                    type="button"
+                    onClick={() => setSelectedPlanId(plan.id)}
+                    className={`flex items-center justify-between rounded-md border px-3 py-2 gap-2 text-left transition-colors ${
+                      checked
+                        ? "border-primary bg-primary/20"
+                        : "hover:bg-primary/10"
+                    }`}
+                  >
+                    <div className="flex flex-1 items-center gap-3">
+                      <div
+                        className={`h-4 w-4 rounded-sm border flex items-center justify-center ${
+                          checked
+                            ? "bg-primary/20 border-primary"
+                            : "border-primary/40"
+                        }`}
+                        aria-checked={checked}
+                        role="checkbox"
+                        aria-label={`Select ${plan.plan_type} plan`}
+                      >
+                        {checked ? (
+                          <span className="h-2 w-2 bg-white block" />
+                        ) : null}
+                      </div>
+                      <Label className="m-0 flex-1 cursor-pointer">
+                        {mealPlanOptions[plan.plan_type]}
+                      </Label>
+                    </div>
+                    <div className="text-sm font-medium text-primary">
+                      ₹{Number(plan.price).toLocaleString("en-IN")}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
         {/* Pricing Section */}
-        <div className="mb-6">
-          {/* Discount Badge */}
-          {pricing.discount > 0 && (
-            <Badge className="bg-green-600 hover:bg-green-700 text-white mb-2">
-              {pricing.discount}% off
-            </Badge>
-          )}
-
-          <div className="flex items-baseline gap-2 mb-1">
-            {pricing.discount > 0 && (
-              <span className="text-gray-500 line-through text-sm">
-                ₹{pricing.originalPrice.toLocaleString()}
-              </span>
-            )}
-            <span className="text-2xl font-bold text-gray-900">
-              ₹{pricing.discountedPrice.toLocaleString()}
-            </span>
+        {pricing ? (
+          <div className="mb-6">
+            <div className="flex items-baseline justify-between">
+              <div className="text-2xl font-bold">
+                ₹{pricing.discountedPrice.toLocaleString("en-IN")}
+              </div>
+              {pricing.discount > 0 ? (
+                <div className="text-sm text-gray-500 line-through">
+                  ₹{pricing.originalPrice.toLocaleString("en-IN")}
+                </div>
+              ) : null}
+            </div>
+            <div className="text-xs">
+              Incl. taxes: ₹{pricing.totalPrice.toLocaleString("en-IN")}
+            </div>
           </div>
-
-          <div className="text-sm text-gray-600">
-            ₹{pricing.totalPrice.toLocaleString()} total
-          </div>
-          <div className="text-sm text-gray-600">includes taxes & fees</div>
-
-          {/* Availability */}
-          <div className="text-red-600 text-sm mt-2">
-            We have {room.room_qty} left
-          </div>
-        </div>
+        ) : null}
 
         {/* Reserve Button */}
         <Button
+          disabled={
+            (room.plans.length == 0 && selectedPlanId == null) ||
+            selectedPlanId == undefined
+          }
           onClick={onReserve}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg text-lg"
+          className="w-full  bg-[#2F2F2F] text-white hover:bg-[#444444] text-white py-3"
         >
           Reserve
         </Button>
 
-        <p className="text-center text-gray-500 text-sm mt-2">
-          You will not be charged yet
-        </p>
+        <p className="text-center text-sm mt-2">You will not be charged yet</p>
       </CardContent>
     </Card>
   );

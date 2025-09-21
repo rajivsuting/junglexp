@@ -73,7 +73,7 @@ export default async function LodgesSection({ park }: { park: TNationalPark }) {
 
         <div className="mt-16 text-center">
           <Link
-            href={`/parks/${park.slug}/stays/resort`}
+            href={`/parks/${park.slug}/stays?stay-type=resort`}
             className="px-8 py-3 bg-[#2F2F2F] text-white hover:bg-[#444444] transition-colors"
           >
             ALL LODGES

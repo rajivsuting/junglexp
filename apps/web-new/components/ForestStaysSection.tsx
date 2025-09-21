@@ -1,9 +1,9 @@
-import { Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { getHotelsByParkId } from "@repo/actions/hotels.actions";
+import { cn } from '@/lib/utils';
+import { getHotelsByParkId } from '@repo/actions/hotels.actions';
 
 import type { TNationalPark } from "@repo/db/index";
 export default async function ForestStaysSection({
@@ -66,7 +66,7 @@ export default async function ForestStaysSection({
 
         <div className="mt-16 text-center">
           <Link
-            href={`/parks/${park.slug}/stays/forest`}
+            href={`/parks/${park.slug}/stays?stay-type=forest`}
             className="px-8 py-3 bg-[#2F2F2F] text-white hover:bg-[#444444] transition-colors"
           >
             ALL FOREST STAYS

@@ -1,34 +1,29 @@
 "use server";
-import {
-  and,
-  count,
-  eq,
-  getTableColumns,
-  ilike,
-  inArray,
-  sql,
-} from "drizzle-orm";
+import { and, asc, count, desc, eq, getTableColumns, ilike, inArray, sql } from 'drizzle-orm';
 
-import { db } from "@repo/db/index";
-import { HotelAmenities } from "@repo/db/schema/hotel-amenities";
+import { db } from '@repo/db/index';
+import { HotelAmenities } from '@repo/db/schema/hotel-amenities';
 import {
-  HotelFaqs,
-  HotelImages,
-  HotelPolicies,
-  Hotels,
-  HotelSaftyFeatures,
-  hotelTypeEnum,
-  insertHotelSchema,
-} from "@repo/db/schema/hotels";
-import { Images } from "@repo/db/schema/image";
-import { NationalParks } from "@repo/db/schema/park";
-import { PlaceImages, Places } from "@repo/db/schema/places";
-import { Policies } from "@repo/db/schema/policies";
-import { Zones } from "@repo/db/schema/zones";
+    HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures, hotelTypeEnum,
+    insertHotelSchema
+} from '@repo/db/schema/hotels';
+import { Images } from '@repo/db/schema/image';
+import { NationalParks } from '@repo/db/schema/park';
+import { PlaceImages, Places } from '@repo/db/schema/places';
+import { Policies } from '@repo/db/schema/policies';
+import { RoomAmenities, RoomImages, RoomPlans, Rooms } from '@repo/db/schema/rooms';
+import { Zones } from '@repo/db/schema/zones';
 
+import type { TRoomBase, TRoomPlanBase } from "@repo/db/schema/rooms";
 import type { THotelType, TNewHotel } from "@repo/db/schema/hotels";
 import type { TImage } from "@repo/db/schema/image";
-import type { THotel, TPlaceImage } from "@repo/db/schema/types";
+import type {
+  THotel,
+  TPlaceImage,
+  TRoom,
+  TRoomImage,
+  TRoomPlan,
+} from "@repo/db/schema/types";
 export const getHotelsByParkSlug = async (slug: string) => {
   const hotels = await db
     .select({
@@ -219,6 +214,7 @@ export const getHotelById = async (hotelId: number) => {
         },
       },
       amenities: {
+        orderBy: [asc(RoomAmenities.order)],
         with: {
           amenity: true,
         },
@@ -262,6 +258,7 @@ export const getHotelBySlug = async (slug: string) => {
         },
       },
       amenities: {
+        orderBy: [asc(RoomAmenities.order)],
         with: {
           amenity: true,
         },
@@ -269,6 +266,21 @@ export const getHotelBySlug = async (slug: string) => {
       faqs: {
         with: {
           faq: true,
+        },
+      },
+      rooms: {
+        with: {
+          images: {
+            orderBy: [asc(RoomImages.order)],
+            with: {
+              image: true,
+            },
+          },
+          amenities: {
+            orderBy: [asc(RoomAmenities.order)],
+            with: { amenity: true },
+          },
+          plans: true,
         },
       },
     },
@@ -546,7 +558,8 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
     .from(Hotels)
     .innerJoin(Zones, eq(Zones.id, Hotels.zone_id))
     .innerJoin(NationalParks, eq(NationalParks.id, Zones.park_id))
-    .where(and(...whereConditions));
+    .where(and(...whereConditions))
+    .orderBy(desc(Hotels.is_featured));
 
   // Then get all images for these hotels
   const hotelIds = hotelsInPark.map((h) => h.hotel.id);
@@ -584,12 +597,110 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
     {} as Record<number, Array<{ order: number; image: TImage }>>
   );
 
-  // Combine hotels with their images
+  // Fetch rooms for these hotels
+  const rooms = await db
+    .select({
+      id: Rooms.id,
+      hotel_id: Rooms.hotel_id,
+      name: Rooms.name,
+      description: Rooms.description,
+      room_qty: Rooms.room_qty,
+      capacity: Rooms.capacity,
+    })
+    .from(Rooms)
+    .where(inArray(Rooms.hotel_id, hotelIds));
+
+  const roomIds = rooms
+    .map((r) => r.id)
+    .filter((id): id is number => id !== null);
+
+  // Fetch images for these rooms
+  let imagesByRoomId: Record<
+    number,
+    Array<{ order: number; image: TImage }>
+  > = {};
+  if (roomIds.length > 0) {
+    const roomImages = await db
+      .select({
+        room_id: RoomImages.room_id,
+        order: RoomImages.order,
+        image: Images,
+      })
+      .from(RoomImages)
+      .innerJoin(Images, eq(Images.id, RoomImages.image_id))
+      .where(inArray(RoomImages.room_id, roomIds))
+      .orderBy(RoomImages.order);
+
+    imagesByRoomId = roomImages.reduce(
+      (acc, row) => {
+        const key = row.room_id as number;
+        if (key !== null && key !== undefined) {
+          if (!acc[key]) acc[key] = [];
+          acc[key].push({ order: row.order, image: row.image });
+        }
+        return acc;
+      },
+      {} as Record<number, Array<{ order: number; image: TImage }>>
+    );
+  }
+
+  // Fetch plans for these rooms
+  let plansByRoomId: Record<number, Array<TRoomPlanBase>> = {};
+  if (roomIds.length > 0) {
+    const plans = await db
+      .select({
+        id: RoomPlans.id,
+        room_id: RoomPlans.room_id,
+        plan_type: RoomPlans.plan_type,
+        price: RoomPlans.price,
+        description: RoomPlans.description,
+        is_active: RoomPlans.is_active,
+      })
+      .from(RoomPlans)
+      .where(inArray(RoomPlans.room_id, roomIds));
+
+    plansByRoomId = plans.reduce(
+      (acc, p) => {
+        const rid = p.room_id as number;
+        if (rid !== null && rid !== undefined) {
+          if (!acc[rid]) acc[rid] = [];
+          acc[rid].push(p as TRoomPlanBase);
+        }
+        return acc;
+      },
+      {} as Record<number, Array<TRoomPlanBase>>
+    );
+  }
+
+  // Group rooms by hotel
+  const roomsByHotelId = rooms.reduce(
+    (acc, r) => {
+      const hid = r.hotel_id as number;
+      if (hid !== null && hid !== undefined) {
+        if (!acc[hid]) acc[hid] = [];
+        acc[hid].push({
+          ...r,
+          images: imagesByRoomId[r.id] || [],
+          plans: plansByRoomId[r.id] || [],
+        });
+      }
+      return acc;
+    },
+    {} as Record<
+      number,
+      Array<
+        TRoomBase & { images: { order: number; image: TImage }[]; plans: any[] }
+      >
+    >
+  );
+
+  // Combine hotels with their images and rooms
   return hotelsInPark.map((hotel) => ({
     ...hotel.hotel,
     park: hotel.park,
     zone: hotel.zone,
     images: hotel.hotel.id ? imagesByHotelId[hotel.hotel.id] || [] : [],
+    rooms: hotel.hotel.id ? roomsByHotelId[hotel.hotel.id] || [] : [],
   }));
 };
 
@@ -597,11 +708,33 @@ export const getHotels = async (filters: {
   page?: number;
   limit?: number;
   search?: string;
+  status?: string[];
+  is_featured?: string[];
 }) => {
-  const { page = 1, limit = 10, search } = filters;
+  const { page = 1, limit = 10, search, status, is_featured } = filters;
+
+  // Build where conditions
+  const whereConditions = [];
+
+  if (search) {
+    whereConditions.push(ilike(Hotels.name, `%${search}%`));
+  }
+
+  if (status && status.length > 0) {
+    whereConditions.push(inArray(Hotels.status, status as any));
+  }
+
+  if (is_featured && is_featured.length > 0) {
+    // Convert string array to boolean array
+    const featuredBooleans = is_featured.map((f) => f === "true");
+    whereConditions.push(inArray(Hotels.is_featured, featuredBooleans));
+  }
+
+  const whereClause =
+    whereConditions.length > 0 ? and(...whereConditions) : undefined;
 
   const hotels = await db.query.Hotels.findMany({
-    where: and(search ? ilike(Hotels.name, `%${search}%`) : undefined),
+    where: whereClause,
     limit: limit,
     offset: (page - 1) * limit,
     with: {
@@ -621,7 +754,7 @@ export const getHotels = async (filters: {
   const total = await db
     .select({ count: count() })
     .from(Hotels)
-    .where(and(ilike(Hotels.name, `%${search}%`)));
+    .where(whereClause);
 
   return { hotels: hotels as unknown as THotel[], total: total[0]?.count || 0 };
 };
@@ -907,6 +1040,9 @@ export const getNearbyPlacesToHotel = async (
       ...getTableColumns(Places),
       distance_in_meters: sql<number>`ST_Distance(${Places.location}::geography, ${hGeom}::geography)`,
       images: imagesAgg,
+      // Coordinates for client-side maps
+      lat: sql<number>`ST_X(${Places.location})`,
+      lon: sql<number>`ST_Y(${Places.location})`,
     })
 
     .from(Places)

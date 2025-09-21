@@ -48,6 +48,7 @@ export const nationalParksRelations = relations(
       references: [Cities.id],
     }),
     images: many(ParkImages),
+    mobile_images: many(ParkImages),
     zones: many(Zones),
     activities: many(Activities),
   })

@@ -42,6 +42,7 @@ export type TParkImage = TParkImageBase & {
 export type TNationalPark = TNationalParkBase & {
   city: TCityWithState;
   images: TParkImage[];
+  mobile_images: TParkImage[];
 };
 
 export type TSouvenirWithImage = TSouvenirBase & {
@@ -101,6 +102,7 @@ export type THotel = THotelBase & {
   saftyFeatures: THotelSaftyFeature[];
   amenities: THotelAmenity[];
   faqs: THotelFaq[];
+  rooms: TRoom[];
 };
 
 // Room types

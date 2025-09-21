@@ -16,3 +16,4 @@ export * from "./souvenirs.actions";
 export * from "./states.actions";
 export * from "./zones.actions";
 export * from "./activities.actions";
+export * from "./users.actions";

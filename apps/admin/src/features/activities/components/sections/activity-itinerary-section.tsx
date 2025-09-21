@@ -101,7 +101,9 @@ const SortableItineraryItem = ({
             </span>
           )}
         </div>
-        <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+        <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
+          {item.description}
+        </p>
       </div>
       <Button
         variant="ghost"
@@ -119,8 +121,6 @@ export default function ActivityItinerarySection({
   activityId,
   initialData,
 }: ActivityItinerarySectionProps) {
-  console.log("initialData", initialData);
-
   // Convert existing itinerary data to our internal format
   const initialItineraryItems: ItineraryItem[] = initialData?.itinerary
     ? initialData.itinerary

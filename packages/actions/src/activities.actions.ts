@@ -242,6 +242,7 @@ export const getActivityBySlug = async (slug: string) => {
           city: {
             with: { state: true },
           },
+          zones: true,
         },
       },
       images: {

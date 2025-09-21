@@ -1,27 +1,12 @@
 "use server";
-import {
-  and,
-  count,
-  eq,
-  getTableColumns,
-  ilike,
-  inArray,
-  or,
-  sql,
-} from "drizzle-orm";
+import { and, count, eq, getTableColumns, ilike, inArray, notInArray, or, sql } from 'drizzle-orm';
 
-import { db, schema } from "@repo/db";
-import { Hotels } from "@repo/db/schema/hotels";
+import { db, schema } from '@repo/db';
+import { Hotels } from '@repo/db/schema/hotels';
 import {
-  RoomAmenities,
-  roomAmenitiesInsertSchema,
-  RoomImages,
-  roomImagesInsertSchema,
-  RoomPlans,
-  roomPlansInsertSchema,
-  Rooms,
-  roomsInsertSchema,
-} from "@repo/db/schema/rooms";
+    RoomAmenities, roomAmenitiesInsertSchema, RoomImages, roomImagesInsertSchema, RoomPlans,
+    roomPlansInsertSchema, Rooms, roomsInsertSchema
+} from '@repo/db/schema/rooms';
 
 import type { TRoom } from "@repo/db/schema/types";
 import type {
@@ -374,6 +359,82 @@ export const removeRoomAmenities = async (
       // Note: This is a simplified version. For proper implementation, you'd use inArray
     )
   );
+};
+
+// Sync room amenities: upsert new ones by order and remove those not present
+export const updateRoomAmenities = async (
+  roomId: number,
+  orderedAmenityIds: number[]
+) => {
+  // Fetch existing amenities for the room
+  const existing = await db
+    .select()
+    .from(RoomAmenities)
+    .where(eq(RoomAmenities.room_id, roomId));
+
+  const existingAmenityIds = existing
+    .map((ra) => ra.amenity_id)
+    .filter((id): id is number => id !== null);
+
+  // Determine deletions and creations
+  const toDelete = existingAmenityIds.filter(
+    (id) => !orderedAmenityIds.includes(id)
+  );
+  const toCreate = orderedAmenityIds.filter(
+    (id) => !existingAmenityIds.includes(id)
+  );
+
+  const ops: Promise<unknown>[] = [];
+
+  if (toDelete.length > 0) {
+    ops.push(
+      db
+        .delete(RoomAmenities)
+        .where(
+          and(
+            eq(RoomAmenities.room_id, roomId),
+            inArray(RoomAmenities.amenity_id, toDelete)
+          )
+        )
+    );
+  }
+
+  if (toCreate.length > 0) {
+    const values = toCreate.map((amenityId, index) =>
+      roomAmenitiesInsertSchema.parse({
+        room_id: roomId,
+        amenity_id: amenityId,
+        order: orderedAmenityIds.indexOf(amenityId),
+      })
+    );
+    ops.push(db.insert(RoomAmenities).values(values));
+  }
+
+  // Update order for existing items
+  for (const item of existing) {
+    if (item.amenity_id == null) continue;
+    const newIndex = orderedAmenityIds.indexOf(item.amenity_id);
+    if (newIndex === -1) continue; // will be deleted above
+    if (item.order !== newIndex) {
+      ops.push(
+        db
+          .update(RoomAmenities)
+          .set({ order: newIndex })
+          .where(eq(RoomAmenities.id, item.id))
+      );
+    }
+  }
+
+  if (ops.length > 0) {
+    await Promise.all(ops);
+  }
+
+  // Return updated list
+  return await db
+    .select()
+    .from(RoomAmenities)
+    .where(eq(RoomAmenities.room_id, roomId))
+    .orderBy(RoomAmenities.order);
 };
 
 // Room Plans

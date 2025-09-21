@@ -1,11 +1,11 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import type { TActivityImage } from "@repo/db/index";
 
@@ -76,7 +76,7 @@ export function ActivityImageGallery({ images }: ActivityImageGalleryProps) {
           // Multiple images layout
           <div className="grid grid-cols-4 grid-rows-2 gap-2 h-96">
             {/* Main large image */}
-            <div className="col-span-2 row-span-2 relative rounded-lg overflow-hidden cursor-pointer">
+            <div className="col-span-4 md:col-span-2 row-span-2 relative rounded-lg overflow-hidden cursor-pointer">
               <Image
                 src={imageUrls[0]!.url}
                 alt={imageUrls[0]!.alt}
@@ -90,7 +90,7 @@ export function ActivityImageGallery({ images }: ActivityImageGalleryProps) {
             {imageUrls.slice(1, 5).map((image, index) => (
               <div
                 key={index + 1}
-                className="relative rounded-lg overflow-hidden cursor-pointer"
+                className="relative hidden md:block rounded-lg overflow-hidden cursor-pointer"
               >
                 <Image
                   src={image.thumbnail}

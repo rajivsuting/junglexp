@@ -47,6 +47,10 @@ export async function POST(req: Request): Promise<NextResponse> {
     return createUser(data);
   }
 
+  if (type === "user.updated") {
+    return updateUser(data);
+  }
+
   if (type === "user.deleted") {
     return deleteUser(data.id);
   }
@@ -62,17 +66,47 @@ export async function POST(req: Request): Promise<NextResponse> {
 }
 
 async function createUser(data: UserJSON) {
+  // Extract role from public metadata, default to 0 (regular user)
+  const role = (data.public_metadata as any)?.role ?? "user";
+
   await db.insert(schema.Users).values({
     user_id: data.id,
     email: data.email_addresses[0]!.email_address,
     first_name: data.first_name ?? "",
     last_name: data.last_name ?? "",
-    role: 0,
+    user_role: role as "user" | "admin" | "super_admin",
   });
 
   return NextResponse.json(
     {
       message: "user created",
+    },
+    { status: 200 }
+  );
+}
+
+async function updateUser(data: UserJSON) {
+  // Extract role from public metadata
+  const role = (data.public_metadata as any)?.role;
+
+  const updateData: any = {
+    first_name: data.first_name ?? "",
+    last_name: data.last_name ?? "",
+  };
+
+  // Only update role if it's provided in metadata
+  if (role !== undefined) {
+    updateData.role = Number(role);
+  }
+
+  await db
+    .update(schema.Users)
+    .set(updateData)
+    .where(eq(schema.Users.user_id, data.id));
+
+  return NextResponse.json(
+    {
+      message: "user updated",
     },
     { status: 200 }
   );

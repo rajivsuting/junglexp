@@ -168,7 +168,7 @@ export default async function SafarisAndActivitiesPage(props: PageProps) {
                 return (
                   <Card
                     key={activity.id}
-                    className="overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                    className="overflow-hidden pt-0 hover:shadow-lg transition-shadow duration-300"
                   >
                     {/* Image Section */}
                     <div className="relative">
@@ -230,7 +230,7 @@ export default async function SafarisAndActivitiesPage(props: PageProps) {
                       </div>
 
                       {/* Description */}
-                      <p className="text-muted-foreground text-sm text-center mb-6 line-clamp-4">
+                      <p className="text-muted-foreground text-sm text-center mb-6 line-clamp-4 whitespace-pre-wrap">
                         {activity.description ||
                           `Experience the thrill of ${activity.name} in ${park.name} with our expert guides.`}
                       </p>
@@ -287,10 +287,12 @@ export default async function SafarisAndActivitiesPage(props: PageProps) {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-              <Button size="lg">Start Planning</Button>
-              <Button variant="outline" size="lg">
-                Contact Us
-              </Button>
+              {/* <Button size="lg">Start Planning</Button> */}
+              <Link href={`/parks/${park.slug}/contact`}>
+                <Button variant="outline" size="lg">
+                  Contact Us
+                </Button>
+              </Link>
             </div>
 
             {/* Quick Links */}

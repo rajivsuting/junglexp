@@ -1,18 +1,11 @@
-import { sql } from "drizzle-orm";
+import { sql } from 'drizzle-orm';
 import {
-  boolean,
-  index,
-  integer,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+    boolean, index, integer, pgTable, serial, text, timestamp, varchar
+} from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
-import { Images } from "./image";
-import { NationalParks } from "./park";
+import { Images } from './image';
+import { NationalParks } from './park';
 
 /**
 --------------------------------------- Souvenirs Table ---------------------------------------
@@ -42,12 +35,14 @@ export const Souvenirs = pgTable(
 );
 
 export const SouvenirImages = pgTable("souvenir_images", {
+  id: serial("id").primaryKey(),
   souvenir_id: integer("souvenir_id")
     .references(() => Souvenirs.id)
     .notNull(),
   image_id: integer("image_id")
     .references(() => Images.id)
     .notNull(),
+  order: integer("order").notNull().default(0),
 });
 
 /**
