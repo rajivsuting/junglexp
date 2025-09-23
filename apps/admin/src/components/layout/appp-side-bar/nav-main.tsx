@@ -1,6 +1,6 @@
 "use client";
 import {
-    Activity, BedDouble, Compass, Hotel, Landmark, MapPin, MapPinHouse, ShoppingBag
+    Activity, BedDouble, Compass, Hotel, Landmark, MapPin, MapPinHouse, ShoppingBag, User
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -26,6 +26,7 @@ const items = [
     url: "/souvenirs",
     icon: ShoppingBag,
   },
+  { title: "Naturalists", url: "/naturalists", icon: User },
 ];
 
 export function NavMain() {

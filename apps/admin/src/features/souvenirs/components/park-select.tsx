@@ -1,14 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { FormControl } from "@/components/ui/form";
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+import { FormControl } from '@/components/ui/form';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import type { TNationalPark } from "@repo/db/index";
 
@@ -46,7 +41,7 @@ const NationalParkSelect = () => {
     <>
       <FormControl className="w-full">
         <SelectTrigger>
-          <SelectValue placeholder="Select state" />
+          <SelectValue placeholder="Select park" />
         </SelectTrigger>
       </FormControl>
       <SelectContent>

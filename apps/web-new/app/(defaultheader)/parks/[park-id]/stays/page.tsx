@@ -1,15 +1,20 @@
-import { Image as ImageIcon, MapPin, Star } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { Image as ImageIcon, MapPin, Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { getHotelsByParkId } from '@repo/actions/hotels.actions';
-import { getNationalParkBySlug } from '@repo/actions/parks.actions';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { getHotelsByParkId } from "@repo/actions/hotels.actions";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
 import type { TRoomBase, TRoomPlan } from "@repo/db/index";
 
@@ -211,10 +216,10 @@ export default async function AllStaysPage(props: PageProps) {
                       {/* Pricing */}
                       <div className="text-center mb-4">
                         <div className="text-lg font-bold mb-1">
-                          From ${priceRange.min}{" "}
+                          From ₹{priceRange.min.toLocaleString()}{" "}
                           {priceRange.min === priceRange.max
                             ? ""
-                            : `to ${priceRange.max}`}
+                            : `to ₹${priceRange.max.toLocaleString()}`}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Per room per night

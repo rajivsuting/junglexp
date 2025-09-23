@@ -1,39 +1,25 @@
 import {
-  Camera,
-  ChartLine,
-  Compass,
-  Database,
-  File,
-  FileStack,
-  HelpCircle,
-  MapPinHouse,
-  Search,
-  Settings,
-} from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
+    Camera, ChartLine, Compass, Database, File, FileStack, HelpCircle, MapPinHouse, Search, Settings
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
+    Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 
-import { NavActivites } from "./nav-activites";
-import { NavAdmin } from "./nav-admin";
-import { NavGlobal } from "./nav-global";
-import { NavHotels } from "./nav-hotels";
-import { NavMain } from "./nav-main";
-import { NavPlaces } from "./nav-places";
-import { NavUser } from "./nav-user";
+import { NavActivites } from './nav-activites';
+import { NavAdmin } from './nav-admin';
+import { NavGlobal } from './nav-global';
+import { NavHotels } from './nav-hotels';
+import { NavMain } from './nav-main';
+import { NavPlaces } from './nav-places';
+import { NavUser } from './nav-user';
 
 import type { User } from "@clerk/nextjs/server";
-
 const data = {
   navMain: [
     {
@@ -142,7 +128,13 @@ export function AppSidebar({ user }: { user: User | null }) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/">
-                <span className="text-base font-semibold">eTroupers</span>
+                <Image
+                  src="/LogoWhite.svg"
+                  alt="eTroupers"
+                  width={100}
+                  height={40}
+                />
+                {/* <span className="text-base font-semibold">eTroupers</span> */}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
