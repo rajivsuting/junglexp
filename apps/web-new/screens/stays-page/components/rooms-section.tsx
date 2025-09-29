@@ -1,18 +1,30 @@
 "use client";
-import type { TRoom } from "@repo/db/schema/types";
+import type { THotel, TRoom, TRoomPlan } from "@repo/db/schema/types";
 
-import { RoomCard } from './room-card';
+import { useState } from "react";
+
+import { BookingModal } from "@/components/booking-modal";
+
+import { RoomCard } from "./room-card";
+
+import type { THotelBase } from "@repo/db/schema/hotels";
 
 interface RoomsSectionProps {
-  rooms: TRoom[];
+  stay: THotel;
 }
 
-export function RoomsSection({ rooms }: RoomsSectionProps) {
-  const handleReserve = (room: TRoom) => {
-    console.log("Reserved room:", room.id);
+export function RoomsSection({ stay }: RoomsSectionProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<TRoom | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<TRoomPlan | null>(null);
+
+  const { rooms } = stay;
+  const handleReserve = (room: TRoom, plan: TRoomPlan) => {
+    setSelectedRoom(room);
+    setSelectedPlan(plan);
+    setIsOpen(true);
     // You can add your reservation logic here
   };
-  console.log("rooms", rooms);
 
   return (
     <section id="rooms" className="py-8 text-primary">
@@ -27,10 +39,18 @@ export function RoomsSection({ rooms }: RoomsSectionProps) {
           <RoomCard
             key={room.id}
             room={room}
-            onReserve={() => handleReserve(room)}
+            onReserve={(plan) => handleReserve(room, plan)}
           />
         ))}
       </div>
+
+      <BookingModal
+        onChangeState={setIsOpen}
+        isOpen={isOpen}
+        stay={stay}
+        room={selectedRoom!}
+        plan={selectedPlan!}
+      />
     </section>
   );
 }

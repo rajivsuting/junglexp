@@ -9,9 +9,11 @@ import { Amenities } from './schema/amenities';
 import { Cities } from './schema/city';
 import { Faqs } from './schema/faqs';
 import { HotelAmenities } from './schema/hotel-amenities';
+import { HotelBookings, hotelBookingStatusEnum } from './schema/hotel-bookings';
 import { HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures } from './schema/hotels';
 import { Images } from './schema/image';
 import { Naturalist } from './schema/naturalist';
+import { NaturalistBookings, naturalistBookingStatusEnum } from './schema/naturalist-bookings';
 import { NationalParks, ParkImages } from './schema/park';
 import { PlaceImages, Places } from './schema/places';
 import { Policies } from './schema/policies';
@@ -96,6 +98,10 @@ export const schemaWithoutRelations = {
   ActivityPackages,
   ActivityPolicies,
   Naturalist,
+  HotelBookings,
+  hotelBookingStatusEnum,
+  NaturalistBookings,
+  naturalistBookingStatusEnum,
 };
 
 export const schema = {

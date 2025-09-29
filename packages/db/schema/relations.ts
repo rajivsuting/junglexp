@@ -1,24 +1,36 @@
-import { relations } from 'drizzle-orm';
+import { relations } from "drizzle-orm";
 
 import {
-    Activities, ActivityAmenities, ActivityImages, ActivityItinerary, ActivityPackages,
-    ActivityPolicies
-} from './activities';
-import { Amenities } from './amenities';
-import { Cities } from './city';
-import { Faqs } from './faqs';
-import { HotelAmenities } from './hotel-amenities';
-import { HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures } from './hotels';
-import { Images } from './image';
-import { Naturalist } from './naturalist';
-import { NationalParks, ParkImages } from './park';
-import { PlaceImages, Places } from './places';
-import { Policies } from './policies';
-import { RoomAmenities, RoomImages, RoomPlans, Rooms } from './rooms';
-import { SaftyFeatures } from './safty-features';
-import { SouvenirImages, Souvenirs } from './souvenirs';
-import { States } from './state';
-import { Zones } from './zones';
+  Activities,
+  ActivityAmenities,
+  ActivityImages,
+  ActivityItinerary,
+  ActivityPackages,
+  ActivityPolicies,
+} from "./activities";
+import { Amenities } from "./amenities";
+import { Cities } from "./city";
+import { Faqs } from "./faqs";
+import { HotelAmenities } from "./hotel-amenities";
+import { HotelBookings } from "./hotel-bookings";
+import {
+  HotelFaqs,
+  HotelImages,
+  HotelPolicies,
+  Hotels,
+  HotelSaftyFeatures,
+} from "./hotels";
+import { Images } from "./image";
+import { Naturalist } from "./naturalist";
+import { NaturalistBookings } from "./naturalist-bookings";
+import { NationalParks, ParkImages } from "./park";
+import { PlaceImages, Places } from "./places";
+import { Policies } from "./policies";
+import { RoomAmenities, RoomImages, RoomPlans, Rooms } from "./rooms";
+import { SaftyFeatures } from "./safty-features";
+import { SouvenirImages, Souvenirs } from "./souvenirs";
+import { States } from "./state";
+import { Zones } from "./zones";
 
 export const statesRelations = relations(States, ({ many }) => ({
   cities: many(Cities),
@@ -314,3 +326,31 @@ export const naturalistRelations = relations(Naturalist, ({ one, many }) => ({
     references: [Images.id],
   }),
 }));
+
+export const hotelBookingsRelations = relations(
+  HotelBookings,
+  ({ one, many }) => ({
+    hotel: one(Hotels, {
+      fields: [HotelBookings.hotel_id],
+      references: [Hotels.id],
+    }),
+    room: one(Rooms, {
+      fields: [HotelBookings.room_id],
+      references: [Rooms.id],
+    }),
+    plan: one(RoomPlans, {
+      fields: [HotelBookings.plan_id],
+      references: [RoomPlans.id],
+    }),
+  })
+);
+
+export const naturalistBookingsRelations = relations(
+  NaturalistBookings,
+  ({ one }) => ({
+    park: one(NationalParks, {
+      fields: [NaturalistBookings.park_id],
+      references: [NationalParks.id],
+    }),
+  })
+);

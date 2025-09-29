@@ -1,0 +1,2 @@
+ALTER TABLE "hotel_bookings" ADD COLUMN "plan_id" integer;--> statement-breakpoint
+ALTER TABLE "hotel_bookings" ADD CONSTRAINT "hotel_bookings_plan_id_room_plans_id_fk" FOREIGN KEY ("plan_id") REFERENCES "public"."room_plans"("id") ON DELETE cascade ON UPDATE no action;

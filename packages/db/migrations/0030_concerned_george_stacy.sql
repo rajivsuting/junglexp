@@ -1,0 +1,1 @@
+ALTER TABLE "hotel_bookings" ALTER COLUMN "mobile_no" SET DATA TYPE varchar(255);

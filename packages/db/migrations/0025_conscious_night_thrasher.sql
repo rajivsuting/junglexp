@@ -1,0 +1,3 @@
+ALTER TABLE "naturalist_bookings" ADD COLUMN "hotel_id" integer;--> statement-breakpoint
+ALTER TABLE "naturalist_bookings" ADD CONSTRAINT "naturalist_bookings_hotel_id_hotels_id_fk" FOREIGN KEY ("hotel_id") REFERENCES "public"."hotels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "naturalist_bookings_hotel_id_idx" ON "naturalist_bookings" USING btree ("hotel_id");

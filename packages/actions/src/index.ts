@@ -17,3 +17,5 @@ export * from "./states.actions";
 export * from "./zones.actions";
 export * from "./activities.actions";
 export * from "./users.actions";
+export * from "./hotel-bookings.action";
+export * from "./naturalist-bookings.actions";

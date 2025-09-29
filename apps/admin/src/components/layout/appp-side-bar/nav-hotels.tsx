@@ -1,5 +1,5 @@
 "use client";
-import { BedDouble, Hotel } from "lucide-react";
+import { BedDouble, Hotel, Landmark } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -22,6 +22,11 @@ const items = [
     title: "Rooms",
     url: "/rooms",
     icon: BedDouble,
+  },
+  {
+    title: "Places",
+    url: "/places",
+    icon: Landmark,
   },
 ];
 

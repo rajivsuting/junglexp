@@ -1,12 +1,5 @@
 "use client";
-import {
-  BedDouble,
-  Compass,
-  Hotel,
-  Landmark,
-  MapPin,
-  MapPinHouse,
-} from "lucide-react";
+import { Hotel, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -20,19 +13,16 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  {
-    title: "Places",
-    url: "/places",
-    icon: Landmark,
-  },
+  { title: "Hotel Bookings", url: "/hotel-bookings", icon: Hotel },
+  { title: "Naturalist Bookings", url: "/naturalist-bookings", icon: User },
 ];
 
-export function NavPlaces() {
+export function NavBookings() {
   const pathname = usePathname();
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Places</SidebarGroupLabel>
+      <SidebarGroupLabel>Bookings</SidebarGroupLabel>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           {items.map((item) => (

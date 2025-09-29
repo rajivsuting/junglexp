@@ -10,6 +10,7 @@ import type { TAmenityBase } from "./amenities";
 import type { TCity } from "./city";
 import type { TFaqsBase } from "./faqs";
 import type { THotelAmenitiesBase } from "./hotel-amenities";
+import type { THotelBookingBase } from "./hotel-bookings";
 import type {
   THotelBase,
   THotelImageBase,
@@ -144,4 +145,11 @@ export type TActivity = TActivityBase & {
   itinerary: TActivityItineraryBase[];
   amenities: TActivityAmenity[];
   packages: TActivityPackageBase[];
+};
+
+// Hotel booking types
+export type THotelBooking = THotelBookingBase & {
+  hotel: THotelBase;
+  room: TRoomBase;
+  plan: TRoomPlanBase;
 };
