@@ -1,19 +1,18 @@
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-import PageContainer from '@/components/layout/page-container';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getNaturalistBookingById } from '@repo/actions/naturalist-bookings.actions';
+import PageContainer from "@/components/layout/page-container";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getNaturalistBookingById } from "@repo/actions/naturalist-bookings.actions";
 
 interface NaturalistBookingDetailPageProps {
-  params: {
-    "booking-id": string;
-  };
+  params: Promise<{ "booking-id": string }>;
 }
 
-export default async function NaturalistBookingDetailPage({
-  params,
-}: NaturalistBookingDetailPageProps) {
+export default async function NaturalistBookingDetailPage(
+  props: NaturalistBookingDetailPageProps
+) {
+  const params = await props.params;
   const bookingId = parseInt(params["booking-id"]);
 
   if (isNaN(bookingId)) {

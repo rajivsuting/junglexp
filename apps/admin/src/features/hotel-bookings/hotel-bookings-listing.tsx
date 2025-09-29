@@ -30,7 +30,7 @@ const HotelBookingsListing = async () => {
     ...(status &&
       Array.isArray(status) &&
       status.length > 0 && {
-        status: status as "pending" | "confirmed" | "cancelled"[],
+        status: status as ("pending" | "confirmed" | "cancelled")[],
       }),
     ...(hotel_id && { hotel_id: Number(hotel_id) }),
     ...(room_id && { room_id: Number(room_id) }),
@@ -42,7 +42,10 @@ const HotelBookingsListing = async () => {
     }),
   };
 
-  const { hotelBookings, total } = await getHotelBookings(filters, sort || []);
+  const { hotelBookings, total } = await getHotelBookings(
+    filters as any,
+    sort || []
+  );
 
   return (
     <HotelBookingsTable
