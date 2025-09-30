@@ -1,1 +1,57 @@
-[{"id":2,"name":"Dhikuli Zone","description":"Dhikuli Zone","park_id":1},{"id":4,"name":"Bijrani","description":"The Bijrani zone","park_id":1}]
+[
+  {
+    "name": "Dhela Zone",
+    "description": "The Dhela Zone is extremely rich in flora and fauna. The entire area has mixed forests of Sal, Rohini, Haldu, Bahera, Kusum vegetation. Fauna includes tigers, leopards, Asiatic elephants, sloth bears and king Cobras. The Dhela zone is particularly known for bird diversity. The entry for Dhela Eco Tourism zone is joint and common with the Jhirna zone. And the gate is located at a distance of approx twenty kilometers from Ramnagar . Dhela Zone remains open throughout the year for tourists.",
+    "park_id": 1
+  },
+  {
+    "name": "Kyari Zone",
+    "description": "Kyari Kham is surrounded by huge and rich timberlands of Ramnagar Forest Division which thusly is a piece of Terai Arc Landscape. The zone is basically depleted by Dabka River and has prime timberlands of Sal and different species. The zone is now drawing in an expansive number of birding guests by virtue of its differing birdlife, evaluated to be more than 350 bird species. ",
+    "park_id": 1
+  },
+  {
+    "name": "Marchula & Mohan Zone",
+    "description": "Marchula is a small, lesser-known village in Uttarakhand, located near Ramnagar. The village is nestled on the banks of the Ramganga River and offers untouched natural beauty with dense forests of pine, sal, and fir trees. Marchula is an ideal destination for those looking for a peaceful and serene environment away from crowds, providing a serene and rejuvenating escape in the wilderness. ",
+    "park_id": 1
+  },
+  {
+    "name": "Choi Zone",
+    "description": "Chhoi is a village located in Ramnagar tehsil of Nainital district in Uttarakhand, India. It is situated 6km away from sub-district headquarter Ramnagar. Hanuman Dham is a prominent tourist attraction in Ramnagar near Jim Corbett National Park. At the heart of the complex stands a majestic temple dedicated to Lord Hanuman. It is a spiritual haven amid the majestic Himalayan valley, providing an ideal environment for introspection and meditation.\n",
+    "park_id": 1
+  },
+  {
+    "name": "Tedha & Patkot Zone",
+    "description": "Patkot is also a local village with a small market and households, providing a glimpse into rural life in the region. The area is characterized by its serene surroundings of lush greenery and majestic hills. t is a gateway to the Jim Corbett National Park, making it an ideal spot for visitors interested in wildlife. Patkot is located a few hours' drive from places like Betalghat, and it is roughly a 45-minute to an hour-long journey from Ramnagar. ",
+    "park_id": 1
+  },
+  {
+    "name": "Kotabagh",
+    "description": "Kotabagh is a beautiful place in Nainital District of Uttarakhand. It is surrounded by lush green forests of Kaladhungi. Kotabagh is known for its natural beauty and outdoor activities. You can go trekking, bird watching, and explore the local flora and fauna. It's also a great place for photography and nature walks. One can enjoy Paragliding also at Kotabagh.\n",
+    "park_id": 1
+  },
+  {
+    "name": "FRH-Dhikala Zone",
+    "description": "Dhikala Zone",
+    "park_id": 1
+  },
+  {
+    "name": "FRH-Bijrani Zone",
+    "description": "Bijrani Zone",
+    "park_id": 1
+  },
+  {
+    "name": "FRH-Jhirna Zone",
+    "description": "Jhirna Zone",
+    "park_id": 1
+  },
+  {
+    "name": "FRH-Dhela Zone",
+    "description": "Dhela Zone",
+    "park_id": 1
+  },
+  {
+    "name": "FRH-Phato Zone",
+    "description": "Phato Zone",
+    "park_id": 1
+  }
+]

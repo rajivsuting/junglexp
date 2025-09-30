@@ -114,7 +114,7 @@ const hotels = hotelsData as HotelData[];
 const hotelImages = hotelImagesData as HotelImageData[];
 const parkImages = parkImagesData as ParkImageData[];
 // Load environment variables
-config({ path: "../../.env.local" });
+config({ path: "../../.env" });
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql);
@@ -263,13 +263,12 @@ async function seedZones() {
 
   try {
     // Clear existing zones
-    await db.delete(Zones);
+    // await db.delete(Zones);
 
     // Insert zones (ID will be auto-generated)
 
     await db.insert(Zones).values(
       zones.map((zone) => ({
-        id: zone.id,
         name: zone.name,
         description: zone.description,
         park_id: zone.park_id,
@@ -370,10 +369,10 @@ async function main() {
     // await seedUsers();
     // await seedImages();
     // await seedNationalParks();
-    // await seedZones();
+    await seedZones();
     // await seedHotels();
     // await seedHotelImages();
-    await seedParkImages();
+    // await seedParkImages();
 
     console.log("🎉 Database seeding completed successfully!");
   } catch (error) {

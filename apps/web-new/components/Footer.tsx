@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import Image from "next/image";
+import Link from "next/link";
+import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -37,13 +37,16 @@ const Footer = () => {
               </h3>
             </div>
             <div className="flex flex-col space-y-1 ml-4">
-              <Link href="/info" className="hover:text-gray-300">
+              {/* <Link href="/info" className="hover:text-gray-300">
                 Useful Info
               </Link>
               <Link href="/specials" className="hover:text-gray-300">
                 Specials
-              </Link>
-              <Link href="/directions" className="hover:text-gray-300">
+              </Link> */}
+              <Link
+                href="https://www.google.com/maps?q=29.404825,79.127213"
+                className="hover:text-gray-300"
+              >
                 Directions
               </Link>
               <Link
@@ -66,14 +69,16 @@ const Footer = () => {
               </h3>
             </div>
             <div className="flex flex-col space-y-1 ml-4">
-              <p>Victoria Falls, Zimbabwe</p>
-              <p>info@hwangesafaris.com</p>
-              <p>Phone: +27 73 168 0048</p>
+              <p className="text-green-400">Junglexp.in</p>
+              <p>Near PWD Guest house Ward no 1</p>
+              <p>Ranikhet Road, Pampa Puri Ramnagar, Nainital</p>
               <div className="flex items-center space-x-2">
-                <span>Whatsapp: +27 82 475 3496</span>
-                <FaWhatsapp className="text-green-400" size={20} />
+                <span>Whatsapp: +91-74280064736</span>
+                <Link href="https://wa.me/9174280064736">
+                  <FaWhatsapp className="text-green-400" size={20} />
+                </Link>
               </div>
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <Link
                   href="https://www.google.com/reviews"
                   className="flex items-center space-x-2 hover:text-gray-300"
@@ -83,7 +88,7 @@ const Footer = () => {
                     Google Reviews
                   </span>
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

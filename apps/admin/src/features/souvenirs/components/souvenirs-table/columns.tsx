@@ -77,6 +77,10 @@ export const columns: ColumnDef<TSouvenir>[] = [
     header: "PRICE",
   },
   {
+    accessorKey: "quantity",
+    header: "QUANTITY",
+  },
+  {
     accessorKey: "description",
     header: "DESCRIPTION",
     size: 300,
@@ -90,6 +94,11 @@ export const columns: ColumnDef<TSouvenir>[] = [
   {
     accessorKey: "is_available",
     header: "STOCK AVAILABLE",
+    cell: ({ cell }) => (
+      <div className="max-w-[300px] truncate">
+        {cell.getValue<TSouvenir["quantity"]>() > 0 ? "YES" : "NO"}
+      </div>
+    ),
   },
   {
     id: "actions",

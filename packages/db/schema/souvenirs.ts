@@ -1,11 +1,18 @@
-import { sql } from 'drizzle-orm';
+import { sql } from "drizzle-orm";
 import {
-    boolean, index, integer, pgTable, serial, text, timestamp, varchar
-} from 'drizzle-orm/pg-core';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+  boolean,
+  index,
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
-import { Images } from './image';
-import { NationalParks } from './park';
+import { Images } from "./image";
+import { NationalParks } from "./park";
 
 /**
 --------------------------------------- Souvenirs Table ---------------------------------------
@@ -19,7 +26,8 @@ export const Souvenirs = pgTable(
     description: text("description").notNull(),
     price: integer("price").notNull(),
     park_id: integer("park_id").references(() => NationalParks.id),
-    is_available: boolean("is_available").notNull().default(false),
+    // is_available: boolean("is_available").notNull().default(false),
+    quantity: integer("quantity").notNull().default(0),
     created_at: timestamp("created_at", { precision: 0 }).defaultNow(),
     updated_at: timestamp("updated_at", { precision: 0 })
       .defaultNow()
@@ -29,8 +37,8 @@ export const Souvenirs = pgTable(
     index("souvenirs_name_idx").on(table.name),
     index("souvenirs_park_id_idx").on(table.park_id),
     index("souvenirs_slug_idx").on(table.slug),
-    index("souvenirs_is_available_idx").on(table.is_available),
-    index("souvenirs_name_availability_idx").on(table.name, table.is_available),
+    // index("souvenirs_is_available_idx").on(table.is_available),
+    // index("souvenirs_name_availability_idx").on(table.name, table.is_available),
   ]
 );
 

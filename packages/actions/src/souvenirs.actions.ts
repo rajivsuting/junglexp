@@ -1,9 +1,9 @@
 "use server";
-import { and, count, db, eq, ilike, inArray } from '@repo/db';
-import { Images } from '@repo/db/schema/image';
-import { SouvenirImages, Souvenirs } from '@repo/db/schema/souvenirs';
+import { and, count, db, eq, gt, ilike, inArray } from "@repo/db";
+import { Images } from "@repo/db/schema/image";
+import { SouvenirImages, Souvenirs } from "@repo/db/schema/souvenirs";
 
-import { createImages, deleteImages } from './image.actions';
+import { createImages, deleteImages } from "./image.actions";
 
 import type { TSouvenir } from "@repo/db";
 import type { TNewImage } from "@repo/db/schema/image";
@@ -29,7 +29,11 @@ export const getSouvenirs = async (_filters: TGetSouvenirsFilters) => {
   }
 
   if (_filters.availability && typeof _filters.availability === "boolean") {
-    filters.push(eq(Souvenirs.is_available, _filters.availability));
+    filters.push(
+      !_filters.availability
+        ? eq(Souvenirs.quantity, 0)
+        : gt(Souvenirs.quantity, 0)
+    );
   }
 
   if (_filters.park && !isNaN(Number(_filters.park))) {

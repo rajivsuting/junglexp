@@ -1,34 +1,42 @@
 "use client";
-import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { FileUploader, hasValidImages } from '@/components/file-uploader';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileUploader, hasValidImages } from "@/components/file-uploader";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Select } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { createSlug } from '@/lib/format';
-import { ImagesArraySchema } from '@/lib/image-schema';
-import { shouldUpdate } from '@/lib/should-update';
-import { uploadFilesWithProgress } from '@/lib/upload-files';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createImages, deleteImages } from '@repo/actions/image.actions';
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { createSlug } from "@/lib/format";
+import { ImagesArraySchema } from "@/lib/image-schema";
+import { shouldUpdate } from "@/lib/should-update";
+import { uploadFilesWithProgress } from "@/lib/upload-files";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createImages, deleteImages } from "@repo/actions/image.actions";
 import {
-    createSouvenirBase, updateSouvenir, updateSouvenirImages
-} from '@repo/actions/souvenirs.actions';
-import { MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
+  createSouvenirBase,
+  updateSouvenir,
+  updateSouvenirImages,
+} from "@repo/actions/souvenirs.actions";
+import { MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
 
-import NationalParkSelect from './components/park-select';
+import NationalParkSelect from "./components/park-select";
 
 import type { TSouvenir } from "@repo/db/index";
 import type { TNewImage } from "@repo/db/schema/image";
@@ -45,7 +53,8 @@ const formSchema = z.object({
   price: z.number().min(1, "Souvenir price is required."),
   images: ImagesArraySchema.default([]),
   park_id: z.string().min(1, "National Park is required."),
-  is_available: z.boolean().default(false),
+  // is_available: z.boolean().default(false),
+  quantity: z.string().min(0, "Souvenir quantity is required."),
 });
 
 const SouvenirForm = (props: TSouvenirFormProps) => {
@@ -70,8 +79,9 @@ const SouvenirForm = (props: TSouvenirFormProps) => {
         original_url: pi.image.original_url,
         alt_text: pi.image.alt_text,
       })),
+    quantity: initialData?.quantity?.toString() || "0",
     park_id: initialData?.park_id ? initialData.park_id.toString() : "",
-    is_available: initialData?.is_available || false,
+    // is_available: initialData?.is_available || false,
   };
 
   const buttonText = initialData ? "Update Souvenir" : "Create Souvenir";
@@ -237,7 +247,7 @@ const SouvenirForm = (props: TSouvenirFormProps) => {
       await updateSouvenirImages(Number(initialData.id), final);
 
       toast.success("Souvenir updated successfully", { icon: <CheckCircle /> });
-      router.replace(`/admin/souvenirs/${initialData.id}`);
+      router.replace(`/souvenirs/${initialData.id}`);
       setIsLoading(false);
       return;
     } catch (error) {
@@ -351,6 +361,29 @@ const SouvenirForm = (props: TSouvenirFormProps) => {
               />
               <FormField
                 control={form.control}
+                name="quantity"
+                render={({ field }) => {
+                  return (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Quantity</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Enter quantity"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        {Number(field.value) > 0 ? "In Stock" : "Out of Stock"}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+
+              {/* <FormField
+                control={form.control}
                 name="is_available"
                 render={({ field }) => (
                   <FormItem className="col-span-1">
@@ -379,7 +412,7 @@ const SouvenirForm = (props: TSouvenirFormProps) => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
             </div>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? <Loader2 className="animate-spin" /> : buttonText}

@@ -1,16 +1,20 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { Suspense } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
-import TopBar from './TopBar';
+import TopBar from "./TopBar";
 
 const navLinks = [
   { name: "Home", href: "#" },
-  { name: "Lodges", href: "#" },
-  { name: "Mobile Safaris", href: "#" },
-  { name: "Day Trip", href: "#" },
-  { name: "Useful Info", href: "#" },
-  { name: "Contact Us", href: "#" },
+  {
+    name: "Stays",
+    href: "/parks/jim-corbet-national-park/stays?stay-type=resort",
+  },
+  {
+    name: "Activities & Safaris",
+    href: "/parks/jim-corbet-national-park/activities",
+  },
+  { name: "Contact Us", href: "https://wa.me/9174280064736" },
 ];
 
 export default async function Header({
@@ -68,10 +72,10 @@ export default async function Header({
             </label>
 
             {/* Right: Start Planning Button */}
-            <div className="hidden xl:block flex-shrink-0">
-              <button className="px-6 py-2 border-2 border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
+            <div className="hidden xl:block px-6 flex-shrink-0">
+              {/* <button className="px-6 py-2 border-2 border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
                 Start Planning
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

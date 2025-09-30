@@ -1,13 +1,13 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { getSouvenirBySlug } from '@repo/actions/souvenirs.actions';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { getSouvenirBySlug } from "@repo/actions/souvenirs.actions";
 
 type PageProps = {
   params: Promise<{ "souvenir-id": string }>;
@@ -94,7 +94,7 @@ export default async function SouvenirDetailsPage(props: PageProps) {
           {/* Details */}
           <div>
             <div className="flex items-center gap-3 mb-3">
-              {souvenir.is_available ? (
+              {souvenir.quantity > 0 ? (
                 <Badge className="bg-green-600 hover:bg-green-600/90">
                   In stock
                 </Badge>
@@ -119,7 +119,7 @@ export default async function SouvenirDetailsPage(props: PageProps) {
               <Button
                 size="lg"
                 className="bg-primary text-primary-foreground hover:opacity-90"
-                disabled={!souvenir.is_available}
+                disabled={souvenir.quantity === 0}
               >
                 Enquire Now
               </Button>
