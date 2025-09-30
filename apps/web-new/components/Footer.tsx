@@ -69,9 +69,12 @@ const Footer = () => {
               </h3>
             </div>
             <div className="flex flex-col space-y-1 ml-4">
-              <p className="text-green-400">Junglexp.in</p>
+              <Link href="/" className="text-green-400">
+                Junglexp.in
+              </Link>
               <p>Near PWD Guest house Ward no 1</p>
-              <p>Ranikhet Road, Pampa Puri Ramnagar, Nainital</p>
+              <p>Pampa Puri Ranikhet Road, Ramnagar,</p>
+              <p>Nainital, Uttarakhand, India</p>
               <div className="flex items-center space-x-2">
                 <span>Whatsapp: +91-74280064736</span>
                 <Link href="https://wa.me/9174280064736">
