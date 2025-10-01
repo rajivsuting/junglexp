@@ -1,37 +1,28 @@
 "use client";
 
-import { Loader2, Star } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2, Star } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createNewHotel, updateHotel } from "@repo/actions/hotels.actions";
-import { hotelStatusEnum, hotelTypeEnum } from "@repo/db/schema/hotels";
+    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createNewHotel, updateHotel } from '@repo/actions/hotels.actions';
+import { hotelStatusEnum, hotelTypeEnum } from '@repo/db/schema/hotels';
 
-import { NationalParkSelect } from "./national-park-select";
-import { ZoneSelect } from "./zone-select";
+import { NationalParkSelect } from './national-park-select';
+import { ZoneSelect } from './zone-select';
 
 import type { THotel } from "@repo/db/index";
 
@@ -126,8 +117,6 @@ export const HotelDetailsSection = ({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  console.log("initialData", initialData);
-
   const defaultValues = useMemo(() => {
     return {
       name: initialData?.name || "",
@@ -159,8 +148,6 @@ export const HotelDetailsSection = ({
     },
     mode: "onChange", // Enable validation on change for better UX
   });
-
-  console.log(form.getValues());
 
   // Watch for park selection changes to reset zone
   const selectedParkId = form.watch("park_id");

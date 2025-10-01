@@ -37,8 +37,8 @@ import type { TParkImageBase } from "@repo/db/schema/park";
 // --------------------
 const formSchema = z.object({
   name: z.string().min(1, "National Park name is required.").max(255),
-  images: ImagesArraySchema,
-  mobile_images: ImagesArraySchema,
+  images: ImagesArraySchema(1, 15),
+  mobile_images: ImagesArraySchema(1, 15),
   description: z.string().min(10, "Description is required."),
   state_id: z.string().refine((value) => value, "State is required."),
   city_id: z.string().refine((value) => value, "City is required."),

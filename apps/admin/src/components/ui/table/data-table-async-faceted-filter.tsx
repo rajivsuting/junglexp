@@ -1,26 +1,16 @@
 "use client";
 
-import { Check, Loader2, PlusCircle, XCircle } from "lucide-react";
-import * as React from "react";
+import { Check, Loader2, PlusCircle, XCircle } from 'lucide-react';
+import * as React from 'react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+    Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 import type { Column } from "@tanstack/react-table";
 import type { Option } from "@/types/data-table";
@@ -137,8 +127,6 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
 
   const onItemSelect = React.useCallback(
     (option: Option, isSelected: boolean) => {
-      console.log("column", column, option, isSelected);
-
       if (!column) return;
 
       if (multiple) {

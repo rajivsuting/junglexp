@@ -1,34 +1,20 @@
 "use client";
 
-import { Check, Search } from "lucide-react";
-import { DynamicIcon, iconNames } from "lucide-react/dynamic";
-import * as React from "react";
+import { Check, Search } from 'lucide-react';
+import { DynamicIcon, iconNames } from 'lucide-react/dynamic';
+import * as React from 'react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+    Command, CommandEmpty, CommandInput, CommandItem, CommandList
+} from '@/components/ui/command';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+    Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger
+} from '@/components/ui/dialog';
 import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+    FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { cn } from '@/lib/utils';
 
 import type { IconName } from "lucide-react/dynamic";
 
@@ -200,8 +186,6 @@ export function IconSelectButton({
   ...props
 }: IconSelectButtonProps) {
   const renderSelectedIcon = () => {
-    console.log("selectedIcon", selectedIcon);
-
     if (!selectedIcon) return <Search size={16} />;
     return <DynamicIcon name={selectedIcon} size={16} />;
   };

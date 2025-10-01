@@ -1,8 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
-import TopBar from "./TopBar";
+import TopBar from './TopBar';
 
 const navLinks = [
   { name: "Home", href: "#" },
@@ -14,7 +14,7 @@ const navLinks = [
     name: "Activities & Safaris",
     href: "/parks/jim-corbet-national-park/activities",
   },
-  { name: "Contact Us", href: "https://wa.me/9174280064736" },
+  { name: "Contact Us", href: "https://wa.me/917428006473" },
 ];
 
 export default async function Header({
@@ -119,9 +119,9 @@ export default async function Header({
             </Link>
           ))}
         </nav>
-        <button className="px-6 mx-6 mt-6 py-2 border-2 border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
+        {/* <button className="px-6 mx-6 mt-6 py-2 border-2 border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
           Start Planning
-        </button>
+        </button> */}
       </div>
     </>
   );

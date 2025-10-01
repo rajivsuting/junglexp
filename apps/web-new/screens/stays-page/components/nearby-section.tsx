@@ -37,8 +37,6 @@ const NearbySection = async ({
 }: NearbySectionProps) => {
   const places = await getNearbyPlacesToHotel(hotelId);
 
-  console.log("places", places);
-
   const topPlaces = places.slice(0, 4);
 
   return (

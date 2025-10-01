@@ -59,9 +59,12 @@ export default async function HomePage() {
             </span>
           </p>
           <div className="flex items-center gap-4">
-            <button className="px-6 py-2 border-2 w-fit border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors">
+            <Link
+              href="/parks/jim-corbet-national-park/stays?stay-type=resort"
+              className="px-6 py-2 border-2 w-fit border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors"
+            >
               Find Lodges
-            </button>
+            </Link>
           </div>
         </div>
         {/* Animated Play Button */}
@@ -96,19 +99,9 @@ export default async function HomePage() {
               </p>
             ))}
 
-            <div className="pt-6">
-              <p className="text-lg max-w-4xl mx-auto">
-                Choose from a wide range of exclusive accommodation.
-              </p>
-
-              <p className="text-lg max-w-4xl mx-auto pt-2">
-                Road transfers, flight transfers and self drives on request.
-              </p>
-            </div>
-
-            <div className="pt-8">
+            {/* <div className="pt-8">
               <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -229,7 +222,7 @@ export default async function HomePage() {
             <span className="font-bold">JIM CORBETT NATIONAL PARK</span> REVIEWS
           </h2>
 
-          <ReviewsSection />
+          {/* <ReviewsSection /> */}
         </div>
       </section>
     </div>

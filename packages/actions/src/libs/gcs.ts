@@ -8,10 +8,8 @@ if (
   !process.env.GCP_CLIENT_EMAIL ||
   !process.env.GCP_PRIVATE_KEY
 ) {
-  console.error("Missing GCP credentials in environment variables.");
   // Handle this error appropriately in production, e.g., throw an error or exit.
 } else {
-  console.log("GCP credentials are set");
 }
 
 const storage = new Storage({
@@ -28,8 +26,6 @@ const storage = new Storage({
 const bucketName = process.env.GCP_BUCKET_NAME!;
 const bucket = storage.bucket(bucketName);
 
-console.log("bucketName", bucketName);
-
 export { storage, bucket };
 
 export function toObjectNameFromUrl(url: string): string {
@@ -43,8 +39,6 @@ export function toObjectNameFromUrl(url: string): string {
     const path = u.pathname.replace(/^\/+/, ""); // strip leading slash(es)
     const segments = path.split("/");
     // If first segment equals the bucket name, drop it:
-    console.log("segments", segments);
-    console.log("process.env.GCS_BUCKET_NAME", bucketName);
     if (segments[0] === bucketName) {
       return segments.slice(1).join("/");
     }

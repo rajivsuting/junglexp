@@ -17,22 +17,16 @@ export const createImage = async (data: TNewImage) => {
 };
 
 export const createImages = async (data: TNewImage[]) => {
-  console.log("data", data);
-
   const result = await db.insert(Images).values(data).returning();
 
   return result;
 };
 
 export const deleteImages = async (imageIds: number[]) => {
-  console.log("imageIds", imageIds);
-
   const deleted = await db
     .delete(Images)
     .where(inArray(Images.id, imageIds))
     .returning();
-
-  console.log("deleted", deleted);
 
   const objectNames = new Set<string>();
   for (const img of deleted) {
@@ -42,8 +36,6 @@ export const deleteImages = async (imageIds: number[]) => {
     if (img.original_url)
       objectNames.add(toObjectNameFromUrl(img.original_url));
   }
-
-  console.log("objectNames", objectNames);
 
   return Promise.allSettled(
     Array.from(objectNames).map(async (name) => {

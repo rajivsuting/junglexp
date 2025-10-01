@@ -1,27 +1,19 @@
 "use client";
 
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  updateHotel,
-  updateHotelAmenities,
-  updateHotelFaqs,
-  updateHotelPolicies,
-  updateHotelSafetyFeatures,
-} from "@repo/actions/hotels.actions";
+    updateHotel, updateHotelAmenities, updateHotelFaqs, updateHotelPolicies,
+    updateHotelSafetyFeatures
+} from '@repo/actions/hotels.actions';
 
 import {
-  HotelAmenitiesSection,
-  HotelDetailsSection,
-  HotelExcludesSection,
-  HotelFaqsSection,
-  HotelImagesSection,
-  HotelIncludesSection,
-  HotelSafetyFeaturesSection,
-} from "./sections";
+    HotelAmenitiesSection, HotelDetailsSection, HotelExcludesSection, HotelFaqsSection,
+    HotelImagesSection, HotelIncludesSection, HotelSafetyFeaturesSection
+} from './sections';
 
 import type { THotel } from "@repo/db/schema/types";
 import type { THotelBase } from "@repo/db/schema/hotels";
@@ -261,14 +253,11 @@ export default function HotelForm({
               <HotelAmenitiesSection
                 initialData={initialData}
                 onSave={async (data) => {
-                  console.log("onSave");
-
                   try {
                     const res = await updateHotelAmenities(
                       Number(hotelId),
                       data.selectedAmenities
                     );
-                    console.log("res", res);
                   } catch (error) {
                     console.error("Error updating hotel amenities", error);
                   }

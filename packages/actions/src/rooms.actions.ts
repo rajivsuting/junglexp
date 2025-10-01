@@ -23,8 +23,6 @@ type TGetRoomsFilters = {
 };
 
 export const getRooms = async (filters: TGetRoomsFilters) => {
-  console.log(filters);
-
   // Build search conditions for both room name and hotel name
   const searchConditions = [];
   if (filters.search) {
@@ -59,9 +57,6 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
   const page = Math.max(1, filters.page || 1);
   const limit = Math.max(1, filters.limit || 10);
   const offset = (page - 1) * limit;
-  console.log("offset", offset);
-
-  console.log("Pagination values:", { page, limit, offset });
 
   const rooms = await db.query.Rooms.findMany({
     where,

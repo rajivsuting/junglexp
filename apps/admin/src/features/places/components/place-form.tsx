@@ -1,35 +1,25 @@
 "use client";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { FileUploader, hasValidImages } from "@/components/file-uploader";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileUploader, hasValidImages } from '@/components/file-uploader';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ImagesArraySchema } from "@/lib/image-schema";
-import { uploadFilesWithProgress } from "@/lib/upload-files";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createImages, deleteImages } from "@repo/actions/image.actions";
-import {
-  createPlace,
-  updatePlace,
-  updatePlaceImages,
-} from "@repo/actions/places.actions";
-import { MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
+    Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ImagesArraySchema } from '@/lib/image-schema';
+import { uploadFilesWithProgress } from '@/lib/upload-files';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createImages, deleteImages } from '@repo/actions/image.actions';
+import { createPlace, updatePlace, updatePlaceImages } from '@repo/actions/places.actions';
+import { MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
 
 import type {
   NewFormImage,
@@ -43,7 +33,7 @@ import type { TPlaceBase } from "@repo/db/index";
 // --------------------
 const formSchema = z.object({
   name: z.string().min(1, "Place name is required.").max(255),
-  images: ImagesArraySchema,
+  images: ImagesArraySchema(1, 5),
   description: z.string().min(10, "Description is required."),
   latitude: z
     .string()
@@ -210,7 +200,6 @@ const PlaceForm = (props: TPlaceFormProps) => {
         if (imagesToDelete.length > 0) {
           // Note: This would require a deleteImages function similar to hotels
           // For now, we'll just log them
-          console.log("Images to delete:", imagesToDelete);
           // 4) Delete orphaned images from the database
           await deleteImages(imagesToDelete);
         }

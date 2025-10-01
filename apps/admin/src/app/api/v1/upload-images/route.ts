@@ -1,11 +1,11 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import fs from "fs";
-import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import sharp from "sharp";
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import fs from 'fs';
+import { NextRequest, NextResponse } from 'next/server';
+import path from 'path';
+import sharp from 'sharp';
 
-import { bucket } from "@/lib/gcs";
-import {} from "@google-cloud/storage";
+import { bucket } from '@/lib/gcs';
+import {} from '@google-cloud/storage';
 
 // Define image sizes for responsive images
 const IMAGE_SIZES = {
@@ -124,8 +124,6 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const files = formData.getAll("files") as File[];
-
-    console.log("files", files);
 
     if (!files || files.length === 0) {
       return NextResponse.json({ error: "No files provided" }, { status: 400 });

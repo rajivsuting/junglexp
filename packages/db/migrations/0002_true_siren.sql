@@ -1,0 +1,1 @@
+ALTER TABLE "reels" ALTER COLUMN "activity_id" SET DATA TYPE integer;

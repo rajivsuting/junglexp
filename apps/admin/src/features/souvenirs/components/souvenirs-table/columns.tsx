@@ -1,10 +1,10 @@
 "use client";
-import { Text } from "lucide-react";
-import Image from "next/image";
+import { Text } from 'lucide-react';
+import Image from 'next/image';
 
-import { DataTableColumnHeader } from "@/components/ui/table/data-table-column-header";
+import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 
-import { CellAction } from "./cell-action";
+import { CellAction } from './cell-action';
 
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import type { TSouvenir } from "@repo/db/index";
@@ -15,8 +15,6 @@ export const columns: ColumnDef<TSouvenir>[] = [
     header: "IMAGE",
     cell: ({ row }) => {
       const url = (row.getValue("images") as any)?.[0]?.image?.small_url;
-
-      console.log("url", url);
 
       return (
         <div className="relative w-10 aspect-square">

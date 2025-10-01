@@ -1,15 +1,15 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { AmenityManager } from "@/features/hotels/components/sections/amenity-manager";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { AmenityManager } from '@/features/hotels/components/sections/amenity-manager';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import type { DisplayAmenity } from "@/features/hotels/components/sections/amenity-manager";
 import type { TActivity, TActivityAmenity } from "@repo/db/index";
@@ -91,14 +91,6 @@ export const ActivityAmenitiesSection = ({
       const orderedAmenityIds = displayAmenities
         .sort((a, b) => a.order - b.order)
         .map((da) => da.amenity.id);
-
-      console.log("Saving amenities:", {
-        selectedAmenities: data.selectedAmenities,
-        orderedAmenityIds,
-        displayAmenities,
-      });
-
-      console.log("onSave", onSave);
 
       if (onSave) {
         await onSave(data);

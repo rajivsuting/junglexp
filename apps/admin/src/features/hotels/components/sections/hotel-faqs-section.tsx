@@ -1,16 +1,16 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { FaqManager } from "./faq-manager";
+import { FaqManager } from './faq-manager';
 
 import type { DisplayFaq } from "./faq-manager";
 import type { THotel, THotelFaq } from "@repo/db/index";
@@ -87,12 +87,6 @@ export const HotelFaqsSection = ({
       const orderedFaqIds = displayFaqs
         .sort((a, b) => a.order - b.order)
         .map((df) => df.faq.id);
-
-      console.log("Saving FAQs:", {
-        selectedFaqs: data.selectedFaqs,
-        orderedFaqIds,
-        displayFaqs,
-      });
 
       if (onSave) {
         await onSave(data);

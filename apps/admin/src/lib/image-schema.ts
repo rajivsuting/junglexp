@@ -34,24 +34,26 @@ export type FormImage = ExistingFormImage | NewFormImage;
 // --------------------
 // Images array schema with validations for new items only
 // --------------------
-export const ImagesArraySchema = z
-  .array(z.union([ExistingImageSchema, NewImageSchema]))
-
-  .refine(
-    (items) =>
-      items
-        .filter((i): i is NewFormImage => i._type === "new")
-        .every((i) => i.size <= MAX_FILE_SIZE),
-    "Max file size is 5MB."
-  )
-  .refine(
-    (items) =>
-      items
-        .filter((i): i is NewFormImage => i._type === "new")
-        .every((i) => ACCEPTED_IMAGE_TYPES.includes(i.mime_type)),
-    ".jpg, .jpeg, .png and .webp files are accepted."
-  )
-  .refine(
-    (items) => items.every((i) => i.alt_text.trim().length > 0),
-    "All images must have alt text."
-  );
+export const ImagesArraySchema = (min?: number, max?: number) =>
+  z
+    .array(z.union([ExistingImageSchema, NewImageSchema]))
+    .min(min ?? 0, "At least one image is required.")
+    .max(max ?? 8, "Maximum 8 images are allowed.")
+    .refine(
+      (items) =>
+        items
+          .filter((i): i is NewFormImage => i._type === "new")
+          .every((i) => i.size <= MAX_FILE_SIZE),
+      "Max file size is 5MB."
+    )
+    .refine(
+      (items) =>
+        items
+          .filter((i): i is NewFormImage => i._type === "new")
+          .every((i) => ACCEPTED_IMAGE_TYPES.includes(i.mime_type)),
+      ".jpg, .jpeg, .png and .webp files are accepted."
+    )
+    .refine(
+      (items) => items.every((i) => i.alt_text.trim().length > 0),
+      "All images must have alt text."
+    );

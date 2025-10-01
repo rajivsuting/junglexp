@@ -1,6 +1,6 @@
 "use client";
 
-import RoomForm from "./room-form";
+import RoomForm from './room-form';
 
 import type { TRoom } from "@repo/db/schema/types";
 
@@ -17,8 +17,6 @@ export default function RoomViewPage({
   roomId,
   initialData,
 }: RoomViewPageProps) {
-  console.log("initialData", initialData);
-
   return (
     <RoomForm
       pageTitle={pageTitle}

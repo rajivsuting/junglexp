@@ -1,16 +1,16 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { PolicyManager } from "./policy-manager";
+import { PolicyManager } from './policy-manager';
 
 import type { DisplayPolicy } from "./policy-manager";
 import type { THotel } from "@repo/db/index";
@@ -90,12 +90,6 @@ export const HotelIncludesSection = ({
       const orderedPolicyIds = displayPolicies
         .sort((a, b) => a.order - b.order)
         .map((dp) => dp.policy.id);
-
-      console.log("Saving includes:", {
-        selectedPolicies: data.selectedPolicies,
-        orderedPolicyIds,
-        displayPolicies,
-      });
 
       if (onSave) {
         await onSave(data);

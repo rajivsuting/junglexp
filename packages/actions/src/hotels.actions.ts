@@ -502,7 +502,6 @@ export const updateHotelPolicies = async (
   for (const policy of policiesToUpdate) {
     if (policy.policy_id !== null) {
       const newOrder = policyIds.indexOf(policy.policy_id);
-      console.log("newOrder", policy.id, newOrder, policy.order);
 
       if (newOrder !== policy.order) {
         const updateOperation = db
@@ -513,8 +512,6 @@ export const updateHotelPolicies = async (
       }
     }
   }
-
-  console.log("operations", operations);
 
   // Execute all operations
   if (operations.length > 0) {
@@ -763,8 +760,6 @@ export const updateHotelAmenities = async (
   hotelId: number,
   amenityIds: number[]
 ) => {
-  console.log("amenityIds", amenityIds);
-
   // Get existing hotel amenities
   const existing = await db
     .select()

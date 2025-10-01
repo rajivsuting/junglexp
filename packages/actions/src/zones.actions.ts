@@ -1,8 +1,8 @@
 "use server";
-import { and, count, eq, ilike } from "drizzle-orm";
+import { and, count, eq, ilike } from 'drizzle-orm';
 
-import { db, schema } from "@repo/db";
-import { Zones, zonesInsertSchema } from "@repo/db/schema/zones";
+import { db, schema } from '@repo/db';
+import { Zones, zonesInsertSchema } from '@repo/db/schema/zones';
 
 import type { TZone } from "@repo/db/schema/types";
 import type { TNewZone, TZoneBase } from "@repo/db/schema/zones";
@@ -15,7 +15,6 @@ type TGetZonesFilters = {
 };
 
 export const getZones = async (filters: TGetZonesFilters) => {
-  console.log(filters);
   const where = and(
     filters.search ? ilike(Zones.name, `%${filters.search}%`) : undefined,
     filters.park ? eq(Zones.park_id, filters.park) : undefined

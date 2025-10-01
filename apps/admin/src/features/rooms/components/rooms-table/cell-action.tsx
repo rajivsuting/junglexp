@@ -1,17 +1,13 @@
 "use client";
 
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+    DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 
 import type { TRoom } from "@repo/db/schema/types";
 
@@ -26,13 +22,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onConfirm = async () => {
     // TODO: Implement delete room functionality
-    console.log("Delete room", data.id);
   };
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     // TODO: Add toast notification
-    console.log("Room ID copied to clipboard");
   };
 
   return (

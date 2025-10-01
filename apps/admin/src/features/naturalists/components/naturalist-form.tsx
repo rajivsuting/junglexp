@@ -36,7 +36,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Name is required").max(255),
   description: z.string().min(1, "Description is required"),
   park_id: z.string().min(1, "National Park is required"),
-  images: ImagesArraySchema.default([]),
+  images: ImagesArraySchema(1, 5).default([]),
 });
 
 const NaturalistForm = ({ initialData, pageTitle }: Props) => {

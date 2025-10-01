@@ -1,37 +1,26 @@
 "use client";
 
-import { GripVertical, List } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { GripVertical, List } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+    closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors
+} from '@dnd-kit/core';
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+    arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy
+} from '@dnd-kit/sortable';
 import {
-  getActivePromotions,
-  getInactivePromotions,
-  setPromotionActive,
-  setPromotionsActive,
-  updatePromotionsOrder,
-} from "@repo/actions/promotions.actions";
+    getActivePromotions, getInactivePromotions, setPromotionActive, setPromotionsActive,
+    updatePromotionsOrder
+} from '@repo/actions/promotions.actions';
 
-import { AddExistingModal } from "./components/add-existing-modal";
-import { CreatePromotionModal } from "./components/create-promotion-modal";
-import { RemoveAlert } from "./components/remove-alert";
-import { SortableItem } from "./components/sortable-item";
+import { AddExistingModal } from './components/add-existing-modal';
+import { CreatePromotionModal } from './components/create-promotion-modal';
+import { RemoveAlert } from './components/remove-alert';
+import { SortableItem } from './components/sortable-item';
 
 import type { DragEndEvent } from "@dnd-kit/core";
 import type { TPromotionBase } from "@repo/db/schema/promotions";
@@ -201,8 +190,6 @@ export const PromotionsListing = () => {
   const availablePromotions = allPromotions.filter(
     (p) => !activePromotions.some((ap) => ap.id === p.id)
   );
-
-  console.log("activePromotions", activePromotions);
 
   return (
     <div className="container mx-auto space-y-6 p-6">

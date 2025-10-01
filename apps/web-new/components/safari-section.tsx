@@ -34,7 +34,6 @@ export async function SafariSection({ park }: { park: TNationalPark }) {
     park_slug: park.slug,
     limit: 5,
   });
-  console.log(result);
 
   const safariActivities = result.activities;
 

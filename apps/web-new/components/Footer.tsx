@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 const Footer = () => {
   return (
@@ -76,8 +76,8 @@ const Footer = () => {
               <p>Pampa Puri Ranikhet Road, Ramnagar,</p>
               <p>Nainital, Uttarakhand, India</p>
               <div className="flex items-center space-x-2">
-                <span>Whatsapp: +91-74280064736</span>
-                <Link href="https://wa.me/9174280064736">
+                <span>Whatsapp: +91-7428006473</span>
+                <Link href="https://wa.me/917428006473">
                   <FaWhatsapp className="text-green-400" size={20} />
                 </Link>
               </div>
@@ -97,7 +97,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 pt-4 border-t border-gray-600 text-sm">
-          <p>© {new Date().getFullYear()} eTroupers</p>
+          <p>© {new Date().getFullYear()} Junglexp</p>
         </div>
       </div>
     </footer>

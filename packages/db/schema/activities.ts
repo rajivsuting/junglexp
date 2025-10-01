@@ -1,21 +1,13 @@
 import {
-  boolean,
-  doublePrecision,
-  geometry,
-  index,
-  integer,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+    boolean, doublePrecision, geometry, index, integer, pgEnum, pgTable, serial, text, timestamp
+} from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
-import { Amenities } from "./amenities";
-import { Images } from "./image";
-import { NationalParks } from "./park";
-import { Policies } from "./policies";
+import { Amenities } from './amenities';
+import { Images } from './image';
+import { NationalParks } from './park';
+import { Policies } from './policies';
 
 export const Activities = pgTable(
   "activities",

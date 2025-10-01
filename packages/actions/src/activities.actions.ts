@@ -37,8 +37,6 @@ export type TGetActivitiesByParkSlugFilters = {
 };
 
 export const getActivities = async (filters: TGetActivitiesFilters) => {
-  console.log(filters);
-
   const where = and(
     filters.search ? ilike(Activities.name, `%${filters.search}%`) : undefined,
     filters.park_id
@@ -107,8 +105,6 @@ export const getActivities = async (filters: TGetActivitiesFilters) => {
 export const getActivitiesByParkSlug = async (
   filters: TGetActivitiesByParkSlugFilters
 ) => {
-  console.log(filters);
-
   // First, find the park by slug if park_slug is provided
   let parkId: number | undefined;
   if (filters.park_slug) {
@@ -895,7 +891,6 @@ export const updateActivityPolicies = async (
   for (const policy of policiesToUpdate) {
     if (policy.policy_id !== null) {
       const newOrder = policyIds.indexOf(policy.policy_id);
-      console.log("newOrder", policy.id, newOrder, policy.order);
 
       if (newOrder !== policy.order) {
         const updateOperation = db
@@ -906,8 +901,6 @@ export const updateActivityPolicies = async (
       }
     }
   }
-
-  console.log("operations", operations);
 
   // Execute all operations
   if (operations.length > 0) {

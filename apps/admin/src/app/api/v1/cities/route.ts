@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { getCities, getCitiesByStateId } from "@repo/actions/cities.actions";
+import { getCities, getCitiesByStateId } from '@repo/actions/cities.actions';
 
 import type { TCity } from "@repo/db/schema/city";
 
@@ -8,8 +8,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   const stateId = searchParams.get("state");
-
-  console.log("stateId", stateId);
 
   let cities: TCity[] = [];
   if (stateId) {

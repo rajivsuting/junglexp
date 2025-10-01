@@ -1,32 +1,24 @@
 "use client";
 
-import { GripVertical, Loader2, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { GripVertical, Loader2, Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form } from '@/components/ui/form';
 import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+    closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors
+} from '@dnd-kit/core';
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { updateActivityItineraries } from "@repo/actions/activities.actions";
+    arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable,
+    verticalListSortingStrategy
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { updateActivityItineraries } from '@repo/actions/activities.actions';
 
-import { AddItineraryModal } from "./add-itinerary-modal";
+import { AddItineraryModal } from './add-itinerary-modal';
 
 import type { TActivity, TActivityItineraryBase } from "@repo/db/index";
 
@@ -200,11 +192,6 @@ export default function ActivityItinerarySection({
       // Log the current state for debugging
       const existingItems = data.itinerary.filter((item) => item.isExisting);
       const newItems = data.itinerary.filter((item) => !item.isExisting);
-
-      console.log("Saving itinerary for activity:", activityId);
-      console.log("Existing items:", existingItems);
-      console.log("New items:", newItems);
-      console.log("Total items:", data.itinerary.length);
 
       // Convert itinerary items to the format expected by the API (include id and order)
       const itineraryData = data.itinerary.map((item, index) => ({

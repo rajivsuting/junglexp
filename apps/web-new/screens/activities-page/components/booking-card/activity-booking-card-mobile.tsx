@@ -70,15 +70,6 @@ export function ActivityBookingCardMobile({
       return;
     }
 
-    // Here you would typically send the booking data to your API
-    console.log({
-      selectedDate,
-      selectedPackage,
-      participants,
-      formData,
-      totalPrice,
-    });
-
     alert("Booking request submitted! We'll contact you within 24 hours.");
     setIsOpen(false);
   };

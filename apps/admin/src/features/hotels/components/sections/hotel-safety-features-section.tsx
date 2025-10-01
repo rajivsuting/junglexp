@@ -1,16 +1,16 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Loader2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { SafetyFeatureManager } from "./safety-feature-manager";
+import { SafetyFeatureManager } from './safety-feature-manager';
 
 import type { DisplaySafetyFeature } from "./safety-feature-manager";
 import type { THotel, THotelSaftyFeature } from "@repo/db/index";
@@ -95,12 +95,6 @@ export const HotelSafetyFeaturesSection = ({
       const orderedSafetyFeatureIds = displaySafetyFeatures
         .sort((a, b) => a.order - b.order)
         .map((dsf) => dsf.safetyFeature.id);
-
-      console.log("Saving safety features:", {
-        selectedSafetyFeatures: data.selectedSafetyFeatures,
-        orderedSafetyFeatureIds,
-        displaySafetyFeatures,
-      });
 
       if (onSave) {
         await onSave(data);

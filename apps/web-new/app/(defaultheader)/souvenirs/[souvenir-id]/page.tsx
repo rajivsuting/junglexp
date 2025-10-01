@@ -1,13 +1,13 @@
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { getSouvenirBySlug } from "@repo/actions/souvenirs.actions";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import { getSouvenirBySlug } from '@repo/actions/souvenirs.actions';
 
 type PageProps = {
   params: Promise<{ "souvenir-id": string }>;
@@ -15,8 +15,6 @@ type PageProps = {
 
 export default async function SouvenirDetailsPage(props: PageProps) {
   const params = await props.params;
-
-  console.log("sd", params["souvenir-id"]);
 
   const souvenir = await getSouvenirBySlug(params["souvenir-id"]);
   if (!souvenir) return notFound();

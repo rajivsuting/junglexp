@@ -1,5 +1,5 @@
 "use client";
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Video } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -10,9 +10,9 @@ import {
 
 const items = [
   {
-    title: "Souvenirs",
-    url: "/souvenirs",
-    icon: ShoppingBag,
+    title: "Reels",
+    url: "/reels",
+    icon: Video,
   },
 ];
 
