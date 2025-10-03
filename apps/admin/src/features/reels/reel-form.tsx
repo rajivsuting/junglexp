@@ -147,7 +147,24 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
 
   const currentForm = isEdit ? (updatefFrm as any) : form;
 
-  const onSubmitUpdate = async (data: z.infer<typeof updateSchema>) => {};
+  const onSubmitUpdate = async (data: z.infer<typeof updateSchema>) => {
+    console.log("onSubmit", data);
+    try {
+      setLoading(true);
+      await updateReel(initialData?.id ?? "", {
+        title: data.title,
+        description: data.description,
+        redirectUrl: data.redirectUrl,
+        status: data.status,
+      });
+      toast.success("Reel updated successfully");
+      router.push(`/reels/${initialData?.id}`);
+    } catch (err) {
+      toast.error("Failed to update reel");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onSubmit = async (data: z.infer<typeof createSchema>) => {
     try {
