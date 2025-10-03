@@ -171,12 +171,14 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
       setLoading(true);
       // Enforce conditional requirement
 
-      const buffer = await data.videoFile.arrayBuffer();
-      const { url } = await uploadVideo({
-        data: buffer,
-        fileName: data.videoFile.name,
-        contentType: data.videoFile.type,
+      const formData = new FormData();
+      formData.append("file", data.videoFile);
+      const response = await fetch("/api/v1/upload-video", {
+        method: "POST",
+        body: formData,
       });
+
+      const { url } = await response.json();
 
       if (!url) {
         setLoading(false);

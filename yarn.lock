@@ -2763,12 +2763,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@repo/env@workspace:packages/env":
-  version: 0.0.0-use.local
-  resolution: "@repo/env@workspace:packages/env"
-  languageName: unknown
-  linkType: soft
-
 "@repo/typescript-config@npm:*, @repo/typescript-config@workspace:tooling/typescript-config":
   version: 0.0.0-use.local
   resolution: "@repo/typescript-config@workspace:tooling/typescript-config"

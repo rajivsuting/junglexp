@@ -1,4 +1,3 @@
-"use server";
 import { bucket } from '@/lib/gcs';
 
 type UploadVideoParams = {
@@ -34,6 +33,8 @@ function sanitizeFileName(name: string): string {
 
 export async function uploadVideo(params: UploadVideoParams) {
   const { data, fileName, contentType } = params;
+
+  console.log("fileName", fileName);
 
   const gcsBucketName = getEnv("GCP_BUCKET_NAME");
   const prefix = process.env.GCS_VIDEO_PREFIX || "uploads/videos";
