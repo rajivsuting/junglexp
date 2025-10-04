@@ -62,7 +62,7 @@ export const getReelById = async (id: string) => {
 
 export const createReel = async (reel: TNewReel) => {
   const inserted = await db.insert(Reels).values(reel).returning();
-  getReelsFromCache();
+  await getReelsFromCache();
   return inserted[0] ?? null;
 };
 
