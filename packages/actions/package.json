@@ -20,6 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.20.2",
     "drizzle-orm": "^0.44.1"
   },
   "devDependencies": {
