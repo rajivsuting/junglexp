@@ -115,3 +115,9 @@ export const schema = {
 config({ path: "../../.env" });
 
 export const db = drizzle(process.env.DATABASE_URL!, { schema });
+
+// export const db = new Proxy({} as any, {
+//   get(target, prop) {
+//     return getDb()[prop];
+//   },
+// });
