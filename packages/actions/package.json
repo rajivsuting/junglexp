@@ -23,6 +23,7 @@
     "@clerk/nextjs": "^6.20.2",
     "drizzle-orm": "^0.44.1"
   },
+  "packageManager": "yarn@4.6.0",
   "devDependencies": {
     "@repo/db": "*",
     "@repo/typescript-config": "*",

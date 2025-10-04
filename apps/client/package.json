@@ -40,6 +40,7 @@
     "tailwind-merge": "^3.3.1",
     "zod": "^4.1.11"
   },
+  "packageManager": "yarn@4.6.0",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@repo/typescript-config": "*",

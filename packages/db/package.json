@@ -19,6 +19,7 @@
     "drizzle-kit": "^0.31.1",
     "typescript": "5.8.2"
   },
+  "packageManager": "yarn@4.6.0",
   "dependencies": {
     "@neondatabase/serverless": "^1.0.0",
     "drizzle-orm": "^0.44.1",
