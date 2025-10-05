@@ -47,10 +47,10 @@ const bookingSchema = z
   .object({
     // Check-in/Check-out dates
     checkInDate: z.date({
-      error: "Check-in date is required",
+      required_error: "Check-in date is required",
     }),
     checkOutDate: z.date({
-      error: "Check-out date is required",
+      required_error: "Check-out date is required",
     }),
     // User details
     firstName: z.string().min(2, "First name must be at least 2 characters"),
