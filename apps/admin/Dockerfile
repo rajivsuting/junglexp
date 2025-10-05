@@ -63,9 +63,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/admin/public ./apps/admin/pu
 COPY --from=builder --chown=nextjs:nodejs /app/.env* ./
 
 # Set environment variables for Next.js server
-ENV PORT=3001
+ENV PORT=8080
 ENV HOSTNAME=0.0.0.0
 
-EXPOSE 3001
+EXPOSE 8080
 
 CMD ["node", "apps/admin/server.js"]
