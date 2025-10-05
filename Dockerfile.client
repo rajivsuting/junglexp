@@ -19,7 +19,10 @@ COPY packages/common-utils/package.json ./packages/common-utils/
 COPY tooling/typescript-config/package.json ./tooling/typescript-config/
 
 # Install all dependencies
-RUN yarn install
+RUN yarn install && \
+    ls -la /app && \
+    echo "Node modules exists:" && \
+    ls -la /app/node_modules | head -10
 
 # Build dependencies first
 FROM base AS builder
