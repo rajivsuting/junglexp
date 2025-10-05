@@ -7,11 +7,12 @@ RUN apk add --no-cache libc6-compat
 RUN corepack enable
 WORKDIR /app
 
-# Copy package.json and create a minimal lockfile
+# Copy package.json and remove monorepo dependencies
 COPY package.json ./
 
-# Install dependencies without lockfile (since we don't have access to root yarn.lock)
-RUN yarn install
+# Remove @repo dependencies and install
+RUN sed -i '/"@repo\//d' package.json && \
+    yarn install
 
 # Rebuild the source code only when needed
 FROM base AS builder
