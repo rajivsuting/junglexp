@@ -17,7 +17,7 @@ function Calendar({
 	className,
 	classNames,
 	showOutsideDays = true,
-	captionLayout = "label",
+	captionLayout,
 	buttonVariant = "ghost",
 	formatters,
 	components,
@@ -60,10 +60,7 @@ function Calendar({
 				dropdown_root: "relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md",
 				dropdown: "absolute inset-0 opacity-0",
 				caption_label: cn(
-					"select-none font-medium",
-					captionLayout === "label"
-						? "text-sm"
-						: "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted-foreground [&>svg]:size-3.5",
+					"select-none font-medium text-sm",
 				),
 				table: "w-full border-collapse",
 				weekdays: "flex",
