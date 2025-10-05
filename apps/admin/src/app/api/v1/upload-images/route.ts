@@ -92,7 +92,7 @@ async function uploadSingleFile(file: File): Promise<UploadResult> {
 
       const destination = `uploads/${fileName}`; // Path in your GCS bucket
 
-      await bucket().file(destination).save(buffer);
+      await bucket.file(destination).save(buffer);
 
       const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET_NAME}/${destination}`;
 
