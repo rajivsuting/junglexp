@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 
-import { getCurrentUserRole } from '@/lib/auth';
+// Ensure this API route is not statically analyzed during build
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
+    // Dynamic import to prevent build-time execution
+    const { getCurrentUserRole } = await import("@/lib/auth");
     const role = await getCurrentUserRole();
 
     return NextResponse.json({ role });

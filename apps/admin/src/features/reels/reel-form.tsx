@@ -22,43 +22,49 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createReel, updateReel } from '@repo/actions/reels.actions';
 
 import type { TReelBase } from "@repo/db/schema/reels";
+
+// Polyfill File for server-side rendering during build
+const FileConstructor = typeof File !== "undefined" ? File : class File {};
+
 const createSchema = z
   .object({
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
     videoUrl: z.string().url().optional(),
-    videoFile: z.instanceof(File).superRefine(async (file, ctx) => {
-      if (!file) return;
-      const ok = await new Promise<boolean>((resolve) => {
-        const url = URL.createObjectURL(file);
-        const video = document.createElement("video");
-        video.preload = "metadata";
-        video.onloadedmetadata = () => {
-          const width = video.videoWidth || 0;
-          const height = video.videoHeight || 0;
-          URL.revokeObjectURL(url);
-          if (width === 0 || height === 0) {
+    videoFile: z
+      .instanceof(FileConstructor as any)
+      .superRefine(async (file, ctx) => {
+        if (!file) return;
+        const ok = await new Promise<boolean>((resolve) => {
+          const url = URL.createObjectURL(file);
+          const video = document.createElement("video");
+          video.preload = "metadata";
+          video.onloadedmetadata = () => {
+            const width = video.videoWidth || 0;
+            const height = video.videoHeight || 0;
+            URL.revokeObjectURL(url);
+            if (width === 0 || height === 0) {
+              resolve(false);
+              return;
+            }
+            const ratio = width / height;
+            const target = 9 / 16;
+            const tolerance = 0.02;
+            resolve(Math.abs(ratio - target) <= tolerance);
+          };
+          video.onerror = () => {
+            URL.revokeObjectURL(url);
             resolve(false);
-            return;
-          }
-          const ratio = width / height;
-          const target = 9 / 16;
-          const tolerance = 0.02;
-          resolve(Math.abs(ratio - target) <= tolerance);
-        };
-        video.onerror = () => {
-          URL.revokeObjectURL(url);
-          resolve(false);
-        };
-        video.src = url;
-      });
-      if (!ok) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Video must be in 9:16 aspect ratio (portrait).",
+          };
+          video.src = url;
         });
-      }
-    }),
+        if (!ok) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Video must be in 9:16 aspect ratio (portrait).",
+          });
+        }
+      }),
     redirectUrl: z.string(),
     isInternal: z.boolean().default(true),
     isExternal: z.boolean().default(false),
