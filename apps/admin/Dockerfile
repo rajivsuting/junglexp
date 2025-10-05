@@ -1,13 +1,14 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
+RUN corepack enable
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm install -g turbo
+RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope=admin --docker
+RUN turbo prune admin --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -17,7 +18,8 @@ WORKDIR /app
 
 # First install the dependencies (as they change less often)
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/yarn.lock ./yarn.lock
+COPY --from=builder /app/out/yarn.lock ./
+COPY --from=builder /app/out/.yarnrc.yml ./ 
 RUN corepack enable
 RUN yarn install
 
