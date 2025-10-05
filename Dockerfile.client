@@ -19,17 +19,16 @@ COPY packages/common-utils/package.json ./packages/common-utils/
 COPY tooling/typescript-config/package.json ./tooling/typescript-config/
 
 # Install all dependencies
-RUN yarn install && \
-    ls -la /app && \
-    echo "Node modules exists:" && \
-    ls -la /app/node_modules | head -10
+RUN yarn install
 
 # Build dependencies first
 FROM base AS builder
 WORKDIR /app
 
-# Copy dependencies
-COPY --from=deps /app/node_modules ./node_modules
+# Copy dependencies (Yarn PnP files instead of node_modules)
+COPY --from=deps /app/.pnp.cjs ./.pnp.cjs
+COPY --from=deps /app/.pnp.loader.mjs ./.pnp.loader.mjs
+COPY --from=deps /app/.yarn ./.yarn
 
 # Copy all source code
 COPY . .
