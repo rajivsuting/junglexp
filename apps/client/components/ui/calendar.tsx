@@ -58,7 +58,6 @@ function Calendar({
 					"select-none font-medium text-sm",
 				),
 				table: "w-full border-collapse",
-				weekdays: "flex",
 				weekday: "text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none",
 				week: "flex w-full mt-2",
 				day: "relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
