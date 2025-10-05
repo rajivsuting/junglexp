@@ -2,6 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+// Force dynamic rendering to avoid build-time database calls
+export const dynamic = 'force-dynamic';
+
 import { getNaturalists } from '@repo/actions/naturlists.actions';
 import { getNationalParkBySlug } from '@repo/actions/parks.actions';
 

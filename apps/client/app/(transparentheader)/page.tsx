@@ -2,6 +2,9 @@ import { PlayCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+// Force dynamic rendering to avoid build-time database calls
+export const dynamic = 'force-dynamic';
+
 import ForestStaysSection from '@/components/ForestStaysSection';
 import ImageSlideshow from '@/components/ImageSlideshow';
 import LodgesSection from '@/components/LodgesSection';
