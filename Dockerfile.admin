@@ -109,4 +109,26 @@ ENV HOSTNAME=0.0.0.0
 
 EXPOSE 8080
 
-CMD ["node", "apps/admin/server.js"]
+# Create startup script with environment variable checks
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'echo "=== RUNTIME ENVIRONMENT VARIABLES CHECK ==="' >> /app/start.sh && \
+    echo 'echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: $([ -n "$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "CLERK_SECRET_KEY: $([ -n "$CLERK_SECRET_KEY" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "DATABASE_URL: $([ -n "$DATABASE_URL" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "GCP_PROJECT_ID: $([ -n "$GCP_PROJECT_ID" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "GCP_CLIENT_EMAIL: $([ -n "$GCP_CLIENT_EMAIL" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "GCP_PRIVATE_KEY: $([ -n "$GCP_PRIVATE_KEY" ] && echo "SET (length: ${#GCP_PRIVATE_KEY})" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "GCP_BUCKET_NAME: $([ -n "$GCP_BUCKET_NAME" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "GCS_VIDEO_PREFIX: $([ -n "$GCS_VIDEO_PREFIX" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "NEXT_PUBLIC_CLERK_SIGN_IN_URL: $([ -n "$NEXT_PUBLIC_CLERK_SIGN_IN_URL" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: $([ -n "$NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: $([ -n "$NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "UPSTASH_REDIS_REST_URL: $([ -n "$UPSTASH_REDIS_REST_URL" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "UPSTASH_REDIS_REST_TOKEN: $([ -n "$UPSTASH_REDIS_REST_TOKEN" ] && echo "SET" || echo "NOT SET")"' >> /app/start.sh && \
+    echo 'echo "PORT: $PORT"' >> /app/start.sh && \
+    echo 'echo "HOSTNAME: $HOSTNAME"' >> /app/start.sh && \
+    echo 'echo "============================================"' >> /app/start.sh && \
+    echo 'exec node apps/admin/server.js' >> /app/start.sh && \
+    chmod +x /app/start.sh
+
+CMD ["/bin/sh", "/app/start.sh"]
