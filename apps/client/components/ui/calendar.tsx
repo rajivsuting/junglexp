@@ -45,18 +45,15 @@ function Calendar({
 				months: "flex gap-4 flex-col md:flex-row relative",
 				month: "flex flex-col w-full gap-4",
 				nav: "flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between",
-				button_previous: cn(
+				nav_button_previous: cn(
 					buttonVariants({ variant: buttonVariant }),
 					"size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
 				),
-				button_next: cn(
+				nav_button_next: cn(
 					buttonVariants({ variant: buttonVariant }),
 					"size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
 				),
-				month_caption: "flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)",
-				dropdowns: "w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5",
-				dropdown_root: "relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md",
-				dropdown: "absolute inset-0 opacity-0",
+				caption: "flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)",
 				caption_label: cn(
 					"select-none font-medium text-sm",
 				),
@@ -64,8 +61,6 @@ function Calendar({
 				weekdays: "flex",
 				weekday: "text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none",
 				week: "flex w-full mt-2",
-				week_number_header: "select-none w-(--cell-size)",
-				week_number: "text-[0.8rem] select-none text-muted-foreground",
 				day: "relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
 				range_start: "rounded-l-md bg-accent",
 				range_middle: "rounded-none",
