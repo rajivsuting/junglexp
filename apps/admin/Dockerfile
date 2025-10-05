@@ -6,7 +6,10 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy workspace configuration files
-COPY package.json yarn.lock .yarnrc.yml turbo.json ./
+COPY package.json ./
+COPY yarn.lock ./
+COPY .yarnrc.yml ./
+COPY turbo.json ./
 COPY tooling ./tooling
 COPY packages ./packages
 COPY apps/admin/package.json ./apps/admin/package.json
