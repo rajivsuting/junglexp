@@ -3,9 +3,9 @@ import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 
-import { db, schema } from '@repo/db';
-
 import type { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
+
+export const runtime = "nodejs";
 
 async function validateRequest(request: Request, secret: string) {
   const payloadString = await request.text();
@@ -66,6 +66,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 }
 
 async function createUser(data: UserJSON) {
+  const { db, schema } = await import("@repo/db");
   // Extract role from public metadata, default to 0 (regular user)
   const role = (data.public_metadata as any)?.role ?? "user";
 
@@ -86,6 +87,7 @@ async function createUser(data: UserJSON) {
 }
 
 async function updateUser(data: UserJSON) {
+  const { db, schema } = await import("@repo/db");
   // Extract role from public metadata
   const role = (data.public_metadata as any)?.role;
 
@@ -113,6 +115,7 @@ async function updateUser(data: UserJSON) {
 }
 
 async function deleteUser(id?: string) {
+  const { db, schema } = await import("@repo/db");
   if (id) {
     await db.delete(schema.Users).where(eq(schema.Users.user_id, id));
 
