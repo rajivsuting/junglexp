@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 
+import { getCities, getCitiesByStateId } from '@repo/actions/cities.actions';
+
+console.log("env", process.env.GCP_BUCKET_NAME, process.env.DATABASE_URL);
+
 import type { TCity } from "@repo/db/schema/city";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
-  const { getCitiesByStateId, getCities } = await import(
-    "@repo/actions/cities.actions"
-  );
   const { searchParams } = new URL(request.url);
 
   const stateId = searchParams.get("state");

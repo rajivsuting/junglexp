@@ -112,12 +112,10 @@ export const schema = {
   ...relations,
 };
 
-config({ path: "../../.env" });
+// Load environment variables - only in non-production environments
+if (process.env.NODE_ENV !== "production") {
+  config({ path: "../../.env" });
+}
 
+// Export a Proxy that lazily initializes the database connection
 export const db = drizzle(process.env.DATABASE_URL!, { schema });
-
-// export const db = new Proxy({} as any, {
-//   get(target, prop) {
-//     return getDb()[prop];
-//   },
-// });
