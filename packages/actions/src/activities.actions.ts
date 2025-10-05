@@ -37,6 +37,8 @@ export type TGetActivitiesByParkSlugFilters = {
 };
 
 export const getActivities = async (filters: TGetActivitiesFilters) => {
+  if (!db) return { activities: [], total: 0, totalPages: 0 };
+
   const where = and(
     filters.search ? ilike(Activities.name, `%${filters.search}%`) : undefined,
     filters.park_id
@@ -105,6 +107,8 @@ export const getActivities = async (filters: TGetActivitiesFilters) => {
 export const getActivitiesByParkSlug = async (
   filters: TGetActivitiesByParkSlugFilters
 ) => {
+  if (!db) return { activities: [], total: 0, totalPages: 0 };
+  
   // First, find the park by slug if park_slug is provided
   let parkId: number | undefined;
   if (filters.park_slug) {
@@ -190,6 +194,8 @@ export const getActivitiesByParkSlug = async (
 };
 
 export const getActivityById = async (id: number) => {
+  if (!db) return null;
+  
   const activity = await db.query.Activities.findFirst({
     where: eq(Activities.id, id),
     with: {
@@ -230,6 +236,8 @@ export const getActivityById = async (id: number) => {
 };
 
 export const getActivityBySlug = async (slug: string) => {
+  if (!db) return null;
+  
   const activity = await db.query.Activities.findFirst({
     where: eq(Activities.slug, slug),
     with: {
