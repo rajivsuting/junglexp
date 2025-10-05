@@ -1,10 +1,10 @@
-import crypto from "crypto";
+import crypto from 'crypto';
 // app/api/v1/upload-image/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import sharp from "sharp";
+import { NextRequest, NextResponse } from 'next/server';
+import path from 'path';
+import sharp from 'sharp';
 
-import { bucket } from "@/lib/gcs";
+import { bucket } from '@/lib/gcs';
 
 export const runtime = "nodejs"; // ensure Node runtime (not Edge)
 
@@ -126,10 +126,12 @@ async function uploadAndMakeVariantsFromFile(
 
 async function saveChunk(sessionId: string, index: number, chunkBuf: Buffer) {
   const key = `uploads/chunks/${sessionId}/${index}`;
-  await bucket().file(key).save(chunkBuf, {
-    resumable: false,
-    metadata: { contentType: "application/octet-stream" },
-  });
+  await bucket()
+    .file(key)
+    .save(chunkBuf, {
+      resumable: false,
+      metadata: { contentType: "application/octet-stream" },
+    });
   return key;
 }
 

@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { getNationalParks } from "@repo/actions/parks.actions";
+export const runtime = "nodejs";
 
 export async function GET() {
+  const { getNationalParks } = await import("@repo/actions/parks.actions");
   const nationalParks = await getNationalParks();
   return NextResponse.json(nationalParks);
 }

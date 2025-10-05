@@ -1,11 +1,9 @@
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import fs from 'fs';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import sharp from 'sharp';
 
 import { bucket } from '@/lib/gcs';
-import {} from '@google-cloud/storage';
 
 // Define image sizes for responsive images
 const IMAGE_SIZES = {
