@@ -11,8 +11,14 @@ RUN corepack enable
 # Set working directory
 WORKDIR /app
 RUN yarn global add turbo
-COPY . .
+COPY package.json yarn.lock ./
+COPY turbo.json ./
+COPY apps/client/package.json ./apps/client/
+COPY packages/ ./packages/
 RUN turbo prune client --docker
+
+# Copy the remaining files needed for build
+COPY . .
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
