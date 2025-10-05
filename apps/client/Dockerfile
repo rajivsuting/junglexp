@@ -5,10 +5,10 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-COPY apps/client/package.json ./apps/client/
-COPY packages/ ./packages/
+# Copy package files (using relative paths from apps/client/ build context)
+COPY ../../package.json ../../yarn.lock* ../../package-lock.json* ../../pnpm-lock.yaml* ./
+COPY ./package.json ./apps/client/
+COPY ../../packages/ ./packages/
 
 # Install dependencies
 RUN \
@@ -22,7 +22,7 @@ RUN \
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY ../../. .
 
 # Build the client app specifically
 RUN yarn turbo build --filter=client
