@@ -8,7 +8,7 @@ RUN apk update
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --filter=admin --docker
+RUN turbo prune admin --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -19,7 +19,7 @@ WORKDIR /app
 # First install the dependencies (as they change less often)
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/yarn.lock ./
-COPY --from=builder /app/out/.yarnrc.yml ./ 
+COPY --from=builder /app/.yarnrc.yml ./ 
 RUN corepack enable
 RUN yarn install
 
