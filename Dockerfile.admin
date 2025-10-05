@@ -31,8 +31,8 @@ COPY --from=deps /app/packages ./packages
 COPY --from=deps /app/apps/admin ./apps/admin
 COPY apps/admin ./apps/admin
 
-# Copy environment variables for build (Clerk needs these during build)
-COPY .env* ./
+# # Copy environment variables for build (Clerk needs these during build)
+# COPY .env* ./
 
 # Set build-time environment variables
 ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
