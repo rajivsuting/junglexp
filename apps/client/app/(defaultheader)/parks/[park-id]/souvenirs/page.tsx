@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 
 // Force dynamic rendering to avoid build-time database calls
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';

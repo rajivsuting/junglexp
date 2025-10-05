@@ -114,7 +114,10 @@ export const schema = {
 
 config({ path: "../../.env" });
 
-export const db = drizzle(process.env.DATABASE_URL!, { schema });
+// Safe database connection that won't fail during build
+export const db = process.env.DATABASE_URL 
+  ? drizzle(process.env.DATABASE_URL, { schema })
+  : null;
 
 // export const db = new Proxy({} as any, {
 //   get(target, prop) {

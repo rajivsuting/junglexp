@@ -88,6 +88,7 @@ export const getNationalParkById = async (parkId: string) => {
 };
 
 export const getNationalParkBySlug = async (slug: string) => {
+  if (!db) return null;
   return getOrSet(
     () =>
       db.query.NationalParks.findFirst({

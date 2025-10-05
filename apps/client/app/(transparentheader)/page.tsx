@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 
 // Force dynamic rendering to avoid build-time database calls
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 import ForestStaysSection from '@/components/ForestStaysSection';
 import ImageSlideshow from '@/components/ImageSlideshow';

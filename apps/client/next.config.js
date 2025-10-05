@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  experimental: {
+    // Disable static optimization to prevent build-time data fetching
+    staticGenerationRetryCount: 0,
+  },
   images: {
     remotePatterns: [
       new URL("https://images.unsplash.com/**"),
