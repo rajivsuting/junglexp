@@ -7,11 +7,11 @@ RUN apk add --no-cache libc6-compat
 RUN corepack enable
 WORKDIR /app
 
-# Copy only what we can access from apps/client/ build context
+# Copy package.json and create a minimal lockfile
 COPY package.json ./
 
-# Install dependencies for just the client app
-RUN yarn install --frozen-lockfile
+# Install dependencies without lockfile (since we don't have access to root yarn.lock)
+RUN yarn install
 
 # Rebuild the source code only when needed
 FROM base AS builder
