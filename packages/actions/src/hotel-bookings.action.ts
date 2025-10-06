@@ -43,6 +43,8 @@ export const getHotelBookings = async (
   filter: THotelBookingsFilter,
   sort?: { id: string; desc: boolean }[]
 ) => {
+  if (!db) return { data: [], total: 0 };
+  
   const {
     search,
     page,
@@ -106,6 +108,8 @@ export const getHotelBookings = async (
 };
 
 export const ceateHotelBooking = async (booking: TNewHotelBooking) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const newBooking = await db.insert(HotelBookings).values(booking).returning();
 
   if (!newBooking[0]) {
@@ -134,6 +138,8 @@ export const updateHotelBookingStatus = async (
   bookingId: number,
   status: (typeof hotelBookingStatusEnum.enumValues)[number]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const updatedBooking = await db
     .update(HotelBookings)
     .set({ status })
@@ -148,6 +154,8 @@ export const updateHotelBookingStatus = async (
 };
 
 export const getHotelBookingById = async (bookingId: number) => {
+  if (!db) return null;
+  
   const booking = await db.query.HotelBookings.findFirst({
     where: eq(HotelBookings.id, bookingId),
     with: {
