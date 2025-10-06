@@ -387,7 +387,7 @@ export const updateActivityImages = async (
   // Delete removed images
   if (imagesToDelete.length > 0 && db) {
     operations.push(
-      db
+      db!
         .delete(ActivityImages)
         .where(
           and(
@@ -405,7 +405,7 @@ export const updateActivityImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db.insert(ActivityImages).values(newImages));
+    operations.push(db!.insert(ActivityImages).values(newImages));
   }
 
   // Update order for existing images
@@ -418,7 +418,7 @@ export const updateActivityImages = async (
       const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
       if (updateData && img.order !== updateData.order) {
         operations.push(
-          db
+          db!
             .update(ActivityImages)
             .set({ order: updateData.order })
             .where(eq(ActivityImages.id, img.id))
@@ -438,7 +438,7 @@ export const updateActivityImages = async (
   );
   if (imageAltTextUpdates.length > 0 && db) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db
+      db!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))

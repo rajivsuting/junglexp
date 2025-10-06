@@ -47,6 +47,8 @@ export const deleteNationalPark = async (parkId: string) => {
 };
 
 export const getNationalParkById = async (parkId: string) => {
+  if (!db) return null;
+  
   try {
     const park = await db.query.NationalParks.findFirst({
       where: eq(schema.NationalParks.id, Number(parkId)),
@@ -315,18 +317,20 @@ const upsertImages = async (
 export const getNationalParks = async (
   filters: TGetNationalParksFilters = {}
 ) => {
+  if (!db) return { destinations: [], total: 0 };
+  
   let where = undefined;
 
   if (filters.search) {
     where = ilike(schema.NationalParks.name, `%${filters.search}%`);
   }
 
-  const totalResponse = await db
+  const totalResponse = await db!
     .select({ count: count() })
     .from(NationalParks)
     .where(where);
 
-  const destinations = await db.query.NationalParks.findMany({
+  const destinations = await db!.query.NationalParks.findMany({
     where,
     limit: filters.limit,
     offset:
