@@ -282,7 +282,7 @@ const upsertImages = async (
   );
   if (altTextUpdates.length > 0) {
     const altTextOperations = altTextUpdates.map((update) =>
-      db
+      db!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))
