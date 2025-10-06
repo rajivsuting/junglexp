@@ -33,6 +33,8 @@ export interface UploadResult {
 }
 
 export const createNationalPark = async (payload: TNewNationalPark) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const parsed = nationaParkInsertSchema.parse(payload);
 
   const newPark = await db.insert(schema.NationalParks).values(parsed);
@@ -41,6 +43,8 @@ export const createNationalPark = async (payload: TNewNationalPark) => {
 };
 
 export const deleteNationalPark = async (parkId: string) => {
+  if (!db) throw new Error("Database connection not available");
+  
   await db
     .delete(schema.NationalParks)
     .where(eq(schema.NationalParks.id, Number(parkId)));
@@ -132,6 +136,8 @@ const upsertImages = async (
   isMobile: boolean,
   imagesPayload: CreateParkImagesPayload
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // 2) Insert new Images for any 'added' entries that include full image payload
   const toInsert = imagesPayload.added.filter(
     (a): a is { image: NewImageInput; order: number } => "image" in a
@@ -381,6 +387,8 @@ export const createPark = async (
   mobileImagesPayload: CreateParkImagesPayload,
   parkId?: number
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const parsed = nationaParkInsertSchema.parse(data);
 
   // 1) Create or fetch park
@@ -436,6 +444,8 @@ export const updateParkImages = async (
     alt_text?: string;
   }>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing place images
   const existing = await db
     .select()
