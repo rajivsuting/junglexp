@@ -385,7 +385,7 @@ export const updateActivityImages = async (
   const operations = [];
 
   // Delete removed images
-  if (imagesToDelete.length > 0) {
+  if (imagesToDelete.length > 0 && db) {
     operations.push(
       db
         .delete(ActivityImages)
@@ -399,7 +399,7 @@ export const updateActivityImages = async (
   }
 
   // Create new images
-  if (imagesToCreate.length > 0) {
+  if (imagesToCreate.length > 0 && db) {
     const newImages = imagesToCreate.map((update) => ({
       activity_id: activityId,
       image_id: update.image_id,
@@ -414,7 +414,7 @@ export const updateActivityImages = async (
   );
 
   for (const img of imagesToUpdate) {
-    if (img.image_id !== null) {
+    if (img.image_id !== null && db) {
       const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
       if (updateData && img.order !== updateData.order) {
         operations.push(
@@ -436,7 +436,7 @@ export const updateActivityImages = async (
   const imageAltTextUpdates = imageUpdates.filter(
     (update) => update.alt_text !== undefined
   );
-  if (imageAltTextUpdates.length > 0) {
+  if (imageAltTextUpdates.length > 0 && db) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
       db
         .update(Images)
@@ -447,6 +447,8 @@ export const updateActivityImages = async (
   }
 
   // Return updated activity images
+  if (!db) return [];
+  
   return await db
     .select()
     .from(ActivityImages)
