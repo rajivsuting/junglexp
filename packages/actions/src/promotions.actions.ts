@@ -46,7 +46,7 @@ export const createPromotion = async (data: TNewPromotion) => {
     parsed.order = nextOrder;
   }
 
-  let [promotion] = await db.insert(Promotions).values(parsed).returning();
+  let [promotion] = await db!.insert(Promotions).values(parsed).returning();
 
   if (!promotion) throw new Error("Failed to create promotion");
 
@@ -163,7 +163,7 @@ export async function setPromotionActive(id: number, isActive: boolean) {
 export const getInactivePromotions = async () => {
   return getOrSet(
     async () =>
-      db.select().from(Promotions).where(eq(Promotions.isActive, false)),
+      db!.select().from(Promotions).where(eq(Promotions.isActive, false)),
     {
       key: await inactivePromotionsKey(),
     }
@@ -173,7 +173,7 @@ export const getInactivePromotions = async () => {
 export const getActivePromotions = async () => {
   return getOrSet(
     async () =>
-      db.select().from(Promotions).where(eq(Promotions.isActive, true)),
+      db!.select().from(Promotions).where(eq(Promotions.isActive, true)),
     {
       key: await activePromotionsKey(),
     }

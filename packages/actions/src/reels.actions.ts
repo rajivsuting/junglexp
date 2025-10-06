@@ -14,7 +14,7 @@ export type TGetReelsFilters = {
 };
 
 const cacheReels = async () => {
-  return db.query.Reels.findMany({
+  return db!.query.Reels.findMany({
     where: eq(Reels.status, "active"),
   });
 };
@@ -35,7 +35,7 @@ export const getReels = async (filters: TGetReelsFilters) => {
 
   const offset = (page - 1) * limit;
 
-  const rows = await db.query.Reels.findMany({
+  const rows = await db!.query.Reels.findMany({
     where,
     with: {},
     orderBy: [desc(Reels.status)],
@@ -54,14 +54,14 @@ export const getReels = async (filters: TGetReelsFilters) => {
 };
 
 export const getReelById = async (id: string) => {
-  const row = await db.query.Reels.findFirst({
+  const row = await db!.query.Reels.findFirst({
     where: eq(Reels.id, id),
   });
   return row;
 };
 
 export const createReel = async (reel: TNewReel) => {
-  const inserted = await db.insert(Reels).values(reel).returning();
+  const inserted = await db!.insert(Reels).values(reel).returning();
   await getReelsFromCache();
   return inserted[0] ?? null;
 };
@@ -87,7 +87,7 @@ export const setReelStatus = async (id: string, status: TReelStatus) => {
 };
 
 export const deleteReel = async (id: string) => {
-  await db.delete(Reels).where(eq(Reels.id, id));
+  await db!.delete(Reels).where(eq(Reels.id, id));
   getReelsFromCache();
   return { id };
 };

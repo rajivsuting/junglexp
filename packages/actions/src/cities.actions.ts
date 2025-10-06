@@ -17,5 +17,5 @@ export async function getCitiesByStateId(stateId: string) {
 export async function getCities() {
   if (!db) return [];
   
-  return db.query.Cities.findMany();
+  return db!.query.Cities.findMany();
 }

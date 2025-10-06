@@ -9,7 +9,7 @@ import type { TImage, TNewImage } from "@repo/db/schema/image";
 export const createImage = async (data: TNewImage) => {
   if (!db) throw new Error("Database connection not available");
   
-  const result = await db.insert(Images).values(data).returning();
+  const result = await db!.insert(Images).values(data).returning();
 
   if (!result[0]) {
     throw new Error("Failed to create image");
@@ -21,7 +21,7 @@ export const createImage = async (data: TNewImage) => {
 export const createImages = async (data: TNewImage[]) => {
   if (!db) throw new Error("Database connection not available");
   
-  const result = await db.insert(Images).values(data).returning();
+  const result = await db!.insert(Images).values(data).returning();
 
   return result;
 };

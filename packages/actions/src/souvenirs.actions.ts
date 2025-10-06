@@ -274,7 +274,7 @@ export const updateSouvenirImages = async (
       image_id: u.image_id,
       order: u.order,
     }));
-    operations.push(db.insert(SouvenirImages).values(rows));
+    operations.push(db!.insert(SouvenirImages).values(rows));
   }
 
   // Update order for existing join rows

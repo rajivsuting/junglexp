@@ -37,7 +37,7 @@ export const createNationalPark = async (payload: TNewNationalPark) => {
   
   const parsed = nationaParkInsertSchema.parse(payload);
 
-  const newPark = await db.insert(schema.NationalParks).values(parsed);
+  const newPark = await db!.insert(schema.NationalParks).values(parsed);
 
   return newPark;
 };
@@ -54,7 +54,7 @@ export const getNationalParkById = async (parkId: string) => {
   if (!db) return null;
   
   try {
-    const park = await db.query.NationalParks.findFirst({
+    const park = await db!.query.NationalParks.findFirst({
       where: eq(schema.NationalParks.id, Number(parkId)),
       with: {
         city: {

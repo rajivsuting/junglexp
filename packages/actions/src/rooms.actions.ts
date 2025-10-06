@@ -58,7 +58,7 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
   const limit = Math.max(1, filters.limit || 10);
   const offset = (page - 1) * limit;
 
-  const rooms = await db.query.Rooms.findMany({
+  const rooms = await db!.query.Rooms.findMany({
     where,
     limit,
     offset,
@@ -105,7 +105,7 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
 export const createRoom = async (payload: TNewRoom) => {
   const parsed = roomsInsertSchema.parse(payload);
 
-  const [newRoom] = await db.insert(schema.Rooms).values(parsed).returning();
+  const [newRoom] = await db!.insert(schema.Rooms).values(parsed).returning();
 
   if (!newRoom) {
     throw new Error("Failed to create room");
@@ -148,7 +148,7 @@ export const deleteRoom = async (roomId: number) => {
 
 export const getRoomById = async (roomId: number) => {
   try {
-    const room = await db.query.Rooms.findFirst({
+    const room = await db!.query.Rooms.findFirst({
       where: eq(schema.Rooms.id, roomId),
       with: {
         hotel: {
@@ -213,7 +213,7 @@ export const addRoomImages = async (roomId: number, imageIds: number[]) => {
 };
 
 export const removeRoomImages = async (roomId: number, imageIds: number[]) => {
-  await db.delete(RoomImages).where(
+  await db!.delete(RoomImages).where(
     and(
       eq(RoomImages.room_id, roomId)
       // Note: This is a simplified version. For proper implementation, you'd use inArray
@@ -274,7 +274,7 @@ export const updateRoomImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db.insert(RoomImages).values(newImages));
+    operations.push(db!.insert(RoomImages).values(newImages));
   }
 
   // Update order for existing images
@@ -348,7 +348,7 @@ export const removeRoomAmenities = async (
   roomId: number,
   amenityIds: number[]
 ) => {
-  await db.delete(RoomAmenities).where(
+  await db!.delete(RoomAmenities).where(
     and(
       eq(RoomAmenities.room_id, roomId)
       // Note: This is a simplified version. For proper implementation, you'd use inArray
@@ -402,7 +402,7 @@ export const updateRoomAmenities = async (
         order: orderedAmenityIds.indexOf(amenityId),
       })
     );
-    ops.push(db.insert(RoomAmenities).values(values));
+    ops.push(db!.insert(RoomAmenities).values(values));
   }
 
   // Update order for existing items
@@ -436,7 +436,7 @@ export const updateRoomAmenities = async (
 export const createRoomPlan = async (payload: TNewRoomPlan) => {
   const parsed = roomPlansInsertSchema.parse(payload);
 
-  const [newPlan] = await db.insert(RoomPlans).values(parsed).returning();
+  const [newPlan] = await db!.insert(RoomPlans).values(parsed).returning();
 
   if (!newPlan) {
     throw new Error("Failed to create room plan");
@@ -478,7 +478,7 @@ export const deleteRoomPlan = async (planId: number) => {
 };
 
 export const getRoomPlansByRoomId = async (roomId: number) => {
-  const plans = await db.query.RoomPlans.findMany({
+  const plans = await db!.query.RoomPlans.findMany({
     where: eq(RoomPlans.room_id, roomId),
   });
 
