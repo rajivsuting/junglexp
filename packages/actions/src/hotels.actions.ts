@@ -952,6 +952,8 @@ export const updateHotelSafetyFeatures = async (
 };
 
 export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel FAQs
   const existing = await db
     .select()
