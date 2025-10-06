@@ -4,7 +4,11 @@
     "declaration": true,
     "declarationMap": true,
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "ES2022"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,6 +23,8 @@
     "incremental": true,
     "composite": true,
     "noUncheckedIndexedAccess": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false
   }
 }

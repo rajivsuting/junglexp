@@ -6,6 +6,6 @@
       "@repo/db/*": ["../db/*"]
     }
   },
-  "include": ["*.ts", "src", "../db/schema", "../db/utils"],
+  "include": ["*.ts", "./../db", "src", "../db/schema", "../db/utils"],
   "exclude": ["node_modules"]
 }
