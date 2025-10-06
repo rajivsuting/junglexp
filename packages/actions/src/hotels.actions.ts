@@ -730,6 +730,8 @@ export const getHotels = async (filters: {
   status?: string[];
   is_featured?: string[];
 }) => {
+  if (!db) return { hotels: [], total: 0 };
+  
   const { page = 1, limit = 10, search, status, is_featured } = filters;
 
   // Build where conditions
