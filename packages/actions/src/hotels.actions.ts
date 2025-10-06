@@ -437,7 +437,7 @@ export const updateHotelImages = async (
   );
   if (imageAltTextUpdates.length > 0) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db
+      db!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))
@@ -446,7 +446,7 @@ export const updateHotelImages = async (
   }
 
   // Return updated hotel images
-  return await db
+  return await db!
     .select()
     .from(HotelImages)
     .where(eq(HotelImages.hotel_id, hotelId))
