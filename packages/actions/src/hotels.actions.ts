@@ -303,6 +303,8 @@ export const createHotelImages = async (
   hotelId: number,
   imageIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const hotelImages = imageIds.map((imageId) => ({
     hotel_id: hotelId,
     image_id: imageId,
@@ -315,6 +317,8 @@ export const deleteHotelImages = async (
   hotelId: number,
   imageIds?: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   if (imageIds && imageIds.length > 0) {
     return await db
       .delete(HotelImages)
@@ -335,6 +339,8 @@ export const deleteHotelImages = async (
 };
 
 export const getHotelImages = async (hotelId: number) => {
+  if (!db) return [];
+  
   return await db.query.HotelImages.findMany({
     where: eq(HotelImages.hotel_id, hotelId),
     with: {
@@ -351,6 +357,8 @@ export const updateHotelImages = async (
     alt_text?: string;
   }>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel images
   const existing = await db
     .select()
@@ -450,6 +458,8 @@ export const updateHotelPolicies = async (
   kind: "include" | "exclude",
   policyIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel policies with the specified kind using database join
   const existing = await db
     .select({
