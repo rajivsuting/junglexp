@@ -7,6 +7,8 @@ import { bucket, toObjectNameFromUrl } from './libs/gcs';
 import type { TImage, TNewImage } from "@repo/db/schema/image";
 
 export const createImage = async (data: TNewImage) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const result = await db.insert(Images).values(data).returning();
 
   if (!result[0]) {
@@ -17,12 +19,16 @@ export const createImage = async (data: TNewImage) => {
 };
 
 export const createImages = async (data: TNewImage[]) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const result = await db.insert(Images).values(data).returning();
 
   return result;
 };
 
 export const deleteImages = async (imageIds: number[]) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const deleted = await db
     .delete(Images)
     .where(inArray(Images.id, imageIds))
@@ -45,6 +51,8 @@ export const deleteImages = async (imageIds: number[]) => {
 };
 
 export const updateImages = async (rows: Pick<TImage, "id" | "alt_text">[]) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const result = await db
     .insert(Images)
     .values(rows as any)
