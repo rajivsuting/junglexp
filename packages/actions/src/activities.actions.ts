@@ -295,7 +295,7 @@ export const createActivity = async (data: TCreateActivity) => {
     slug,
   };
 
-  const [activity] = await db
+  const [activity] = await db!
     .insert(Activities)
     .values(activityData)
     .returning();
