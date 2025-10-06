@@ -784,6 +784,8 @@ export const updateHotelAmenities = async (
   hotelId: number,
   amenityIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel amenities
   const existing = await db
     .select()
