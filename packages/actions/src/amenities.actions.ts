@@ -5,10 +5,14 @@ import { Amenities, insertAmenitiesSchema } from "@repo/db/schema/amenities";
 import type { TNewAmenity } from "@repo/db/schema/amenities";
 
 export const getAllAmenities = async () => {
+  if (!db) return [];
+  
   return await db.query.Amenities.findMany();
 };
 
 export const createAmenity = async (data: TNewAmenity) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const parsed = insertAmenitiesSchema.parse(data);
   const [result] = await db.insert(Amenities).values(parsed).returning();
 
@@ -20,6 +24,8 @@ export const createAmenity = async (data: TNewAmenity) => {
 };
 
 export const createAmenities = async (data: TNewAmenity[]) => {
+  if (!db) throw new Error("Database connection not available");
+  
   if (data.length === 0) return [];
 
   const parsedAmenities = data.map((amenity) =>

@@ -25,6 +25,8 @@ import type {
   TRoomPlan,
 } from "@repo/db/schema/types";
 export const getHotelsByParkSlug = async (slug: string) => {
+  if (!db) return [];
+  
   const hotels = await db
     .select({
       hotel: Hotels,
@@ -538,6 +540,8 @@ export const updateHotelPolicies = async (
 };
 
 export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
+  if (!db) return [];
+  
   // First get all hotels in the park
   const whereConditions = [eq(NationalParks.id, parkId)];
 

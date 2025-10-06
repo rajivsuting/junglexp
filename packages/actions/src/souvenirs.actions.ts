@@ -22,6 +22,8 @@ export type TGetSouvenirsFilters = {
 };
 
 export const getSouvenirs = async (_filters: TGetSouvenirsFilters) => {
+  if (!db) return { souvenirs: [], total: 0 };
+  
   let filters = [];
 
   if (_filters.search) {
