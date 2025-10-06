@@ -869,6 +869,8 @@ export const updateHotelSafetyFeatures = async (
   hotelId: number,
   safetyFeatureIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel safety features
   const existing = await db
     .select()
