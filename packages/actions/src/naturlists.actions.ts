@@ -21,7 +21,7 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
     search ? ilike(Naturalist.name, `%${search}%`) : undefined
   );
 
-  const naturalists = await db.query.Naturalist.findMany({
+  const naturalists = await db!.query.Naturalist.findMany({
     with: {
       image: true,
       park: true,
@@ -43,7 +43,7 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
 export const getNaturalistById = async (id: number) => {
   if (!db) return null;
   
-  const naturalist = await db.query.Naturalist.findFirst({
+  const naturalist = await db!.query.Naturalist.findFirst({
     where: eq(Naturalist.id, id),
     with: {
       image: true,
@@ -56,7 +56,7 @@ export const getNaturalistById = async (id: number) => {
 export const createNaturalist = async (naturalist: TNewNaturalist) => {
   if (!db) throw new Error("Database connection not available");
   
-  const newNaturalist = await db.insert(Naturalist).values(naturalist);
+  const newNaturalist = await db!.insert(Naturalist).values(naturalist);
   return newNaturalist;
 };
 

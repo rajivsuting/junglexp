@@ -61,7 +61,7 @@ export const getNaturalistBookings = async (
           : [])
   );
 
-  const naturalistBookings = await db.query.NaturalistBookings.findMany({
+  const naturalistBookings = await db!.query.NaturalistBookings.findMany({
     where,
     with: {
       park: true,
@@ -117,7 +117,7 @@ export const updateNaturalistBookingStatus = async (
 export const getNaturalistBookingById = async (bookingId: number) => {
   if (!db) return null;
   
-  const booking = await db.query.NaturalistBookings.findFirst({
+  const booking = await db!.query.NaturalistBookings.findFirst({
     where: eq(NaturalistBookings.id, bookingId),
     with: {
       park: true,

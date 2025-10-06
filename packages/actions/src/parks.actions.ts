@@ -97,7 +97,7 @@ export const getNationalParkBySlug = async (slug: string) => {
   if (!db) return null;
   return getOrSet(
     () =>
-      db.query.NationalParks.findFirst({
+      db!.query.NationalParks.findFirst({
         where: eq(schema.NationalParks.slug, slug),
         with: {
           city: {
@@ -146,7 +146,7 @@ const upsertImages = async (
   let insertedImages: { id: number; order: number }[] = [];
   if (toInsert.length > 0) {
     const imageRows = toInsert.map((a) => ({ ...a.image }));
-    const created = await db.insert(Images).values(imageRows).returning(); // TImage[]
+    const created = await db!.insert(Images).values(imageRows).returning(); // TImage[]
     if (!created || created.length !== toInsert.length) {
       throw new Error("Failed to insert images");
     }
@@ -264,7 +264,7 @@ const upsertImages = async (
   }
 
   if (toInsertJoins.length > 0) {
-    await db.insert(ParkImages).values(toInsertJoins);
+    await db!.insert(ParkImages).values(toInsertJoins);
   }
 
   for (const u of toUpdate) {
@@ -394,7 +394,7 @@ export const createPark = async (
   // 1) Create or fetch park
   let park: TNationalParkBase;
   if (parkId) {
-    const found = await db.query.NationalParks.findFirst({
+    const found = await db!.query.NationalParks.findFirst({
       where: eq(schema.NationalParks.id, parkId),
     });
 
@@ -492,7 +492,7 @@ export const updateParkImages = async (
       order: update.order,
     }));
 
-    operations.push(db.insert(ParkImages).values(newImages));
+    operations.push(db!.insert(ParkImages).values(newImages));
   }
 
   // Update order for existing images

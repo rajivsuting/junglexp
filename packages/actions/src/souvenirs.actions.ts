@@ -49,7 +49,7 @@ export const getSouvenirs = async (_filters: TGetSouvenirsFilters) => {
     .from(Souvenirs)
     .where(where);
 
-  const souvenirs = await db.query.Souvenirs.findMany({
+  const souvenirs = await db!.query.Souvenirs.findMany({
     where,
     limit: _filters.limit,
     offset: _filters.page ? (_filters.page - 1) * _filters.limit : 0,
@@ -70,7 +70,7 @@ export const getSouvenirs = async (_filters: TGetSouvenirsFilters) => {
 };
 
 export const getSouvenirById = async (id: string) => {
-  return db.query.Souvenirs.findFirst({
+  return db!.query.Souvenirs.findFirst({
     where: eq(Souvenirs.id, Number(id)),
     with: {
       park: true,
@@ -84,7 +84,7 @@ export const getSouvenirById = async (id: string) => {
 };
 
 export const getSouvenirBySlug = async (slug: string) => {
-  return db.query.Souvenirs.findFirst({
+  return db!.query.Souvenirs.findFirst({
     where: eq(Souvenirs.slug, slug),
 
     with: {
@@ -102,7 +102,7 @@ export const createSouvenir = async (
   data: Omit<TNewSouvenirBase, "images">,
   images: TNewImage[]
 ) => {
-  const result = await db.insert(Souvenirs).values(data).returning();
+  const result = await db!.insert(Souvenirs).values(data).returning();
 
   if (!result[0]) {
     throw new Error("Failed to create souvenir");
@@ -182,7 +182,7 @@ export const updateSouvenir = async (
   }
 
   // Fetch and return the updated souvenir with all current images
-  const updatedSouvenir = await db.query.Souvenirs.findFirst({
+  const updatedSouvenir = await db!.query.Souvenirs.findFirst({
     where: eq(Souvenirs.id, souvenirId),
     with: {
       park: true,
@@ -203,7 +203,7 @@ export const updateSouvenir = async (
 export const createSouvenirBase = async (
   data: Omit<TNewSouvenirBase, "images">
 ) => {
-  const result = await db.insert(Souvenirs).values(data).returning();
+  const result = await db!.insert(Souvenirs).values(data).returning();
   if (!result[0]) throw new Error("Failed to create souvenir");
   return result[0];
 };

@@ -58,7 +58,7 @@ export const getActivities = async (filters: TGetActivitiesFilters) => {
   const limit = Math.max(1, filters.limit || 10);
   const offset = (page - 1) * limit;
 
-  const activities = await db.query.Activities.findMany({
+  const activities = await db!.query.Activities.findMany({
     where,
     limit,
     offset,
@@ -112,7 +112,7 @@ export const getActivitiesByParkSlug = async (
   // First, find the park by slug if park_slug is provided
   let parkId: number | undefined;
   if (filters.park_slug) {
-    const park = await db.query.NationalParks.findFirst({
+    const park = await db!.query.NationalParks.findFirst({
       where: eq(NationalParks.slug, filters.park_slug),
       columns: { id: true },
     });
@@ -148,7 +148,7 @@ export const getActivitiesByParkSlug = async (
   const offset =
     page !== undefined && limit !== undefined ? (page - 1) * limit : undefined;
 
-  const activities = await db.query.Activities.findMany({
+  const activities = await db!.query.Activities.findMany({
     where,
     limit,
     offset,
@@ -196,7 +196,7 @@ export const getActivitiesByParkSlug = async (
 export const getActivityById = async (id: number) => {
   if (!db) return null;
   
-  const activity = await db.query.Activities.findFirst({
+  const activity = await db!.query.Activities.findFirst({
     where: eq(Activities.id, id),
     with: {
       park: {
@@ -238,7 +238,7 @@ export const getActivityById = async (id: number) => {
 export const getActivityBySlug = async (slug: string) => {
   if (!db) return null;
   
-  const activity = await db.query.Activities.findFirst({
+  const activity = await db!.query.Activities.findFirst({
     where: eq(Activities.slug, slug),
     with: {
       park: {
@@ -319,14 +319,14 @@ export const updateActivity = async (
 export const deleteActivity = async (id: number): Promise<void> => {
   if (!db) throw new Error("Database connection not available");
   
-  await db.delete(Activities).where(eq(Activities.id, id));
+  await db!.delete(Activities).where(eq(Activities.id, id));
 };
 
 // Activity Images
 export const createActivityImage = async (data: TNewActivityImage) => {
   if (!db) throw new Error("Database connection not available");
   
-  const [image] = await db.insert(ActivityImages).values(data).returning();
+  const [image] = await db!.insert(ActivityImages).values(data).returning();
   return image;
 };
 
@@ -347,7 +347,7 @@ export const updateActivityImage = async (
 export const deleteActivityImage = async (id: number): Promise<void> => {
   if (!db) throw new Error("Database connection not available");
   
-  await db.delete(ActivityImages).where(eq(ActivityImages.id, id));
+  await db!.delete(ActivityImages).where(eq(ActivityImages.id, id));
 };
 
 export const updateActivityImages = async (
@@ -524,7 +524,7 @@ export const updateActivityItineraries = async (
   const itemsToCreate = itineraryItems.filter((i) => i.id === undefined);
   if (itemsToCreate.length > 0) {
     operations.push(
-      db.insert(ActivityItinerary).values(
+      db!.insert(ActivityItinerary).values(
         itemsToCreate.map((i) => ({
           activity_id: activityId,
           title: i.title,
@@ -582,14 +582,14 @@ export const updateActivityItineraries = async (
 export const deleteActivityItinerary = async (id: number): Promise<void> => {
   if (!db) throw new Error("Database connection not available");
   
-  await db.delete(ActivityItinerary).where(eq(ActivityItinerary.id, id));
+  await db!.delete(ActivityItinerary).where(eq(ActivityItinerary.id, id));
 };
 
 // Activity Amenities
 export const createActivityAmenity = async (data: TNewActivityAmenity) => {
   if (!db) throw new Error("Database connection not available");
   
-  const [amenity] = await db.insert(ActivityAmenities).values(data).returning();
+  const [amenity] = await db!.insert(ActivityAmenities).values(data).returning();
   return amenity;
 };
 
@@ -610,7 +610,7 @@ export const updateActivityAmenity = async (
 export const deleteActivityAmenity = async (id: number): Promise<void> => {
   if (!db) throw new Error("Database connection not available");
   
-  await db.delete(ActivityAmenities).where(eq(ActivityAmenities.id, id));
+  await db!.delete(ActivityAmenities).where(eq(ActivityAmenities.id, id));
 };
 
 // Activity Packages
@@ -659,7 +659,7 @@ export const updateActivityPackage = async (
 export const deleteActivityPackage = async (id: number): Promise<void> => {
   if (!db) throw new Error("Database connection not available");
   
-  await db.delete(ActivityPackages).where(eq(ActivityPackages.id, id));
+  await db!.delete(ActivityPackages).where(eq(ActivityPackages.id, id));
 };
 
 export const updateActivityPackages = async (
@@ -713,7 +713,7 @@ export const updateActivityPackages = async (
   const itemsToCreate = packageItems.filter((i) => i.id === undefined);
   if (itemsToCreate.length > 0) {
     operations.push(
-      db.insert(ActivityPackages).values(
+      db!.insert(ActivityPackages).values(
         itemsToCreate.map((i) => ({
           activity_id: activityId,
           name: i.name,
@@ -833,7 +833,7 @@ export const updateActivityAmenities = async (
       order: amenityIds.indexOf(amenityId),
     }));
 
-    const createOperation = db.insert(ActivityAmenities).values(newAmenities);
+    const createOperation = db!.insert(ActivityAmenities).values(newAmenities);
     operations.push(createOperation);
   }
 
@@ -928,7 +928,7 @@ export const updateActivityPolicies = async (
       order: policyIds.indexOf(policyId),
     }));
 
-    const createOperation = db.insert(ActivityPolicies).values(newPolicies);
+    const createOperation = db!.insert(ActivityPolicies).values(newPolicies);
     operations.push(createOperation);
   }
 
@@ -981,7 +981,7 @@ export const updateActivityPolicies = async (
 export const getPackagesByActivityId = async (activityId: string) => {
   if (!db) return [];
   
-  return await db.query.ActivityPackages.findMany({
+  return await db!.query.ActivityPackages.findMany({
     where: and(
       eq(ActivityPackages.activity_id, Number(activityId)),
       eq(ActivityPackages.active, true)

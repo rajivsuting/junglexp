@@ -7,14 +7,14 @@ import type { TNewFaqs } from "@repo/db/schema/faqs";
 export const getAllFaqs = async () => {
   if (!db) return [];
   
-  return await db.query.Faqs.findMany();
+  return await db!.query.Faqs.findMany();
 };
 
 export const createFaq = async (data: TNewFaqs) => {
   if (!db) throw new Error("Database connection not available");
   
   const parsed = insertFaqsSchema.parse(data);
-  const [result] = await db.insert(Faqs).values(parsed).returning();
+  const [result] = await db!.insert(Faqs).values(parsed).returning();
 
   if (!result) {
     throw new Error("Failed to create FAQ");
@@ -30,7 +30,7 @@ export const createFaqs = async (data: TNewFaqs[]) => {
 
   const parsedFaqs = data.map((faq) => insertFaqsSchema.parse(faq));
 
-  const results = await db.insert(Faqs).values(parsedFaqs).returning();
+  const results = await db!.insert(Faqs).values(parsedFaqs).returning();
 
   if (!results || results.length === 0) {
     throw new Error("Failed to create FAQs");

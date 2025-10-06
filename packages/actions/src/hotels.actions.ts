@@ -128,9 +128,9 @@ type TCreateHotePayload = {
 //           }))
 //         )
 //         .returning(),
-//       db.insert(HotelAmenities).values(parsedIncludes).returning(),
-//       db.insert(HotelAmenities).values(parsedExcludes).returning(),
-//       db.insert(HotelPolicies).values(parsedPolicies).returning(),
+//       db!.insert(HotelAmenities).values(parsedIncludes).returning(),
+//       db!.insert(HotelAmenities).values(parsedExcludes).returning(),
+//       db!.insert(HotelPolicies).values(parsedPolicies).returning(),
 //       db.insert(SaftyFeatures).values(parsedSaftyFeatures).returning(),
 //       db.insert(Faqs).values(parsedFaqs).returning(),
 //     ]);
@@ -198,7 +198,7 @@ export const updateHotel = async (
 export const getHotelById = async (hotelId: number) => {
   if (!db) return null;
   
-  const hotel = await db.query.Hotels.findFirst({
+  const hotel = await db!.query.Hotels.findFirst({
     where: eq(Hotels.id, hotelId),
     with: {
       zone: {
@@ -240,7 +240,7 @@ export const getHotelById = async (hotelId: number) => {
 export const getHotelBySlug = async (slug: string) => {
   if (!db) return null;
   
-  const hotel = await db.query.Hotels.findFirst({
+  const hotel = await db!.query.Hotels.findFirst({
     where: eq(Hotels.slug, slug),
     with: {
       zone: {
@@ -310,7 +310,7 @@ export const createHotelImages = async (
     image_id: imageId,
   }));
 
-  return await db.insert(HotelImages).values(hotelImages).returning();
+  return await db!.insert(HotelImages).values(hotelImages).returning();
 };
 
 export const deleteHotelImages = async (
@@ -341,7 +341,7 @@ export const deleteHotelImages = async (
 export const getHotelImages = async (hotelId: number) => {
   if (!db) return [];
   
-  return await db.query.HotelImages.findMany({
+  return await db!.query.HotelImages.findMany({
     where: eq(HotelImages.hotel_id, hotelId),
     with: {
       image: true,
@@ -404,7 +404,7 @@ export const updateHotelImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db.insert(HotelImages).values(newImages));
+    operations.push(db!.insert(HotelImages).values(newImages));
   }
 
   // Update order for existing images
@@ -509,7 +509,7 @@ export const updateHotelPolicies = async (
       order: policyIds.indexOf(policyId),
     }));
 
-    const createOperation = db.insert(HotelPolicies).values(newPolicies);
+    const createOperation = db!.insert(HotelPolicies).values(newPolicies);
     operations.push(createOperation);
   }
 
@@ -754,7 +754,7 @@ export const getHotels = async (filters: {
   const whereClause =
     whereConditions.length > 0 ? and(...whereConditions) : undefined;
 
-  const hotels = await db.query.Hotels.findMany({
+  const hotels = await db!.query.Hotels.findMany({
     where: whereClause,
     limit: limit,
     offset: (page - 1) * limit,
@@ -829,7 +829,7 @@ export const updateHotelAmenities = async (
       order: amenityIds.indexOf(amenityId),
     }));
 
-    const createOperation = db.insert(HotelAmenities).values(newAmenities);
+    const createOperation = db!.insert(HotelAmenities).values(newAmenities);
     operations.push(createOperation);
   }
 
@@ -914,7 +914,7 @@ export const updateHotelSafetyFeatures = async (
       order: safetyFeatureIds.indexOf(featureId),
     }));
 
-    const createOperation = db.insert(HotelSaftyFeatures).values(newFeatures);
+    const createOperation = db!.insert(HotelSaftyFeatures).values(newFeatures);
     operations.push(createOperation);
   }
 
@@ -997,7 +997,7 @@ export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
       order: faqIds.indexOf(faqId),
     }));
 
-    const createOperation = db.insert(HotelFaqs).values(newFaqs);
+    const createOperation = db!.insert(HotelFaqs).values(newFaqs);
     operations.push(createOperation);
   }
 
