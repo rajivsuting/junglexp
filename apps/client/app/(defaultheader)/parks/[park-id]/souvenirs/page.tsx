@@ -25,7 +25,7 @@ export default async function ParkSouvenirsPage(props: PageProps) {
   const park = await getNationalParkBySlug(params["park-id"]);
   if (!park) return notFound();
 
-  const { data: souvenirs } = await getSouvenirs({
+  const { data: souvenirs = [] } = await getSouvenirs({
     park: String(park.id),
     availability: true,
     page: 1,
