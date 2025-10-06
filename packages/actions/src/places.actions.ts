@@ -90,7 +90,7 @@ export const getPlaces = async (
       searchConditions.length > 0 ? or(...searchConditions) : undefined;
 
     // Get total count
-    const totalResult = await db
+    const totalResult = await db!
       .select({ count: count() })
       .from(schema.Places)
       .where(where);
