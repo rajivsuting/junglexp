@@ -1036,6 +1036,8 @@ export const getNearbyPlacesToHotel = async (
   hotelId: number,
   limit: number = 10
 ) => {
+  if (!db) return [];
+  
   const hGeom = sql`(SELECT ${Hotels.location} FROM ${Hotels} WHERE ${Hotels.id} = ${hotelId})`;
 
   const imagesAgg = sql<TPlaceImage[]>`
