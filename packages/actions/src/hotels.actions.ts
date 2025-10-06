@@ -162,6 +162,8 @@ type TCreateHotePayload = {
 // };
 
 export const createNewHotel = async (hotel: TNewHotel) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const parsedHotel = insertHotelSchema.parse({
     ...hotel,
   });
@@ -182,6 +184,8 @@ export const updateHotel = async (
   hotelId: number,
   hotel: Partial<TNewHotel>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [updatedHotel] = await db
     .update(Hotels)
     .set(hotel)
@@ -192,6 +196,8 @@ export const updateHotel = async (
 };
 
 export const getHotelById = async (hotelId: number) => {
+  if (!db) return null;
+  
   const hotel = await db.query.Hotels.findFirst({
     where: eq(Hotels.id, hotelId),
     with: {
@@ -232,6 +238,8 @@ export const getHotelById = async (hotelId: number) => {
 };
 
 export const getHotelBySlug = async (slug: string) => {
+  if (!db) return null;
+  
   const hotel = await db.query.Hotels.findFirst({
     where: eq(Hotels.slug, slug),
     with: {
