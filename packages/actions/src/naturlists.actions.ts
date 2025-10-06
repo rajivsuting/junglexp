@@ -12,6 +12,8 @@ type GetNaturalistsFilters = {
 };
 
 export const getNaturalists = async (filters: GetNaturalistsFilters) => {
+  if (!db) return { naturalists: [], total: 0 };
+  
   const { park_ids, search, page, limit } = filters;
 
   const where = and(
@@ -39,6 +41,8 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
 };
 
 export const getNaturalistById = async (id: number) => {
+  if (!db) return null;
+  
   const naturalist = await db.query.Naturalist.findFirst({
     where: eq(Naturalist.id, id),
     with: {
@@ -50,6 +54,8 @@ export const getNaturalistById = async (id: number) => {
 };
 
 export const createNaturalist = async (naturalist: TNewNaturalist) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const newNaturalist = await db.insert(Naturalist).values(naturalist);
   return newNaturalist;
 };
@@ -58,6 +64,8 @@ export const updateNaturalist = async (
   id: number,
   naturalist: Partial<TNewNaturalist>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const updatedNaturalist = await db
     .update(Naturalist)
     .set(naturalist)
