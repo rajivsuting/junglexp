@@ -279,6 +279,8 @@ export const getActivityBySlug = async (slug: string) => {
 };
 
 export const createActivity = async (data: TCreateActivity) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Generate slug from name
   const slug = generateSlug(data.name, {
     separator: "-",
@@ -304,6 +306,8 @@ export const updateActivity = async (
   id: number,
   data: Partial<TNewActivity>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [activity] = await db
     .update(Activities)
     .set({ ...data, updated_at: new Date() })
@@ -313,11 +317,15 @@ export const updateActivity = async (
 };
 
 export const deleteActivity = async (id: number): Promise<void> => {
+  if (!db) throw new Error("Database connection not available");
+  
   await db.delete(Activities).where(eq(Activities.id, id));
 };
 
 // Activity Images
 export const createActivityImage = async (data: TNewActivityImage) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [image] = await db.insert(ActivityImages).values(data).returning();
   return image;
 };
@@ -326,6 +334,8 @@ export const updateActivityImage = async (
   id: number,
   data: Partial<TNewActivityImage>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [image] = await db
     .update(ActivityImages)
     .set(data)
@@ -335,6 +345,8 @@ export const updateActivityImage = async (
 };
 
 export const deleteActivityImage = async (id: number): Promise<void> => {
+  if (!db) throw new Error("Database connection not available");
+  
   await db.delete(ActivityImages).where(eq(ActivityImages.id, id));
 };
 
@@ -346,6 +358,8 @@ export const updateActivityImages = async (
     alt_text?: string;
   }>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing activity images
   const existing = await db
     .select()
@@ -442,6 +456,8 @@ export const updateActivityImages = async (
 
 // Activity Itinerary
 export const createActivityItinerary = async (data: TNewActivityItinerary) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [itinerary] = await db
     .insert(ActivityItinerary)
     .values(data)
@@ -453,6 +469,8 @@ export const updateActivityItinerary = async (
   id: number,
   data: Partial<TNewActivityItinerary>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [itinerary] = await db
     .update(ActivityItinerary)
     .set(data)
@@ -470,6 +488,8 @@ export const updateActivityItineraries = async (
     order: number; // desired order in UI
   }>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Fetch existing itinerary items for this activity
   const existing = await db
     .select({
@@ -558,11 +578,15 @@ export const updateActivityItineraries = async (
 };
 
 export const deleteActivityItinerary = async (id: number): Promise<void> => {
+  if (!db) throw new Error("Database connection not available");
+  
   await db.delete(ActivityItinerary).where(eq(ActivityItinerary.id, id));
 };
 
 // Activity Amenities
 export const createActivityAmenity = async (data: TNewActivityAmenity) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [amenity] = await db.insert(ActivityAmenities).values(data).returning();
   return amenity;
 };
@@ -571,6 +595,8 @@ export const updateActivityAmenity = async (
   id: number,
   data: Partial<TNewActivityAmenity>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [amenity] = await db
     .update(ActivityAmenities)
     .set(data)
@@ -580,11 +606,15 @@ export const updateActivityAmenity = async (
 };
 
 export const deleteActivityAmenity = async (id: number): Promise<void> => {
+  if (!db) throw new Error("Database connection not available");
+  
   await db.delete(ActivityAmenities).where(eq(ActivityAmenities.id, id));
 };
 
 // Activity Packages
 export const createActivityPackage = async (data: TCreateActivityPackage) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get the next order number for this activity
   const existingPackages = await db
     .select({ order: ActivityPackages.order })
@@ -614,6 +644,8 @@ export const updateActivityPackage = async (
   id: number,
   data: Partial<TNewActivityPackage>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [package_] = await db
     .update(ActivityPackages)
     .set(data)
@@ -623,6 +655,8 @@ export const updateActivityPackage = async (
 };
 
 export const deleteActivityPackage = async (id: number): Promise<void> => {
+  if (!db) throw new Error("Database connection not available");
+  
   await db.delete(ActivityPackages).where(eq(ActivityPackages.id, id));
 };
 
@@ -639,6 +673,8 @@ export const updateActivityPackages = async (
     order: number; // desired order in UI
   }>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Fetch existing package items for this activity
   const existing = await db
     .select({
@@ -750,6 +786,8 @@ export const updateActivityAmenities = async (
   activityId: number,
   amenityIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing activity amenities
   const existing = await db
     .select()
@@ -835,6 +873,8 @@ export const updateActivityPolicies = async (
   kind: "include" | "exclude",
   policyIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel policies with the specified kind using database join
   const existing = await db
     .select({
@@ -937,6 +977,8 @@ export const updateActivityPolicies = async (
 };
 
 export const getPackagesByActivityId = async (activityId: string) => {
+  if (!db) return [];
+  
   return await db.query.ActivityPackages.findMany({
     where: and(
       eq(ActivityPackages.activity_id, Number(activityId)),
