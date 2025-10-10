@@ -1,13 +1,12 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { getSouvenirBySlug } from '@repo/actions/souvenirs.actions';
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { SouvenirBookingButton } from "@/screens/souvenirs-page/components/souvenir-booking-button";
+import { getSouvenirBySlug } from "@repo/actions/souvenirs.actions";
 
 type PageProps = {
   params: Promise<{ "souvenir-id": string }>;
@@ -114,13 +113,7 @@ export default async function SouvenirDetailsPage(props: PageProps) {
             </p>
 
             <div className="flex items-center gap-3">
-              <Button
-                size="lg"
-                className="bg-primary text-primary-foreground hover:opacity-90"
-                disabled={souvenir.quantity === 0}
-              >
-                Enquire Now
-              </Button>
+              <SouvenirBookingButton souvenir={souvenir} />
             </div>
           </div>
         </div>

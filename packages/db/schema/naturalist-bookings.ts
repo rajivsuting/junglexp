@@ -8,6 +8,7 @@ import {
   text,
 } from "drizzle-orm/pg-core";
 
+import { Activities } from "./activities";
 import { NationalParks } from "./park";
 
 export const naturalistBookingStatusEnum = pgEnum("naturalist_booking_status", [
@@ -27,6 +28,9 @@ export const NaturalistBookings = pgTable(
     slot: text("slot").notNull(),
     park_id: integer("park_id").references(() => NationalParks.id, {
       onDelete: "cascade",
+    }),
+    activity_id: integer("activity_id").references(() => Activities.id, {
+      onDelete: "set null",
     }),
     specialised_interest: text("specialised_interest").notNull(),
 

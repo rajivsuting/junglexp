@@ -1,34 +1,52 @@
 "use client";
-import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { FileUploader, hasValidImages } from '@/components/file-uploader';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileUploader, hasValidImages } from "@/components/file-uploader";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import NationalParkSelect from '@/features/souvenirs/components/park-select';
-import { ImagesArraySchema } from '@/lib/image-schema';
-import { uploadFilesWithProgress } from '@/lib/upload-files';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createImages } from '@repo/actions/image.actions';
-import { createNaturalist, updateNaturalist } from '@repo/actions/naturlists.actions';
-import { MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import NationalParkSelect from "@/features/souvenirs/components/park-select";
+import { ImagesArraySchema } from "@/lib/image-schema";
+import { uploadFilesWithProgress } from "@/lib/upload-files";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { getActivities } from "@repo/actions/activities.actions";
+import { createImages } from "@repo/actions/image.actions";
+import {
+  createNaturalist,
+  updateNaturalist,
+} from "@repo/actions/naturlists.actions";
+import { MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
 
 import type { FormImage as FileUploaderFormImage } from "@/components/file-uploader";
 import type { TNaturalistBase } from "@repo/db/schema/naturalist";
 import type { TNewImage } from "@repo/db/schema/image";
+import type { Option } from "@/components/ui/multi-select";
 
 type Props = {
-  initialData: (TNaturalistBase & { image?: any }) | null;
+  initialData:
+    | (TNaturalistBase & {
+        image?: any;
+        naturalistActivities?: Array<{
+          activity?: { id: number; name: string };
+        }>;
+      })
+    | null;
   pageTitle: string;
 };
 
@@ -36,6 +54,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Name is required").max(255),
   description: z.string().min(1, "Description is required"),
   park_id: z.string().min(1, "National Park is required"),
+  activity_ids: z.array(z.string()).default([]),
   images: ImagesArraySchema(1, 5).default([]),
 });
 
@@ -43,12 +62,20 @@ const NaturalistForm = ({ initialData, pageTitle }: Props) => {
   const router = useRouter();
   const [progresses, setProgresses] = useState<Record<string, number>>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [activities, setActivities] = useState<Option[]>([]);
+  const [loadingActivities, setLoadingActivities] = useState(false);
 
   const defaultValues = useMemo(() => {
+    const activityIds =
+      initialData?.naturalistActivities
+        ?.map((na) => String(na.activity?.id))
+        .filter(Boolean) ?? [];
+
     return {
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       park_id: initialData?.park_id ? String(initialData.park_id) : "",
+      activity_ids: activityIds,
       images: initialData?.image
         ? [
             {
@@ -70,6 +97,41 @@ const NaturalistForm = ({ initialData, pageTitle }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues,
   });
+
+  const parkId = form.watch("park_id");
+
+  // Fetch activities when park is selected
+  useEffect(() => {
+    const fetchActivities = async () => {
+      if (!parkId) {
+        setActivities([]);
+        return;
+      }
+
+      setLoadingActivities(true);
+      try {
+        const result = await getActivities({
+          park_id: Number(parkId),
+          page: 1,
+          limit: 100,
+        });
+
+        const activityOptions: Option[] = result.activities.map((activity) => ({
+          label: activity.name,
+          value: String(activity.id),
+        }));
+
+        setActivities(activityOptions);
+      } catch (error) {
+        console.error("Failed to fetch activities:", error);
+        toast.error("Failed to load activities");
+      } finally {
+        setLoadingActivities(false);
+      }
+    };
+
+    fetchActivities();
+  }, [parkId]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -106,22 +168,31 @@ const NaturalistForm = ({ initialData, pageTitle }: Props) => {
         imageId = created?.[0]?.id ?? null;
       }
 
+      const activityIds = data.activity_ids.map(Number);
+
       if (!initialData) {
-        await createNaturalist({
-          name: data.name,
-          description: data.description,
-          park_id: Number(data.park_id),
-          image_id: imageId ?? undefined,
-        } as any);
+        await createNaturalist(
+          {
+            name: data.name,
+            description: data.description,
+            park_id: Number(data.park_id),
+            image_id: imageId ?? undefined,
+          } as any,
+          activityIds
+        );
         toast.success("Naturalist created successfully");
         router.replace("/naturalists");
       } else {
-        await updateNaturalist(initialData.id, {
-          name: data.name,
-          description: data.description,
-          park_id: Number(data.park_id),
-          image_id: imageId ?? undefined,
-        } as any);
+        await updateNaturalist(
+          initialData.id,
+          {
+            name: data.name,
+            description: data.description,
+            park_id: Number(data.park_id),
+            image_id: imageId ?? undefined,
+          } as any,
+          activityIds
+        );
         toast.success("Naturalist updated successfully");
         router.replace(`/naturalists/${initialData.id}`);
       }
@@ -211,11 +282,43 @@ const NaturalistForm = ({ initialData, pageTitle }: Props) => {
                   <FormLabel>National Park</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        // Reset activity selection when park changes
+                        form.setValue("activity_ids", []);
+                      }}
                       value={field.value?.toString()}
                     >
                       <NationalParkSelect />
                     </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="activity_ids"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Activities</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={activities}
+                      selected={field.value}
+                      onChange={field.onChange}
+                      placeholder={
+                        !parkId
+                          ? "Select a park first"
+                          : loadingActivities
+                            ? "Loading activities..."
+                            : activities.length === 0
+                              ? "No activities available"
+                              : "Select activities..."
+                      }
+                      disabled={!parkId || loadingActivities || isSaving}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -3,7 +3,7 @@ import { Storage } from '@google-cloud/storage';
 
 // Ensure environment variables are loaded (only for local development)
 if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config({ path: "./.env.local" });
+  require("dotenv").config({ path: "./.env" });
 }
 
 export const storage = new Storage({

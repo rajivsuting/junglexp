@@ -1,20 +1,18 @@
 "use client";
-import { Hotel, User } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Hotel, Palmtree, ShoppingBag, User } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
 
 const items = [
   { title: "Hotel Bookings", url: "/hotel-bookings", icon: Hotel },
+  { title: "Activity Bookings", url: "/activity-bookings", icon: Palmtree },
   { title: "Naturalist Bookings", url: "/naturalist-bookings", icon: User },
+  { title: "Souvenir Bookings", url: "/souvenir-bookings", icon: ShoppingBag },
 ];
 
 export function NavBookings() {

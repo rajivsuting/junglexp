@@ -1,0 +1,2 @@
+ALTER TABLE "naturalist_bookings" ADD COLUMN "activity_id" integer;--> statement-breakpoint
+ALTER TABLE "naturalist_bookings" ADD CONSTRAINT "naturalist_bookings_activity_id_activities_id_fk" FOREIGN KEY ("activity_id") REFERENCES "public"."activities"("id") ON DELETE set null ON UPDATE no action;

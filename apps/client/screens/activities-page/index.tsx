@@ -1,16 +1,14 @@
-import { FAQSection } from '@/components/faq-section';
-import ReviewsSection from '@/components/ReviewsSection';
+import { FAQSection } from "@/components/faq-section";
+import ReviewsSection from "@/components/ReviewsSection";
 
-import { StayAmenitiesSection } from '../stays-page/components/stay-amenities-section';
-import { StayPoliciesSection } from '../stays-page/components/stay-policies-section';
-import { ActivityImageGallery } from './components/activity-image-gallery';
-import { ActivityItinerarySection } from './components/activity-itinerary-section';
-import { ActivityPackagesSection } from './components/activity-packages-section';
-import { ActivityTitleSection } from './components/activity-title-section';
-import {
-    ActivityBookingCardDesktop
-} from './components/booking-card/activity-booking-card-desktop';
-import { ActivityBookingCardMobile } from './components/booking-card/activity-booking-card-mobile';
+import { StayAmenitiesSection } from "../stays-page/components/stay-amenities-section";
+import { StayPoliciesSection } from "../stays-page/components/stay-policies-section";
+import { ActivityImageGallery } from "./components/activity-image-gallery";
+import { ActivityItinerarySection } from "./components/activity-itinerary-section";
+import { ActivityPackagesSection } from "./components/activity-packages-section";
+import { ActivityTitleSection } from "./components/activity-title-section";
+import { ActivityBookingCardDesktop } from "./components/booking-card/activity-booking-card-desktop";
+import { ActivityBookingCardMobile } from "./components/booking-card/activity-booking-card-mobile";
 
 import type {
   TActivityAmenity,
@@ -22,6 +20,7 @@ import type {
 type ActivityData = {
   id: number;
   name: string;
+  slug?: string;
   description: string;
   rating?: number | null;
   duration?: string | null;
@@ -85,6 +84,7 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
 
   const {
     name,
+    slug,
     description,
     amenities,
     images,
@@ -128,7 +128,10 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
           </section>
 
           {/* Packages Section - Key feature for activities */}
-          <ActivityPackagesSection packages={packages} />
+          <ActivityPackagesSection
+            packages={packages}
+            activity={{ id: activity.id, name, slug }}
+          />
 
           {/* Itinerary Section - Key feature for activities */}
           <ActivityItinerarySection itinerary={itinerary as any} />
@@ -162,6 +165,7 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
         packages={packages}
         basePrice={basePrice}
         rating={rating || 0}
+        maxGroupSize={max_group_size}
       />
 
       <ReviewsSection className="pt-16 pb-20 lg:pb-16" />

@@ -1,14 +1,22 @@
 "use client";
-import Image from 'next/image';
+import Image from "next/image";
 
-import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
+import { Badge } from "@/components/ui/badge";
+import { DataTableColumnHeader } from "@/components/ui/table/data-table-column-header";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-import { CellAction } from './cell-action';
+import { CellAction } from "./cell-action";
 
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import type { TNaturalistBase } from "@repo/db/schema/naturalist";
+import type { TNaturalist } from "@repo/db/index";
 
-export const columns: ColumnDef<TNaturalistBase>[] = [
+export const columns: ColumnDef<TNaturalist>[] = [
   { id: "id", accessorKey: "id", header: "ID", size: 50 },
   {
     accessorKey: "image",
@@ -38,10 +46,10 @@ export const columns: ColumnDef<TNaturalistBase>[] = [
   {
     id: "name",
     accessorKey: "name",
-    header: ({ column }: { column: Column<TNaturalistBase, unknown> }) => (
+    header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
-    cell: ({ cell }) => <div>{cell.getValue<TNaturalistBase["name"]>()}</div>,
+    cell: ({ cell }) => <div>{cell.getValue<string>()}</div>,
     meta: {
       label: "Name",
       placeholder: "Search naturalists...",
@@ -57,6 +65,58 @@ export const columns: ColumnDef<TNaturalistBase>[] = [
       return (
         <div className="max-w-[300px] truncate" title={description}>
           {description}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "activity_ids",
+    header: "Activities",
+    cell: ({ cell }) => {
+      const activities = cell.row.original.naturalistActivities || [];
+
+      if (activities.length === 0) {
+        return (
+          <span className="text-sm text-muted-foreground italic">
+            No activities
+          </span>
+        );
+      }
+
+      const visibleCount = 2;
+      const visibleActivities = activities.slice(0, visibleCount);
+      const remainingCount = activities.length - visibleCount;
+      const allActivityNames = activities
+        .map((a) => a.activity?.name)
+        .filter(Boolean)
+        .join(", ");
+
+      return (
+        <div className="flex items-center gap-1 flex-wrap max-w-[250px]">
+          {visibleActivities.map((activity, index) => (
+            <Badge
+              key={`${activity.activity?.id}-${index}`}
+              variant="secondary"
+              className="text-xs"
+            >
+              {activity.activity?.name}
+            </Badge>
+          ))}
+          {remainingCount > 0 && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant="outline" className="text-xs cursor-help">
+                    +{remainingCount} more
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p className="font-semibold mb-1">All Activities:</p>
+                  <p className="text-sm">{allActivityNames}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       );
     },

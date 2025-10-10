@@ -1,0 +1,1 @@
+ALTER TABLE "naturalist" ADD CONSTRAINT "naturalist_activity_ids_activities_id_fk" FOREIGN KEY ("activity_ids") REFERENCES "public"."activities"("id") ON DELETE no action ON UPDATE no action;

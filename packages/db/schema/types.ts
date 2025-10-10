@@ -11,6 +11,8 @@ import type { TCity } from "./city";
 import type { TFaqsBase } from "./faqs";
 import type { THotelAmenitiesBase } from "./hotel-amenities";
 import type { THotelBookingBase } from "./hotel-bookings";
+import type { TNaturalistActivitiesBase, TNaturalistBase } from "./naturalist";
+
 import type {
   THotelBase,
   THotelImageBase,
@@ -152,4 +154,14 @@ export type THotelBooking = THotelBookingBase & {
   hotel: THotelBase;
   room: TRoomBase;
   plan: TRoomPlanBase;
+};
+
+export type TNaturalistActivity = TNaturalistActivitiesBase & {
+  activity: TActivityBase;
+};
+
+export type TNaturalist = TNaturalistBase & {
+  naturalistActivities: TNaturalistActivity[];
+  image: TImage;
+  park: TNationalPark;
 };

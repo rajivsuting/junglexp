@@ -1,27 +1,39 @@
-import { relations } from 'drizzle-orm';
+import { relations } from "drizzle-orm";
 
 import {
-    Activities, ActivityAmenities, ActivityImages, ActivityItinerary, ActivityPackages,
-    ActivityPolicies
-} from './activities';
-import { Amenities } from './amenities';
-import { Cities } from './city';
-import { Faqs } from './faqs';
-import { HotelAmenities } from './hotel-amenities';
-import { HotelBookings } from './hotel-bookings';
-import { HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures } from './hotels';
-import { Images } from './image';
-import { Naturalist } from './naturalist';
-import { NaturalistBookings } from './naturalist-bookings';
-import { NationalParks, ParkImages } from './park';
-import { PlaceImages, Places } from './places';
-import { Policies } from './policies';
-import { Reels } from './reels';
-import { RoomAmenities, RoomImages, RoomPlans, Rooms } from './rooms';
-import { SaftyFeatures } from './safty-features';
-import { SouvenirImages, Souvenirs } from './souvenirs';
-import { States } from './state';
-import { Zones } from './zones';
+  Activities,
+  ActivityAmenities,
+  ActivityImages,
+  ActivityItinerary,
+  ActivityPackages,
+  ActivityPolicies,
+} from "./activities";
+import { ActivityBookings } from "./activity-bookings";
+import { Amenities } from "./amenities";
+import { Cities } from "./city";
+import { Faqs } from "./faqs";
+import { HotelAmenities } from "./hotel-amenities";
+import { HotelBookings } from "./hotel-bookings";
+import {
+  HotelFaqs,
+  HotelImages,
+  HotelPolicies,
+  Hotels,
+  HotelSaftyFeatures,
+} from "./hotels";
+import { Images } from "./image";
+import { Naturalist, NaturalistActivities } from "./naturalist";
+import { NaturalistBookings } from "./naturalist-bookings";
+import { NationalParks, ParkImages } from "./park";
+import { PlaceImages, Places } from "./places";
+import { Policies } from "./policies";
+import { Reels } from "./reels";
+import { RoomAmenities, RoomImages, RoomPlans, Rooms } from "./rooms";
+import { SaftyFeatures } from "./safty-features";
+import { SouvenirBookings } from "./souvenir-bookings";
+import { SouvenirImages, Souvenirs } from "./souvenirs";
+import { States } from "./state";
+import { Zones } from "./zones";
 
 export const statesRelations = relations(States, ({ many }) => ({
   cities: many(Cities),
@@ -316,7 +328,22 @@ export const naturalistRelations = relations(Naturalist, ({ one, many }) => ({
     fields: [Naturalist.image_id],
     references: [Images.id],
   }),
+  naturalistActivities: many(NaturalistActivities),
 }));
+
+export const naturalistActivitiesRelations = relations(
+  NaturalistActivities,
+  ({ one }) => ({
+    naturalist: one(Naturalist, {
+      fields: [NaturalistActivities.naturalist_id],
+      references: [Naturalist.id],
+    }),
+    activity: one(Activities, {
+      fields: [NaturalistActivities.activity_id],
+      references: [Activities.id],
+    }),
+  })
+);
 
 export const hotelBookingsRelations = relations(
   HotelBookings,
@@ -342,6 +369,26 @@ export const naturalistBookingsRelations = relations(
     park: one(NationalParks, {
       fields: [NaturalistBookings.park_id],
       references: [NationalParks.id],
+    }),
+  })
+);
+
+export const souvenirBookingsRelations = relations(
+  SouvenirBookings,
+  ({ one }) => ({
+    souvenir: one(Souvenirs, {
+      fields: [SouvenirBookings.souvenir_id],
+      references: [Souvenirs.id],
+    }),
+  })
+);
+
+export const activityBookingsRelations = relations(
+  ActivityBookings,
+  ({ one }) => ({
+    activity: one(Activities, {
+      fields: [ActivityBookings.activity_id],
+      references: [Activities.id],
     }),
   })
 );

@@ -19,3 +19,5 @@ export * from "./activities.actions";
 export * from "./users.actions";
 export * from "./hotel-bookings.action";
 export * from "./naturalist-bookings.actions";
+export * from "./souvenir-bookings.actions";
+export * from "./activity-bookings.actions";

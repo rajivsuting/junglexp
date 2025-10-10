@@ -1,11 +1,11 @@
-import { Plus } from 'lucide-react';
+import { Plus } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { searchParamsCache } from '@/lib/searchparams';
-import { getNaturalists } from '@repo/actions/naturlists.actions';
+import { Button } from "@/components/ui/button";
+import { searchParamsCache } from "@/lib/searchparams";
+import { getNaturalists } from "@repo/actions/naturlists.actions";
 
-import { NaturalistsTable } from './table';
-import { columns } from './table/columns';
+import { NaturalistsTable } from "./table";
+import { columns } from "./table/columns";
 
 const NaturalistsListing = async () => {
   const page = searchParamsCache.get("page");

@@ -1,14 +1,14 @@
-import { PlayCircle } from 'lucide-react';
-import Link from 'next/link';
-import { Suspense } from 'react';
+import { PlayCircle } from "lucide-react";
+import Link from "next/link";
+import { Suspense } from "react";
 
-import ForestStaysSection from '@/components/ForestStaysSection';
-import ImageSlideshow from '@/components/ImageSlideshow';
-import LodgesSection from '@/components/LodgesSection';
-import Map from '@/components/Map';
-import ReviewsSection from '@/components/ReviewsSection';
-import { SafariSection } from '@/components/safari-section';
-import { getNationalParkBySlug } from '@repo/actions/parks.actions';
+import ForestStaysSection from "@/components/ForestStaysSection";
+import ImageSlideshow from "@/components/ImageSlideshow";
+import LodgesSection from "@/components/LodgesSection";
+import Map from "@/components/Map";
+import ReviewsSection from "@/components/ReviewsSection";
+import { SafariSection } from "@/components/safari-section";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
 export const generateMetadata = async () => {
   const park = await getNationalParkBySlug("jim-corbet-national-park");
@@ -115,6 +115,7 @@ export default async function HomePage() {
               loop
               controls={false}
               muted
+              playsInline={true}
               webkit-playsinline="true"
               x-webkit-airplay="allow"
               preload="metadata"
@@ -171,6 +172,7 @@ export default async function HomePage() {
               autoPlay
               loop
               controls={false}
+              playsInline={true}
               webkit-playsinline="true"
               x-webkit-airplay="allow"
               preload="metadata"

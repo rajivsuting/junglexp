@@ -1,0 +1,1 @@
+ALTER TABLE "naturalist" ADD COLUMN "activity_ids" integer[] DEFAULT '{}';

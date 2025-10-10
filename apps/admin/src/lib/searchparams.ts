@@ -1,8 +1,13 @@
 import {
-    createSearchParamsCache, createSerializer, parseAsArrayOf, parseAsBoolean, parseAsInteger,
-    parseAsJson, parseAsString
-} from 'nuqs/server';
-import z from 'zod';
+  createSearchParamsCache,
+  createSerializer,
+  parseAsArrayOf,
+  parseAsBoolean,
+  parseAsInteger,
+  parseAsJson,
+  parseAsString,
+} from "nuqs/server";
+import z from "zod";
 
 const schema = z.object({
   id: z.string(),
@@ -33,6 +38,8 @@ export const searchParams = {
   sort: parseAsArrayOf(parseAsJson(schema)),
   activity_id: parseAsInteger,
   title: parseAsString,
+  souvenir_id: parseAsInteger,
+  preferred_date: parseAsString,
   // advanced filter
   // filters: getFiltersStateParser().withDefault([]),
   // joinOperator: parseAsStringEnum(['and', 'or']).withDefault('and')

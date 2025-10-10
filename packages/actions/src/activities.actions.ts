@@ -1,15 +1,19 @@
 "use server";
-import { and, count, eq, ilike, inArray, or } from 'drizzle-orm';
+import { and, count, eq, ilike, inArray, or } from "drizzle-orm";
 
-import { db } from '@repo/db';
+import { db } from "@repo/db";
 import {
-    Activities, ActivityAmenities, ActivityImages, ActivityItinerary, ActivityPackages,
-    ActivityPolicies
-} from '@repo/db/schema/activities';
-import { Images } from '@repo/db/schema/image';
-import { NationalParks } from '@repo/db/schema/park';
-import { Policies } from '@repo/db/schema/policies';
-import { generateSlug } from '@repo/db/utils/slug-generator';
+  Activities,
+  ActivityAmenities,
+  ActivityImages,
+  ActivityItinerary,
+  ActivityPackages,
+  ActivityPolicies,
+} from "@repo/db/schema/activities";
+import { Images } from "@repo/db/schema/image";
+import { NationalParks } from "@repo/db/schema/park";
+import { Policies } from "@repo/db/schema/policies";
+import { generateSlug } from "@repo/db/utils/slug-generator";
 
 import type {
   TActivityBase,
@@ -157,6 +161,7 @@ export const getActivitiesByParkSlug = async (
           },
         },
       },
+
       images: {
         with: {
           image: true,

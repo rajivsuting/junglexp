@@ -1,20 +1,20 @@
 "use client";
 
-import Link from 'next/link';
-import { parseAsInteger, useQueryState } from 'nuqs';
+import Link from "next/link";
+import { parseAsInteger, useQueryState } from "nuqs";
 
-import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/ui/table/data-table';
-import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
-import { useDataTable } from '@/hooks/use-data-table';
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/table/data-table";
+import { DataTableToolbar } from "@/components/ui/table/data-table-toolbar";
+import { useDataTable } from "@/hooks/use-data-table";
 
-import type { TNaturalistBase } from "@repo/db/schema/naturalist";
 import type { ColumnDef } from "@tanstack/react-table";
+import type { TNaturalist } from "@repo/db/index";
 
 interface NaturalistsTableProps {
-  data: TNaturalistBase[];
+  data: TNaturalist[];
   totalItems: number;
-  columns: ColumnDef<TNaturalistBase>[];
+  columns: ColumnDef<TNaturalist>[];
 }
 
 export const NaturalistsTable: React.FC<NaturalistsTableProps> = ({
