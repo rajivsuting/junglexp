@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-import { auth } from '@repo/auth';
-import { and, db, eq, like, or, Users } from '@repo/db/client';
+import { auth } from "@repo/auth/auth.config";
+import { and, count, db, eq, like, or, Users } from "@repo/db";
+import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/users - List users with pagination and search
 export async function GET(request: NextRequest) {
@@ -59,18 +58,18 @@ export async function GET(request: NextRequest) {
     // Get users with pagination
     const users = await db
       .select({
-        id: Users.id,
-        name: Users.name,
-        email: Users.email,
-        firstName: Users.firstName,
-        lastName: Users.lastName,
-        phone: Users.phone,
-        userRole: Users.userRole,
-        isActive: Users.isActive,
-        emailVerified: Users.emailVerified,
-        image: Users.image,
         createdAt: Users.createdAt,
+        email: Users.email,
+        emailVerified: Users.emailVerified,
+        firstName: Users.firstName,
+        id: Users.id,
+        image: Users.image,
+        isActive: Users.isActive,
+        lastName: Users.lastName,
+        name: Users.name,
+        phone: Users.phone,
         updatedAt: Users.updatedAt,
+        userRole: Users.userRole,
       })
       .from(Users)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -78,20 +77,20 @@ export async function GET(request: NextRequest) {
       .offset(offset)
       .orderBy(Users.createdAt);
 
-    // Get total count
-    const [{ count }] = await db
-      .select({ count: Users.id })
+    const totalResponse = await db
+      .select({ count: count() })
       .from(Users)
       .where(conditions.length > 0 ? and(...conditions) : undefined);
 
+    const _count = totalResponse[0]?.count ?? 0;
     return NextResponse.json({
-      users,
       pagination: {
-        page,
         limit,
-        total: count,
-        totalPages: Math.ceil(count / limit),
+        page,
+        total: _count,
+        totalPages: Math.ceil(_count / limit),
       },
+      users,
     });
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -123,7 +122,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { email, name, firstName, lastName, phone, userRole, password } =
+    const { email, firstName, lastName, name, password, phone, userRole } =
       body;
 
     // Validate required fields
@@ -138,10 +137,10 @@ export async function POST(request: NextRequest) {
     const result = await auth.api.signUpEmail({
       body: {
         email,
-        password,
-        name,
         firstName,
         lastName,
+        name,
+        password,
         phone,
         userRole: userRole || "user",
       },

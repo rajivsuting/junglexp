@@ -1,10 +1,10 @@
-import './globals.css';
+import "./globals.css";
 
-import localFont from 'next/font/local';
+import localFont from "next/font/local";
 
-import Footer from '@/components/Footer';
+import Footer from "@/components/Footer";
 
-import { Header } from '../components/Header';
+import { Header } from "../components/Header";
 
 import type { Metadata } from "next";
 
@@ -36,9 +36,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  av: string;
   children: React.ReactNode;
-  name: string;
 }>) {
   return (
     <html lang="en">

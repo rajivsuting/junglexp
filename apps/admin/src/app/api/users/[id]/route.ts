@@ -1,7 +1,67 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { auth } from "@repo/auth/auth.config";
+import { db, eq, Users } from "@repo/db";
+import { NextRequest, NextResponse } from "next/server";
 
-import { auth } from '@repo/auth';
-import { db, eq, Users } from '@repo/db/client';
+// DELETE /api/users/[id] - Delete user (admin only)
+// export async function DELETE(
+//   request: NextRequest,
+//   { params }: { params: { id: string } }
+// ) {
+//   try {
+//     // Check authentication
+//     const session = await auth.api.getSession({
+//       headers: request.headers,
+//     });
+
+//     if (!session?.user) {
+//       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//     }
+
+//     // Only admins can delete users
+//     if (
+//       session.user.userRole !== "admin" &&
+//       session.user.userRole !== "super_admin"
+//     ) {
+//       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+//     }
+
+//     const { id } = params;
+
+//     // Prevent self-deletion
+//     if (session.user.id === id) {
+//       return NextResponse.json(
+//         { error: "Cannot delete your own account" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // Check if user exists
+//     const [existingUser] = await db
+//       .select()
+//       .from(Users)
+//       .where(eq(Users.id, id))
+//       .limit(1);
+
+//     if (!existingUser) {
+//       return NextResponse.json({ error: "User not found" }, { status: 404 });
+//     }
+
+//     // Delete user using better-auth (this will handle cleanup of related records)
+//     await auth.api.deleteUser({
+//       body: { token: await auth.api.getAccessToken() },
+//     });
+
+//     return NextResponse.json({
+//       message: "User deleted successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error deleting user:", error);
+//     return NextResponse.json(
+//       { error: "Internal server error" },
+//       { status: 500 }
+//     );
+//   }
+// }
 
 // GET /api/users/[id] - Get user by ID
 export async function GET(
@@ -32,18 +92,18 @@ export async function GET(
     // Get user by ID
     const [user] = await db
       .select({
-        id: Users.id,
-        name: Users.name,
-        email: Users.email,
-        firstName: Users.firstName,
-        lastName: Users.lastName,
-        phone: Users.phone,
-        userRole: Users.userRole,
-        isActive: Users.isActive,
-        emailVerified: Users.emailVerified,
-        image: Users.image,
         createdAt: Users.createdAt,
+        email: Users.email,
+        emailVerified: Users.emailVerified,
+        firstName: Users.firstName,
+        id: Users.id,
+        image: Users.image,
+        isActive: Users.isActive,
+        lastName: Users.lastName,
+        name: Users.name,
+        phone: Users.phone,
         updatedAt: Users.updatedAt,
+        userRole: Users.userRole,
       })
       .from(Users)
       .where(eq(Users.id, id))
@@ -129,18 +189,18 @@ export async function PUT(
       })
       .where(eq(Users.id, id))
       .returning({
-        id: Users.id,
-        name: Users.name,
-        email: Users.email,
-        firstName: Users.firstName,
-        lastName: Users.lastName,
-        phone: Users.phone,
-        userRole: Users.userRole,
-        isActive: Users.isActive,
-        emailVerified: Users.emailVerified,
-        image: Users.image,
         createdAt: Users.createdAt,
+        email: Users.email,
+        emailVerified: Users.emailVerified,
+        firstName: Users.firstName,
+        id: Users.id,
+        image: Users.image,
+        isActive: Users.isActive,
+        lastName: Users.lastName,
+        name: Users.name,
+        phone: Users.phone,
         updatedAt: Users.updatedAt,
+        userRole: Users.userRole,
       });
 
     return NextResponse.json({
@@ -149,67 +209,6 @@ export async function PUT(
     });
   } catch (error) {
     console.error("Error updating user:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE /api/users/[id] - Delete user (admin only)
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    // Check authentication
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Only admins can delete users
-    if (
-      session.user.userRole !== "admin" &&
-      session.user.userRole !== "super_admin"
-    ) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    const { id } = params;
-
-    // Prevent self-deletion
-    if (session.user.id === id) {
-      return NextResponse.json(
-        { error: "Cannot delete your own account" },
-        { status: 400 }
-      );
-    }
-
-    // Check if user exists
-    const [existingUser] = await db
-      .select()
-      .from(Users)
-      .where(eq(Users.id, id))
-      .limit(1);
-
-    if (!existingUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    // Delete user using better-auth (this will handle cleanup of related records)
-    await auth.api.deleteUser({
-      body: { userId: id },
-    });
-
-    return NextResponse.json({
-      message: "User deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting user:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
