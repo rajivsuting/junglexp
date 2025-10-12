@@ -1,5 +1,5 @@
 {
-  "name": "eTroupers",
+  "name": "Junglexp",
   "private": true,
   "scripts": {
     "build": "turbo run build",
