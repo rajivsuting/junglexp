@@ -113,7 +113,7 @@ export default async function SouvenirDetailsPage(props: PageProps) {
             </p>
 
             <div className="flex items-center gap-3">
-              <SouvenirBookingButton souvenir={souvenir} />
+              <SouvenirBookingButton souvenir={souvenir as any} />
             </div>
           </div>
         </div>
