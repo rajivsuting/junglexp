@@ -1,6 +1,6 @@
 # Places Management
 
-This feature provides comprehensive management of places in the eTroupers system, including listing, creating, updating, and deleting places with location coordinates.
+This feature provides comprehensive management of places in the Junglexp system, including listing, creating, updating, and deleting places with location coordinates.
 
 ## Features
 

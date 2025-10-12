@@ -252,7 +252,7 @@ export const deleteUser = async (userId: string) => {
     await client.users.deleteUser(userId);
 
     // Delete user from our database (webhook should handle this too)
-    await db.delete(schema.Users).where(eq(schema.Users.user_id, userId));
+    await db!.delete(schema.Users).where(eq(schema.Users.user_id, userId));
 
     return {
       success: true,

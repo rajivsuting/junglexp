@@ -26,7 +26,6 @@ RUN yarn config set nodeLinker node-modules && \
 FROM base AS builder
 WORKDIR /app
 
-# 
 # Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
 
@@ -64,15 +63,29 @@ ENV DATABASE_URL=$DATABASE_URL \
     UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL \
     UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN
 
-# Build the admin app specifically
-RUN yarn turbo build --filter=admin
+
+# Build the client app specifically
+RUN yarn turbo build --filter=client
 
 # Production image
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV production
 
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy the standalone output
+COPY --from=builder --chown=nextjs:nodejs /app/apps/client/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/client/.next/static ./apps/client/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/client/public ./apps/client/public
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT=3000
 # Re-declare environment variables for runtime
 ENV NODE_ENV=production \
     DATABASE_URL=$DATABASE_URL \
@@ -89,18 +102,5 @@ ENV NODE_ENV=production \
     UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL \
     UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
 
-# Copy the standalone output
-COPY --from=builder --chown=nextjs:nodejs /app/apps/admin/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/admin/.next/static ./apps/admin/.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/apps/admin/public ./apps/admin/public
-
-USER nextjs
-
-EXPOSE 3000
-
-ENV PORT=3000
-
-CMD ["node", "apps/admin/server.js"]
+CMD ["node", "apps/client/server.js"]

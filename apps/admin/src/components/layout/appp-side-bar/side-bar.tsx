@@ -1,19 +1,24 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 import {
-    Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton,
-    SidebarMenuItem
-} from '@/components/ui/sidebar';
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
-import { Logo } from './Logo';
-import { NavActivites } from './nav-activites';
-import { NavAdmin } from './nav-admin';
-import { NavBookings } from './nav-bookings';
-import { NavGlobal } from './nav-global';
-import { NavHotels } from './nav-hotels';
-import { NavMain } from './nav-main';
-import { NavOthers } from './nav-others';
-import { NavUser } from './nav-user';
+import { Logo } from "./Logo";
+import { NavActivites } from "./nav-activites";
+import { NavAdmin } from "./nav-admin";
+import { NavBookings } from "./nav-bookings";
+import { NavGlobal } from "./nav-global";
+import { NavHotels } from "./nav-hotels";
+import { NavMain } from "./nav-main";
+import { NavOthers } from "./nav-others";
+import { NavUser } from "./nav-user";
 
 import type { User } from "@clerk/nextjs/server";
 export function AppSidebar({ user }: { user: User | null }) {
@@ -28,8 +33,6 @@ export function AppSidebar({ user }: { user: User | null }) {
             >
               <Link href="/">
                 <Logo />
-
-                {/* <span className="text-base font-semibold">eTroupers</span> */}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

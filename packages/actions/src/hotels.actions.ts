@@ -25,6 +25,8 @@ import type {
   TRoomPlan,
 } from "@repo/db/schema/types";
 export const getHotelsByParkSlug = async (slug: string) => {
+  if (!db) return [];
+  
   const hotels = await db
     .select({
       hotel: Hotels,
@@ -126,9 +128,9 @@ type TCreateHotePayload = {
 //           }))
 //         )
 //         .returning(),
-//       db.insert(HotelAmenities).values(parsedIncludes).returning(),
-//       db.insert(HotelAmenities).values(parsedExcludes).returning(),
-//       db.insert(HotelPolicies).values(parsedPolicies).returning(),
+//       db!.insert(HotelAmenities).values(parsedIncludes).returning(),
+//       db!.insert(HotelAmenities).values(parsedExcludes).returning(),
+//       db!.insert(HotelPolicies).values(parsedPolicies).returning(),
 //       db.insert(SaftyFeatures).values(parsedSaftyFeatures).returning(),
 //       db.insert(Faqs).values(parsedFaqs).returning(),
 //     ]);
@@ -160,6 +162,8 @@ type TCreateHotePayload = {
 // };
 
 export const createNewHotel = async (hotel: TNewHotel) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const parsedHotel = insertHotelSchema.parse({
     ...hotel,
   });
@@ -180,6 +184,8 @@ export const updateHotel = async (
   hotelId: number,
   hotel: Partial<TNewHotel>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const [updatedHotel] = await db
     .update(Hotels)
     .set(hotel)
@@ -190,7 +196,9 @@ export const updateHotel = async (
 };
 
 export const getHotelById = async (hotelId: number) => {
-  const hotel = await db.query.Hotels.findFirst({
+  if (!db) return null;
+  
+  const hotel = await db!.query.Hotels.findFirst({
     where: eq(Hotels.id, hotelId),
     with: {
       zone: {
@@ -230,7 +238,9 @@ export const getHotelById = async (hotelId: number) => {
 };
 
 export const getHotelBySlug = async (slug: string) => {
-  const hotel = await db.query.Hotels.findFirst({
+  if (!db) return null;
+  
+  const hotel = await db!.query.Hotels.findFirst({
     where: eq(Hotels.slug, slug),
     with: {
       zone: {
@@ -293,18 +303,22 @@ export const createHotelImages = async (
   hotelId: number,
   imageIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const hotelImages = imageIds.map((imageId) => ({
     hotel_id: hotelId,
     image_id: imageId,
   }));
 
-  return await db.insert(HotelImages).values(hotelImages).returning();
+  return await db!.insert(HotelImages).values(hotelImages).returning();
 };
 
 export const deleteHotelImages = async (
   hotelId: number,
   imageIds?: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   if (imageIds && imageIds.length > 0) {
     return await db
       .delete(HotelImages)
@@ -325,7 +339,9 @@ export const deleteHotelImages = async (
 };
 
 export const getHotelImages = async (hotelId: number) => {
-  return await db.query.HotelImages.findMany({
+  if (!db) return [];
+  
+  return await db!.query.HotelImages.findMany({
     where: eq(HotelImages.hotel_id, hotelId),
     with: {
       image: true,
@@ -341,6 +357,8 @@ export const updateHotelImages = async (
     alt_text?: string;
   }>
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel images
   const existing = await db
     .select()
@@ -386,7 +404,7 @@ export const updateHotelImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db.insert(HotelImages).values(newImages));
+    operations.push(db!.insert(HotelImages).values(newImages));
   }
 
   // Update order for existing images
@@ -419,7 +437,7 @@ export const updateHotelImages = async (
   );
   if (imageAltTextUpdates.length > 0) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db
+      db!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))
@@ -428,7 +446,7 @@ export const updateHotelImages = async (
   }
 
   // Return updated hotel images
-  return await db
+  return await db!
     .select()
     .from(HotelImages)
     .where(eq(HotelImages.hotel_id, hotelId))
@@ -440,6 +458,8 @@ export const updateHotelPolicies = async (
   kind: "include" | "exclude",
   policyIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel policies with the specified kind using database join
   const existing = await db
     .select({
@@ -489,7 +509,7 @@ export const updateHotelPolicies = async (
       order: policyIds.indexOf(policyId),
     }));
 
-    const createOperation = db.insert(HotelPolicies).values(newPolicies);
+    const createOperation = db!.insert(HotelPolicies).values(newPolicies);
     operations.push(createOperation);
   }
 
@@ -538,6 +558,8 @@ export const updateHotelPolicies = async (
 };
 
 export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
+  if (!db) return [];
+  
   // First get all hotels in the park
   const whereConditions = [eq(NationalParks.id, parkId)];
 
@@ -708,6 +730,8 @@ export const getHotels = async (filters: {
   status?: string[];
   is_featured?: string[];
 }) => {
+  if (!db) return { hotels: [], total: 0 };
+  
   const { page = 1, limit = 10, search, status, is_featured } = filters;
 
   // Build where conditions
@@ -730,7 +754,7 @@ export const getHotels = async (filters: {
   const whereClause =
     whereConditions.length > 0 ? and(...whereConditions) : undefined;
 
-  const hotels = await db.query.Hotels.findMany({
+  const hotels = await db!.query.Hotels.findMany({
     where: whereClause,
     limit: limit,
     offset: (page - 1) * limit,
@@ -760,6 +784,8 @@ export const updateHotelAmenities = async (
   hotelId: number,
   amenityIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel amenities
   const existing = await db
     .select()
@@ -803,7 +829,7 @@ export const updateHotelAmenities = async (
       order: amenityIds.indexOf(amenityId),
     }));
 
-    const createOperation = db.insert(HotelAmenities).values(newAmenities);
+    const createOperation = db!.insert(HotelAmenities).values(newAmenities);
     operations.push(createOperation);
   }
 
@@ -843,6 +869,8 @@ export const updateHotelSafetyFeatures = async (
   hotelId: number,
   safetyFeatureIds: number[]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel safety features
   const existing = await db
     .select()
@@ -886,7 +914,7 @@ export const updateHotelSafetyFeatures = async (
       order: safetyFeatureIds.indexOf(featureId),
     }));
 
-    const createOperation = db.insert(HotelSaftyFeatures).values(newFeatures);
+    const createOperation = db!.insert(HotelSaftyFeatures).values(newFeatures);
     operations.push(createOperation);
   }
 
@@ -924,6 +952,8 @@ export const updateHotelSafetyFeatures = async (
 };
 
 export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
+  if (!db) throw new Error("Database connection not available");
+  
   // Get existing hotel FAQs
   const existing = await db
     .select()
@@ -967,7 +997,7 @@ export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
       order: faqIds.indexOf(faqId),
     }));
 
-    const createOperation = db.insert(HotelFaqs).values(newFaqs);
+    const createOperation = db!.insert(HotelFaqs).values(newFaqs);
     operations.push(createOperation);
   }
 
@@ -1006,6 +1036,8 @@ export const getNearbyPlacesToHotel = async (
   hotelId: number,
   limit: number = 10
 ) => {
+  if (!db) return [];
+  
   const hGeom = sql`(SELECT ${Hotels.location} FROM ${Hotels} WHERE ${Hotels.id} = ${hotelId})`;
 
   const imagesAgg = sql<TPlaceImage[]>`

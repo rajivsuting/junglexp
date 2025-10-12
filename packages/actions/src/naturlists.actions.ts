@@ -15,6 +15,8 @@ type GetNaturalistsFilters = {
 };
 
 export const getNaturalists = async (filters: GetNaturalistsFilters) => {
+  if (!db) return { naturalists: [], total: 0 };
+
   const { park_ids, search, page, limit } = filters;
 
   const where = and(
@@ -22,7 +24,7 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
     search ? ilike(Naturalist.name, `%${search}%`) : undefined
   );
 
-  const naturalists = await db.query.Naturalist.findMany({
+  const naturalists = await db!.query.Naturalist.findMany({
     with: {
       image: true,
       park: true,
@@ -48,7 +50,9 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
 };
 
 export const getNaturalistById = async (id: number) => {
-  const naturalist = await db.query.Naturalist.findFirst({
+  if (!db) return null;
+
+  const naturalist = await db!.query.Naturalist.findFirst({
     where: eq(Naturalist.id, id),
     with: {
       image: true,

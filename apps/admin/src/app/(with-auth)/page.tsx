@@ -21,7 +21,7 @@ export default function HomePage() {
           {/* Welcome Header */}
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">
-              Welcome to eTroupers Admin
+              Welcome to Junglexp Admin
             </h1>
             <p className="text-muted-foreground">
               Manage your safari destinations, hotels, tours, and more from your

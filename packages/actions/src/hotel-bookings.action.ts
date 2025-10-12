@@ -43,6 +43,8 @@ export const getHotelBookings = async (
   filter: THotelBookingsFilter,
   sort?: { id: string; desc: boolean }[]
 ) => {
+  if (!db) return { data: [], total: 0 };
+  
   const {
     search,
     page,
@@ -78,7 +80,7 @@ export const getHotelBookings = async (
     //       : [])
   );
 
-  const hotelBookings = await db.query.HotelBookings.findMany({
+  const hotelBookings = await db!.query.HotelBookings.findMany({
     where,
     with: {
       hotel: {
@@ -106,13 +108,15 @@ export const getHotelBookings = async (
 };
 
 export const ceateHotelBooking = async (booking: TNewHotelBooking) => {
-  const newBooking = await db.insert(HotelBookings).values(booking).returning();
+  if (!db) throw new Error("Database connection not available");
+  
+  const newBooking = await db!.insert(HotelBookings).values(booking).returning();
 
   if (!newBooking[0]) {
     throw new Error("Failed to create hotel booking");
   }
 
-  const _booking = await db.query.HotelBookings.findFirst({
+  const _booking = await db!.query.HotelBookings.findFirst({
     where: eq(HotelBookings.id, newBooking[0].id),
     with: {
       hotel: {
@@ -134,6 +138,8 @@ export const updateHotelBookingStatus = async (
   bookingId: number,
   status: (typeof hotelBookingStatusEnum.enumValues)[number]
 ) => {
+  if (!db) throw new Error("Database connection not available");
+  
   const updatedBooking = await db
     .update(HotelBookings)
     .set({ status })
@@ -148,7 +154,9 @@ export const updateHotelBookingStatus = async (
 };
 
 export const getHotelBookingById = async (bookingId: number) => {
-  const booking = await db.query.HotelBookings.findFirst({
+  if (!db) return null;
+  
+  const booking = await db!.query.HotelBookings.findFirst({
     where: eq(HotelBookings.id, bookingId),
     with: {
       hotel: {

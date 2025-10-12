@@ -6,7 +6,6 @@ import ForestStaysSection from "@/components/ForestStaysSection";
 import ImageSlideshow from "@/components/ImageSlideshow";
 import LodgesSection from "@/components/LodgesSection";
 import Map from "@/components/Map";
-import ReviewsSection from "@/components/ReviewsSection";
 import { SafariSection } from "@/components/safari-section";
 import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 

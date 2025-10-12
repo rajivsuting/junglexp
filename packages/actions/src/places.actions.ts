@@ -90,7 +90,7 @@ export const getPlaces = async (
       searchConditions.length > 0 ? or(...searchConditions) : undefined;
 
     // Get total count
-    const totalResult = await db
+    const totalResult = await db!
       .select({ count: count() })
       .from(schema.Places)
       .where(where);
@@ -99,7 +99,7 @@ export const getPlaces = async (
     const totalPages = Math.ceil(total / limit);
 
     // Get places with pagination and images
-    const places = await db.query.Places.findMany({
+    const places = await db!.query.Places.findMany({
       where,
       limit,
       offset,
@@ -130,7 +130,7 @@ export const getPlaceById = async (
   id: number
 ): Promise<TPlaceWithImages | null> => {
   try {
-    const place = await db.query.Places.findFirst({
+    const place = await db!.query.Places.findFirst({
       where: eq(schema.Places.id, id),
       with: {
         images: {
@@ -214,7 +214,7 @@ export const createPlace = async (
             order: toInsert[idx]!.order,
           }));
 
-          await db.insert(schema.PlaceImages).values(placeImageRows);
+          await db!.insert(schema.PlaceImages).values(placeImageRows);
         }
       }
     }
@@ -290,7 +290,7 @@ export const updatePlace = async (
               order: toInsert[idx]!.order,
             }));
 
-            await db.insert(schema.PlaceImages).values(placeImageRows);
+            await db!.insert(schema.PlaceImages).values(placeImageRows);
           }
         }
       }
@@ -320,7 +320,7 @@ export const updatePlace = async (
 
 export const deletePlace = async (id: number): Promise<void> => {
   try {
-    await db.delete(schema.Places).where(eq(schema.Places.id, id));
+    await db!.delete(schema.Places).where(eq(schema.Places.id, id));
   } catch (error) {
     console.error("Error deleting place:", error);
     throw new Error("Failed to delete place");
@@ -441,7 +441,7 @@ export const updatePlaceImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db.insert(schema.PlaceImages).values(newImages));
+    operations.push(db!.insert(schema.PlaceImages).values(newImages));
   }
 
   // Update order for existing images
