@@ -120,7 +120,7 @@ export default async function HomePage() {
               preload="metadata"
               disablePictureInPicture
               className="flex-1 flex aspect-square object-cover"
-              src="/videos/20230612_150614.mp4"
+              src="https://ik.imagekit.io/ovrrfvjgl/20230612_150614.mp4?updatedAt=1760256546804"
               // src="https://video.wixstatic.com/video/5265be_ef0152dfff594d299e5363f2742b4853/720p/mp4/file.mp4"
             />
           </div>
@@ -178,7 +178,7 @@ export default async function HomePage() {
               disablePictureInPicture
               muted
               className="flex flex-1 object-cover"
-              src="/videos/VID20250129074022.mp4"
+              src="https://ik.imagekit.io/ovrrfvjgl/VID20250129074022.mp4?updatedAt=1760256560333"
 
               // src="https://video.wixstatic.com/video/5265be_a0ccfaab6d554b358651c0877c8f5ffd/720p/mp4/file.mp4"
             />
