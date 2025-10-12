@@ -10,7 +10,6 @@ const SouvenirBookingsListing = async () => {
   const pageLimit = searchParamsCache.get("perPage");
   const status = searchParamsCache.get("status");
   const souvenir_id = searchParamsCache.get("souvenir_id");
-  const sort = searchParamsCache.get("sort");
 
   const filters = {
     page,
@@ -25,8 +24,8 @@ const SouvenirBookingsListing = async () => {
   };
 
   const { souvenirBookings, total } = await getSouvenirBookings(
-    filters as any,
-    sort || []
+    filters as any
+    // sort || []
   );
 
   return (
