@@ -1,19 +1,26 @@
 "use client";
 
-import { Loader2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { FileUploader, hasValidImages } from '@/components/file-uploader';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { ImagesArraySchema } from '@/lib/image-schema';
-import { uploadFilesWithProgress } from '@/lib/upload-files';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { updateHotelImages } from '@repo/actions/hotels.actions';
-import { createImages, deleteImages } from '@repo/actions/image.actions';
+import { FileUploader, hasValidImages } from "@/components/file-uploader";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { ImagesArraySchema } from "@/lib/image-schema";
+import { uploadFilesWithProgress } from "@/lib/upload-files";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { updateHotelImages } from "@repo/actions/hotels.actions";
+import { createImages, deleteImages } from "@repo/actions/image.actions";
 
 import type {
   NewFormImage,
@@ -70,6 +77,8 @@ export const HotelImagesSection = ({
   const hasValidAltText = useMemo(() => {
     return hasValidImages(images as FileUploaderFormImage[]);
   }, [images]);
+
+  console.log("form", form.formState.isDirty);
 
   const handleSave = async (data: ImagesFormData) => {
     // Mark that user has attempted to submit
@@ -208,6 +217,7 @@ export const HotelImagesSection = ({
                   showValidation={hasAttemptedSubmit}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
