@@ -29,7 +29,7 @@ export default async function UserListingPage() {
     return redirect("/sign-in");
   }
 
-  const { users, total } = await getUsers(filters);
+  const { total, users } = await getUsers(filters);
 
   console.log("users", total);
 

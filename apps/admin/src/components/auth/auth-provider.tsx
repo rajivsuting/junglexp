@@ -52,17 +52,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Listen for auth state changes
   useEffect(() => {
-    const unsubscribe = authClient.onSessionChange((session, user) => {
-      setSession(session);
-      setUser(user);
-      setIsLoading(false);
-    });
-
-    return () => {
-      if (typeof unsubscribe === "function") {
-        unsubscribe();
-      }
-    };
+    // Note: onSessionChange is not available in better-auth client
+    // Session changes are handled through getSession calls
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -73,9 +64,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
       });
 
-      if (result.data?.session && result.data?.user) {
-        setSession(result.data.session);
+      if (result.data?.user) {
         setUser(result.data.user);
+        // Fetch session separately
+        const sessionData = await authClient.getSession();
+        if (sessionData?.data?.session) {
+          setSession(sessionData.data.session);
+        }
       }
 
       return result;
@@ -123,8 +118,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateUser = async (data: any) => {
     try {
       const result = await authClient.updateUser(data);
-      if (result.data?.user) {
-        setUser(result.data.user);
+      if (result.data) {
+        setUser(result.data);
       }
       return result;
     } catch (error) {
@@ -146,7 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const resetPassword = async (token: string, password: string) => {
     try {
       const result = await authClient.resetPassword({
-        password,
+        newPassword: password,
         token,
       });
       return result;
@@ -158,9 +153,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyEmail = async (token: string) => {
     try {
-      const result = await authClient.verifyEmail({ token });
-      if (result.data?.user) {
-        setUser(result.data.user);
+      const result = await authClient.verifyEmail({
+        query: { token },
+      });
+      if (result.data) {
+        setUser(result.data);
       }
       return result;
     } catch (error) {
@@ -171,7 +168,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const resendVerificationEmail = async () => {
     try {
-      const result = await authClient.sendVerificationEmail();
+      const result = await authClient.sendVerificationEmail({
+        email: user?.email || "",
+      });
       return result;
     } catch (error) {
       console.error("Resend verification error:", error);

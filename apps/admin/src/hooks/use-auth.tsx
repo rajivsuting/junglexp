@@ -1,86 +1,90 @@
 "use client";
 
-import { authClient, authHelpers } from "@repo/auth";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
-export interface AuthUser {
-  id: string;
-  email: string;
-  name: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  userRole: "user" | "admin" | "super_admin";
-  isActive: boolean;
-  emailVerified: boolean;
-  image?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { authClient, authHelpers } from '@repo/auth';
 
 export interface AuthSession {
-  id: string;
-  userId: string;
   expiresAt: Date;
-  token: string;
+  id: string;
   ipAddress?: string;
+  token: string;
   userAgent?: string;
+  userId: string;
 }
 
-interface UseAuthReturn {
-  user: AuthUser | null;
-  session: AuthSession | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  
-  // Authentication methods
-  signIn: (email: string, password: string) => Promise<any>;
-  signUp: (data: SignUpData) => Promise<any>;
-  signOut: () => Promise<void>;
-  
-  // Social authentication
-  signInWithGithub: () => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  
-  // User management
-  updateUser: (data: UpdateUserData) => Promise<any>;
-  changePassword: (currentPassword: string, newPassword: string) => Promise<any>;
-  deleteAccount: () => Promise<void>;
-  
-  // Email operations
-  sendPasswordResetEmail: (email: string) => Promise<any>;
-  resetPassword: (token: string, password: string) => Promise<any>;
-  verifyEmail: (token: string) => Promise<any>;
-  resendVerificationEmail: () => Promise<any>;
-  
-  // Role and permission helpers
-  hasRole: (role: string) => boolean;
-  isAdmin: () => boolean;
-  isSuperAdmin: () => boolean;
-  canAccess: (requiredRole: "user" | "admin" | "super_admin") => boolean;
-  
-  // User info helpers
-  getFullName: () => string;
-  getInitials: () => string;
-  getDisplayName: () => string;
+export interface AuthUser {
+  createdAt: Date;
+  email: string;
+  emailVerified: boolean;
+  firstName?: string;
+  id: string;
+  image?: string;
+  isActive: boolean;
+  lastName?: string;
+  name: string;
+  phone?: string;
+  updatedAt: Date;
+  userRole: "admin" | "super_admin" | "user";
 }
 
 interface SignUpData {
   email: string;
-  password: string;
-  name: string;
   firstName?: string;
   lastName?: string;
+  name: string;
+  password: string;
   phone?: string;
 }
 
 interface UpdateUserData {
-  name?: string;
   firstName?: string;
-  lastName?: string;
-  phone?: string;
   image?: string;
+  lastName?: string;
+  name?: string;
+  phone?: string;
+}
+
+interface UseAuthReturn {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  session: AuthSession | null;
+  user: AuthUser | null;
+
+  // Authentication methods
+  signIn: (email: string, password: string) => Promise<any>;
+  signOut: () => Promise<void>;
+  signUp: (data: SignUpData) => Promise<any>;
+
+  // Social authentication
+  signInWithGithub: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+
+  // User management
+  changePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => Promise<any>;
+  deleteAccount: () => Promise<void>;
+  updateUser: (data: UpdateUserData) => Promise<any>;
+
+  // Email operations
+  resendVerificationEmail: () => Promise<any>;
+  resetPassword: (token: string, password: string) => Promise<any>;
+  sendPasswordResetEmail: (email: string) => Promise<any>;
+  verifyEmail: (token: string) => Promise<any>;
+
+  // Role and permission helpers
+  canAccess: (requiredRole: "admin" | "super_admin" | "user") => boolean;
+  hasRole: (role: string) => boolean;
+  isAdmin: () => boolean;
+  isSuperAdmin: () => boolean;
+
+  // User info helpers
+  getDisplayName: () => string;
+  getFullName: () => string;
+  getInitials: () => string;
 }
 
 export function useAuth(): UseAuthReturn {
@@ -130,13 +134,13 @@ export function useAuth(): UseAuthReturn {
         email,
         password,
       });
-      
+
       if (result.data?.session && result.data?.user) {
         setSession(result.data.session);
         setUser(result.data.user);
         toast.success("Signed in successfully!");
       }
-      
+
       return result;
     } catch (error: any) {
       console.error("Sign in error:", error);
@@ -151,11 +155,13 @@ export function useAuth(): UseAuthReturn {
     try {
       setIsLoading(true);
       const result = await authClient.signUp.email(data);
-      
+
       if (result.data) {
-        toast.success("Account created successfully! Please check your email to verify your account.");
+        toast.success(
+          "Account created successfully! Please check your email to verify your account."
+        );
       }
-      
+
       return result;
     } catch (error: any) {
       console.error("Sign up error:", error);
@@ -187,8 +193,8 @@ export function useAuth(): UseAuthReturn {
     try {
       setIsLoading(true);
       await authClient.signIn.social({
-        provider: "github",
         callbackURL: "/",
+        provider: "github",
       });
     } catch (error: any) {
       console.error("GitHub sign in error:", error);
@@ -202,8 +208,8 @@ export function useAuth(): UseAuthReturn {
     try {
       setIsLoading(true);
       await authClient.signIn.social({
-        provider: "google",
         callbackURL: "/",
+        provider: "google",
       });
     } catch (error: any) {
       console.error("Google sign in error:", error);
@@ -229,17 +235,20 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
-  const changePassword = async (currentPassword: string, newPassword: string) => {
+  const changePassword = async (
+    currentPassword: string,
+    newPassword: string
+  ) => {
     try {
       const result = await authClient.changePassword({
         currentPassword,
         newPassword,
       });
-      
+
       if (result.data) {
         toast.success("Password changed successfully!");
       }
-      
+
       return result;
     } catch (error: any) {
       console.error("Change password error:", error);
@@ -279,14 +288,14 @@ export function useAuth(): UseAuthReturn {
   const resetPassword = async (token: string, password: string) => {
     try {
       const result = await authClient.resetPassword({
-        token,
         password,
+        token,
       });
-      
+
       if (result.data) {
         toast.success("Password reset successfully!");
       }
-      
+
       return result;
     } catch (error: any) {
       console.error("Reset password error:", error);
@@ -337,14 +346,16 @@ export function useAuth(): UseAuthReturn {
     return authHelpers.isSuperAdmin(user);
   };
 
-  const canAccess = (requiredRole: "user" | "admin" | "super_admin"): boolean => {
+  const canAccess = (
+    requiredRole: "admin" | "super_admin" | "user"
+  ): boolean => {
     if (!user) return false;
-    
+
     switch (requiredRole) {
-      case "super_admin":
-        return user.userRole === "super_admin";
       case "admin":
         return user.userRole === "admin" || user.userRole === "super_admin";
+      case "super_admin":
+        return user.userRole === "super_admin";
       case "user":
         return true; // All authenticated users have user access
       default:
@@ -367,40 +378,40 @@ export function useAuth(): UseAuthReturn {
   };
 
   return {
-    user,
-    session,
-    isLoading,
     isAuthenticated: !!user,
-    
+    isLoading,
+    session,
+    user,
+
     // Authentication methods
     signIn,
-    signUp,
     signOut,
-    
+    signUp,
+
     // Social authentication
     signInWithGithub,
     signInWithGoogle,
-    
+
     // User management
-    updateUser,
     changePassword,
     deleteAccount,
-    
+    updateUser,
+
     // Email operations
-    sendPasswordResetEmail,
-    resetPassword,
-    verifyEmail,
     resendVerificationEmail,
-    
+    resetPassword,
+    sendPasswordResetEmail,
+    verifyEmail,
+
     // Role and permission helpers
+    canAccess,
     hasRole,
     isAdmin,
     isSuperAdmin,
-    canAccess,
-    
+
     // User info helpers
+    getDisplayName,
     getFullName,
     getInitials,
-    getDisplayName,
   };
 }

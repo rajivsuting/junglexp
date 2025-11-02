@@ -1,80 +1,84 @@
-'use client';
-import { Badge } from '@/components/ui/badge';
-import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
-import { Product } from '@/constants/data';
-import { Column, ColumnDef } from '@tanstack/react-table';
+"use client";
 import { CheckCircle2, Text, XCircle } from 'lucide-react';
 import Image from 'next/image';
+
+import { Badge } from '@/components/ui/badge';
+import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
+
 import { CellAction } from './cell-action';
 import { CATEGORY_OPTIONS } from './options';
 
+import type { Product } from "@/constants/data";
+
+import type { Column, ColumnDef } from "@tanstack/react-table";
+
 export const columns: ColumnDef<Product>[] = [
   {
-    accessorKey: 'photo_url',
-    header: 'IMAGE',
+    accessorKey: "photo_url",
     cell: ({ row }) => {
       return (
-        <div className='relative aspect-square'>
+        <div className="relative aspect-square">
           <Image
-            src={row.getValue('photo_url')}
-            alt={row.getValue('name')}
+            alt={row.getValue("name")}
+            className="rounded-lg"
             fill
-            className='rounded-lg'
+            src={row.getValue("photo_url")}
           />
         </div>
       );
-    }
-  },
-  {
-    id: 'name',
-    accessorKey: 'name',
-    header: ({ column }: { column: Column<Product, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Name' />
-    ),
-    cell: ({ cell }) => <div>{cell.getValue<Product['name']>()}</div>,
-    meta: {
-      label: 'Name',
-      placeholder: 'Search products...',
-      variant: 'text',
-      icon: Text
     },
-    enableColumnFilter: true
+    header: "IMAGE",
   },
   {
-    id: 'category',
-    accessorKey: 'category',
+    accessorKey: "name",
+    cell: ({ cell }) => <div>{cell.getValue<Product["name"]>()}</div>,
+    enableColumnFilter: true,
     header: ({ column }: { column: Column<Product, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Category' />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
+    id: "name",
+    meta: {
+      icon: Text,
+      label: "Name",
+      placeholder: "Search products...",
+      variant: "text",
+    },
+  },
+  {
+    accessorKey: "category",
     cell: ({ cell }) => {
-      const status = cell.getValue<Product['category']>();
-      const Icon = status === 'active' ? CheckCircle2 : XCircle;
+      const status = cell.getValue<Product["category"]>();
+      const Icon = status === "active" ? CheckCircle2 : XCircle;
 
       return (
-        <Badge variant='outline' className='capitalize'>
+        <Badge className="capitalize" variant="outline">
           <Icon />
           {status}
         </Badge>
       );
     },
     enableColumnFilter: true,
+    header: ({ column }: { column: Column<Product, unknown> }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
+    id: "category",
     meta: {
-      label: 'categories',
-      variant: 'multiSelect',
-      options: CATEGORY_OPTIONS
-    }
+      label: "categories",
+      options: CATEGORY_OPTIONS,
+      variant: "multiSelect",
+    },
   },
   {
-    accessorKey: 'price',
-    header: 'PRICE'
+    accessorKey: "price",
+    header: "PRICE",
   },
   {
-    accessorKey: 'description',
-    header: 'DESCRIPTION'
+    accessorKey: "description",
+    header: "DESCRIPTION",
   },
 
   {
-    id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
-  }
+    cell: ({ row }) => <CellAction data={row.original} />,
+    id: "actions",
+  },
 ];

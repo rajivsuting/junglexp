@@ -1,9 +1,10 @@
-import { Product } from "@/constants/data";
-import { fakeProducts } from "@/constants/mock-api";
-import { searchParamsCache } from "@/lib/searchparams";
+import type { Product } from "@/constants/data";
 
-import { ProductTable } from "./product-tables";
-import { columns } from "./product-tables/columns";
+import { fakeProducts } from '@/constants/mock-api';
+import { searchParamsCache } from '@/lib/searchparams';
+
+import { ProductTable } from './product-tables';
+import { columns } from './product-tables/columns';
 
 type ProductListingPage = {};
 
@@ -14,7 +15,7 @@ export default async function ProductListingPage({}: ProductListingPage) {
   const pageLimit = searchParamsCache.get("perPage");
   const categories = searchParamsCache.get("roles");
 
-  const filters = {
+  const filters: any = {
     limit: pageLimit,
     page,
     ...(search && { search }),

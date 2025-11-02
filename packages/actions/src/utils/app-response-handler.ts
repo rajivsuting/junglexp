@@ -7,14 +7,14 @@ export type TErrorResponse = {
 
 export type TResponse<T> = TErrorResponse | TSuccessResponse<T>;
 
-export type TSuccessResponse<T> = T & { success: true };
+export type TSuccessResponse<T> = { success: true } & T;
 
 const AppResponseHandler = {
   error: (error: string, statusCode: number) => {
     return {
       error,
-      success: false,
       statusCode,
+      success: false,
     } as TErrorResponse;
   },
   isError: <T>(data: AppResponseHandler<T>): data is TErrorResponse => {
