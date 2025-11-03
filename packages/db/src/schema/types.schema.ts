@@ -1,7 +1,3 @@
-/**
- * Composite types with relations - Following junglexp pattern
- */
-
 import type { TAmenityBase } from "./amenities.schema";
 import type { TUser } from "./auth.schema";
 import type { TBlogBase, TBlogImageBase } from "./blogs.schema";

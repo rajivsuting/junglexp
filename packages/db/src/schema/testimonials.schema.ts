@@ -69,8 +69,7 @@ export const insertTestimonialSchema = createInsertSchema(Testimonials, {
   guest_name: (schema) => schema.guest_name.min(1, "Guest name is required"),
   content: (schema) =>
     schema.content.min(10, "Review must be at least 10 characters"),
-  rating: (schema) =>
-    schema.rating.min(1).max(5),
+  rating: (schema) => schema.rating.min(1).max(5),
 });
 
 export type TTestimonialBase = typeof Testimonials.$inferSelect;

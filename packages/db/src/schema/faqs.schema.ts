@@ -7,14 +7,8 @@ export const Faqs = pgTable("faqs", {
   answer: text("answer").notNull(),
 });
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertFaqsSchema = createInsertSchema(Faqs);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TFaqBase = typeof Faqs.$inferSelect;
 export type TNewFaq = typeof Faqs.$inferInsert;
 export type TInsertFaq = typeof insertFaqsSchema;

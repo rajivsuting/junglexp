@@ -1,6 +1,5 @@
 import { Storage } from "@google-cloud/storage";
 
-// Initialize Google Cloud Storage
 const storage = new Storage({
   projectId: process.env.GCP_PROJECT_ID,
   credentials: {
@@ -16,9 +15,6 @@ const bucket = storage.bucket(bucketName);
 
 export { storage, bucket };
 
-/**
- * Extract object name from GCS URL
- */
 export function toObjectNameFromUrl(url: string): string {
   try {
     const u = new URL(url);
@@ -36,9 +32,6 @@ export function toObjectNameFromUrl(url: string): string {
   }
 }
 
-/**
- * Delete multiple files from GCS
- */
 export async function deleteFilesFromGCS(urls: string[]): Promise<void> {
   const deletePromises = urls.map((url) => {
     const objectName = toObjectNameFromUrl(url);
@@ -50,9 +43,6 @@ export async function deleteFilesFromGCS(urls: string[]): Promise<void> {
   await Promise.allSettled(deletePromises);
 }
 
-/**
- * Delete single file from GCS
- */
 export async function deleteFileFromGCS(url: string): Promise<void> {
   try {
     const objectName = toObjectNameFromUrl(url);
@@ -62,9 +52,6 @@ export async function deleteFileFromGCS(url: string): Promise<void> {
   }
 }
 
-/**
- * Generate signed URL for uploading
- */
 export async function generateSignedUploadUrl(
   filename: string,
   contentType: string
@@ -84,9 +71,6 @@ export async function generateSignedUploadUrl(
   return { signedUrl, publicUrl };
 }
 
-/**
- * Upload file buffer directly to GCS
- */
 export async function uploadFileToGCS(
   buffer: Buffer,
   filename: string,

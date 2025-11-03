@@ -1,10 +1,6 @@
 import { index, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
-/**
- * Images table - Central image repository with multiple variants
- * Stores images in Google Cloud Storage with different sizes
- */
 export const Images = pgTable(
   "images",
   {
@@ -22,15 +18,9 @@ export const Images = pgTable(
   (table) => [index("images_created_at_idx").on(table.created_at)]
 );
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertImageSchema = createInsertSchema(Images);
 export const selectImageSchema = createSelectSchema(Images);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TImage = typeof Images.$inferSelect;
 export type TNewImage = typeof Images.$inferInsert;
 

@@ -1,4 +1,3 @@
-// lib/cache.ts - Following junglexp pattern
 import { redis } from "./redis";
 
 type CacheOptions<T> = {

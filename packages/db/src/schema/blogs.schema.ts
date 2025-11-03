@@ -92,9 +92,6 @@ export const BlogImages = pgTable("blog_images", {
   caption: text("caption"),
 });
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertBlogSchema = createInsertSchema(Blogs, {
   title: (schema) => schema.title.min(1, "Title is required").max(500),
   slug: (schema) =>
@@ -108,9 +105,6 @@ export const insertBlogSchema = createInsertSchema(Blogs, {
 
 export const selectBlogSchema = createSelectSchema(Blogs);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TBlogBase = typeof Blogs.$inferSelect;
 export type TNewBlog = typeof Blogs.$inferInsert;
 export type TBlogStatus = (typeof blogStatusEnum.enumValues)[number];

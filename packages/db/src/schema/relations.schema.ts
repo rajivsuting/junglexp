@@ -24,9 +24,6 @@ import { Amenities } from "./amenities.schema";
 import { Policies } from "./policies.schema";
 import { Faqs } from "./faqs.schema";
 
-/**
- * Resort Relations
- */
 export const resortRelations = relations(Resort, ({ many }) => ({
   images: many(ResortImages),
   policies: many(ResortPolicies),
@@ -70,9 +67,6 @@ export const resortFaqsRelations = relations(ResortFaqs, ({ one }) => ({
   }),
 }));
 
-/**
- * Room Types Relations
- */
 export const roomTypeRelations = relations(RoomTypes, ({ one, many }) => ({
   resort: one(Resort, {
     fields: [RoomTypes.resort_id],
@@ -139,9 +133,6 @@ export const roomTypeFaqsRelations = relations(RoomTypeFaqs, ({ one }) => ({
   }),
 }));
 
-/**
- * Rooms Relations
- */
 export const roomRelations = relations(Rooms, ({ one, many }) => ({
   resort: one(Resort, {
     fields: [Rooms.resort_id],
@@ -154,9 +145,6 @@ export const roomRelations = relations(Rooms, ({ one, many }) => ({
   bookings: many(Bookings),
 }));
 
-/**
- * Bookings Relations
- */
 export const bookingRelations = relations(Bookings, ({ one, many }) => ({
   roomType: one(RoomTypes, {
     fields: [Bookings.room_type_id],
@@ -183,9 +171,6 @@ export const bookingPaymentsRelations = relations(
   })
 );
 
-/**
- * Blogs Relations
- */
 export const blogRelations = relations(Blogs, ({ one, many }) => ({
   author: one(Users, {
     fields: [Blogs.author_id],
@@ -209,9 +194,6 @@ export const blogImagesRelations = relations(BlogImages, ({ one }) => ({
   }),
 }));
 
-/**
- * Gallery Relations
- */
 export const galleryRelations = relations(Gallery, ({ one }) => ({
   resort: one(Resort, {
     fields: [Gallery.resort_id],
@@ -227,9 +209,6 @@ export const galleryRelations = relations(Gallery, ({ one }) => ({
   }),
 }));
 
-/**
- * Testimonials Relations
- */
 export const testimonialRelations = relations(Testimonials, ({ one }) => ({
   resort: one(Resort, {
     fields: [Testimonials.resort_id],
@@ -245,9 +224,6 @@ export const testimonialRelations = relations(Testimonials, ({ one }) => ({
   }),
 }));
 
-/**
- * Master Data Relations
- */
 export const amenityRelations = relations(Amenities, ({ many }) => ({
   roomTypes: many(RoomTypeAmenities),
 }));
@@ -262,9 +238,6 @@ export const faqRelations = relations(Faqs, ({ many }) => ({
   roomTypes: many(RoomTypeFaqs),
 }));
 
-/**
- * Images Relations
- */
 export const imageRelations = relations(Images, ({ many }) => ({
   resortImages: many(ResortImages),
   roomTypeImages: many(RoomTypeImages),

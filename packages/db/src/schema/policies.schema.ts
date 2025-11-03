@@ -16,14 +16,8 @@ export const Policies = pgTable(
   ]
 );
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertPoliciesSchema = createInsertSchema(Policies);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TPolicyBase = typeof Policies.$inferSelect;
 export type TNewPolicy = typeof Policies.$inferInsert;
 export type TInsertPolicy = typeof insertPoliciesSchema;

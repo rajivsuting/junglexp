@@ -76,11 +76,6 @@ import {
 // Relations
 import * as relations from "./schema/relations.schema";
 
-/**
- * --------------------------------------- Export All Types ---------------------------------------
- */
-
-// Auth Types
 export type {
   TAccount,
   TNewUser,
@@ -108,10 +103,6 @@ export type {
   TNewPolicy,
   TPolicyBase,
   TPolicyKind,
-} from "./schema/policies.schema";
-
-// Resort Types
-export type {
   TNewResort,
   TNewResortFaq,
   TNewResortImage,
@@ -121,10 +112,6 @@ export type {
   TResortImageBase,
   TResortPolicyBase,
   TResortStatus,
-} from "./schema/resort.schema";
-
-// Room Types
-export type {
   TBedType,
   TNewRoomType,
   TNewRoomTypeAmenity,
@@ -137,52 +124,28 @@ export type {
   TRoomTypeImageBase,
   TRoomTypePolicyBase,
   TRoomTypeStatus,
-} from "./schema/room-types.schema";
-
-// Room Types
-export type {
   TNewRoom,
   TRoomBase,
   TRoomStatus,
-} from "./schema/rooms.schema";
-
-// Booking Types
-export type {
   TBookingBase,
   TBookingPaymentBase,
   TBookingStatus,
   TNewBooking,
   TNewBookingPayment,
   TPaymentStatus,
-} from "./schema/bookings.schema";
-
-// Blog Types
-export type {
   TBlogBase,
   TBlogCategory,
   TBlogImageBase,
   TBlogStatus,
   TNewBlog,
   TNewBlogImage,
-} from "./schema/blogs.schema";
-
-// Gallery Types
-export type {
   TGalleryBase,
   TGalleryCategory,
   TGalleryType,
   TNewGallery,
-} from "./schema/gallery.schema";
-
-// Testimonial Types
-export type {
   TNewTestimonial,
   TTestimonialBase,
   TTestimonialStatus,
-} from "./schema/testimonials.schema";
-
-// Composite Types with Relations
-export type {
   TBlog,
   TBlogImage,
   TBooking,
@@ -221,19 +184,16 @@ export {
   userRoles,
   Users,
   Verifications,
-  // Core
   Amenities,
   Faqs,
   Images,
   Policies,
   policyKindEnum,
-  // Resort
   Resort,
   ResortFaqs,
   ResortImages,
   ResortPolicies,
   resortStatusEnum,
-  // Room Types
   bedTypeEnum,
   RoomTypeAmenities,
   RoomTypeFaqs,
@@ -241,33 +201,24 @@ export {
   RoomTypePolicies,
   RoomTypes,
   roomTypeStatusEnum,
-  // Rooms
   Rooms,
   roomStatusEnum,
-  // Bookings
   BookingPayments,
   Bookings,
   bookingStatusEnum,
   paymentStatusEnum,
-  // Blogs
   BlogImages,
   Blogs,
   blogCategoryEnum,
   blogStatusEnum,
-  // Gallery
   Gallery,
   galleryCategoryEnum,
   galleryTypeEnum,
-  // Testimonials
   Testimonials,
   testimonialStatusEnum,
 };
 
-/**
- * --------------------------------------- Schema Object ---------------------------------------
- */
 export const schemaWithoutRelations = {
-  // Auth
   Users,
   Sessions,
   Accounts,
@@ -277,33 +228,25 @@ export const schemaWithoutRelations = {
   TwoFactorTokens,
   UserPreferences,
   UserAuditLog,
-  // Core
   Images,
   Amenities,
   Policies,
   Faqs,
-  // Resort
   Resort,
   ResortImages,
   ResortPolicies,
   ResortFaqs,
-  // Room Types
   RoomTypes,
   RoomTypeImages,
   RoomTypeAmenities,
   RoomTypePolicies,
   RoomTypeFaqs,
-  // Rooms
   Rooms,
-  // Bookings
   Bookings,
   BookingPayments,
-  // Blogs
   Blogs,
   BlogImages,
-  // Gallery
   Gallery,
-  // Testimonials
   Testimonials,
 };
 
@@ -312,11 +255,6 @@ export const schema = {
   ...relations,
 };
 
-/**
- * --------------------------------------- Database Connection ---------------------------------------
- */
-
-// Load environment variables - only in non-production environments
 if (process.env.NODE_ENV !== "production") {
   config({ path: "../../.env" });
 }
@@ -329,5 +267,4 @@ const getDatabaseUrl = () => {
   return url;
 };
 
-// Export Drizzle database instance
 export const db = drizzle(getDatabaseUrl(), { schema });

@@ -51,9 +51,6 @@ export const Rooms = pgTable(
   ]
 );
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertRoomSchema = createInsertSchema(Rooms, {
   room_number: (schema) =>
     schema.room_number.min(1, "Room number is required").max(50),
@@ -62,9 +59,6 @@ export const insertRoomSchema = createInsertSchema(Rooms, {
 
 export const selectRoomSchema = createSelectSchema(Rooms);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TRoomBase = typeof Rooms.$inferSelect;
 export type TNewRoom = typeof Rooms.$inferInsert;
 export type TRoomStatus = (typeof roomStatusEnum.enumValues)[number];

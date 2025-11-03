@@ -108,9 +108,6 @@ export const ResortFaqs = pgTable("resort_faqs", {
   order: integer("order").notNull().default(0),
 });
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertResortSchema = createInsertSchema(Resort, {
   name: (schema) => schema.name.min(1, "Resort name is required").max(255),
   email: (schema) => schema.email.email("Invalid email address"),
@@ -120,9 +117,6 @@ export const insertResortSchema = createInsertSchema(Resort, {
 
 export const selectResortSchema = createSelectSchema(Resort);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TResortBase = typeof Resort.$inferSelect;
 export type TNewResort = typeof Resort.$inferInsert;
 export type TResortStatus = (typeof resortStatusEnum.enumValues)[number];

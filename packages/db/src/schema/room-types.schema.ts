@@ -116,9 +116,6 @@ export const RoomTypeFaqs = pgTable("room_type_faqs", {
   order: integer("order").notNull().default(0),
 });
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertRoomTypeSchema = createInsertSchema(RoomTypes, {
   name: (schema) => schema.name.min(1, "Room type name is required").max(255),
   max_occupancy: (schema) =>
@@ -129,9 +126,6 @@ export const insertRoomTypeSchema = createInsertSchema(RoomTypes, {
 
 export const selectRoomTypeSchema = createSelectSchema(RoomTypes);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TRoomTypeBase = typeof RoomTypes.$inferSelect;
 export type TNewRoomType = typeof RoomTypes.$inferInsert;
 export type TRoomTypeStatus = (typeof roomTypeStatusEnum.enumValues)[number];

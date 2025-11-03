@@ -149,9 +149,6 @@ export const BookingPayments = pgTable(
   ]
 );
 
-/**
- * --------------------------------------- Validation Schemas ---------------------------------------
- */
 export const insertBookingSchema = createInsertSchema(Bookings, {
   guest_name: (schema) => schema.guest_name.min(1, "Guest name is required"),
   guest_email: (schema) => schema.guest_email.email("Invalid email address"),
@@ -169,9 +166,6 @@ export const selectBookingSchema = createSelectSchema(Bookings);
 
 export const insertBookingPaymentSchema = createInsertSchema(BookingPayments);
 
-/**
- * --------------------------------------- Type Definitions ---------------------------------------
- */
 export type TBookingBase = typeof Bookings.$inferSelect;
 export type TNewBooking = typeof Bookings.$inferInsert;
 export type TBookingStatus = (typeof bookingStatusEnum.enumValues)[number];

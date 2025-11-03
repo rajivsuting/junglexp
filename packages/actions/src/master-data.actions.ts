@@ -3,9 +3,6 @@ import { db, Amenities, Policies, Faqs } from "@repo/db";
 import type { TNewAmenity, TNewPolicy, TNewFaq } from "@repo/db";
 import { eq } from "@repo/db";
 
-/**
- * Amenities Actions
- */
 export const getAmenities = async () => {
   if (!db) return [];
 
@@ -40,9 +37,6 @@ export const deleteAmenity = async (id: number) => {
   await db.delete(Amenities).where(eq(Amenities.id, id));
 };
 
-/**
- * Policies Actions
- */
 export const getPolicies = async () => {
   if (!db) return [];
 
@@ -86,9 +80,6 @@ export const deletePolicy = async (id: number) => {
   await db.delete(Policies).where(eq(Policies.id, id));
 };
 
-/**
- * FAQs Actions
- */
 export const getFaqs = async () => {
   if (!db) return [];
 
