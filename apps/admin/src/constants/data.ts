@@ -1,13 +1,13 @@
-import { NavItem } from '@/types';
+import type { NavItem } from "@/types";
 
 export type Product = {
-  photo_url: string;
-  name: string;
-  description: string;
-  created_at: string;
-  price: number;
-  id: number;
   category: string;
+  created_at: string;
+  description: string;
+  id: number;
+  name: string;
+  photo_url: string;
+  price: number;
   updated_at: string;
 };
 

@@ -26,13 +26,15 @@ import {
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
 
+import type { Tenant } from "../org-switcher";
+
 export const company = {
   logo: IconPhotoUp,
   name: "Acme Inc",
   plan: "Enterprise",
 };
 
-const tenants = [
+const tenants: Tenant[] = [
   { id: "1", name: "Acme Inc" },
   { id: "2", name: "Beta Corp" },
   { id: "3", name: "Gamma Ltd" },
@@ -57,7 +59,7 @@ export default function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <OrgSwitcher
-          defaultTenant={activeTenant}
+          defaultTenant={activeTenant!}
           onTenantSwitch={handleSwitchTenant}
           tenants={tenants}
         />
@@ -179,8 +181,8 @@ export default function AppSidebar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <SignOutButton
-                    variant="ghost"
                     className="w-full justify-start"
+                    variant="ghost"
                   />
                 </DropdownMenuItem>
               </DropdownMenuContent>

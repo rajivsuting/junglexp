@@ -5,16 +5,16 @@ import { dataTableConfig } from '@/config/data-table';
 
 import type {
   ExtendedColumnFilter,
-  ExtendedColumnSort
-} from '@/types/data-table';
+  ExtendedColumnSort,
+} from "@/types/data-table";
 
 const sortingItemSchema = z.object({
+  desc: z.boolean(),
   id: z.string(),
-  desc: z.boolean()
 });
 
 export const getSortingStateParser = <TData>(
-  columnIds?: string[] | Set<string>
+  columnIds?: Set<string> | string[]
 ) => {
   const validKeys = columnIds
     ? columnIds instanceof Set
@@ -23,6 +23,12 @@ export const getSortingStateParser = <TData>(
     : null;
 
   return createParser({
+    eq: (a: ExtendedColumnSort<TData>[], b: ExtendedColumnSort<TData>[]) =>
+      a.length === b.length &&
+      a.every(
+        (item: ExtendedColumnSort<TData>, index: number) =>
+          item.id === b[index]?.id && item.desc === b[index]?.desc
+      ),
     parse: (value) => {
       try {
         const parsed = JSON.parse(value);
@@ -40,27 +46,21 @@ export const getSortingStateParser = <TData>(
       }
     },
     serialize: (value) => JSON.stringify(value),
-    eq: (a, b) =>
-      a.length === b.length &&
-      a.every(
-        (item, index) =>
-          item.id === b[index]?.id && item.desc === b[index]?.desc
-      )
   });
 };
 
 const filterItemSchema = z.object({
+  filterId: z.string(),
   id: z.string(),
+  operator: z.enum(dataTableConfig.operators),
   value: z.union([z.string(), z.array(z.string())]),
   variant: z.enum(dataTableConfig.filterVariants),
-  operator: z.enum(dataTableConfig.operators),
-  filterId: z.string()
 });
 
 export type FilterItemSchema = z.infer<typeof filterItemSchema>;
 
 export const getFiltersStateParser = <TData>(
-  columnIds?: string[] | Set<string>
+  columnIds?: Set<string> | string[]
 ) => {
   const validKeys = columnIds
     ? columnIds instanceof Set
@@ -69,6 +69,15 @@ export const getFiltersStateParser = <TData>(
     : null;
 
   return createParser({
+    eq: (a: ExtendedColumnFilter<TData>[], b: ExtendedColumnFilter<TData>[]) =>
+      a.length === b.length &&
+      a.every(
+        (filter: ExtendedColumnFilter<TData>, index: number) =>
+          filter.id === b[index]?.id &&
+          filter.value === b[index]?.value &&
+          filter.variant === b[index]?.variant &&
+          filter.operator === b[index]?.operator
+      ),
     parse: (value) => {
       try {
         const parsed = JSON.parse(value);
@@ -86,14 +95,5 @@ export const getFiltersStateParser = <TData>(
       }
     },
     serialize: (value) => JSON.stringify(value),
-    eq: (a, b) =>
-      a.length === b.length &&
-      a.every(
-        (filter, index) =>
-          filter.id === b[index]?.id &&
-          filter.value === b[index]?.value &&
-          filter.variant === b[index]?.variant &&
-          filter.operator === b[index]?.operator
-      )
   });
 };

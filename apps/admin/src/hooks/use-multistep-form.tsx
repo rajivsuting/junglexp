@@ -1,4 +1,6 @@
-import { ReactElement, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+
+import type { ReactElement } from "react";
 
 export default function useMultistepForm(steps: ReactElement<any>[]) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -16,13 +18,13 @@ export default function useMultistepForm(steps: ReactElement<any>[]) {
   }, []);
 
   return {
+    back,
     currentStepIndex,
-    step: steps[currentStepIndex],
-    steps,
+    goTo,
     isFirstStep: currentStepIndex === 0,
     isLastStep: currentStepIndex === steps.length - 1,
-    goTo,
     next,
-    back
+    step: steps[currentStepIndex],
+    steps,
   };
 }

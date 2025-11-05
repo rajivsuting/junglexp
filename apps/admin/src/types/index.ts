@@ -1,16 +1,27 @@
 import { Icons } from '@/components/icons';
 
-export interface NavItem {
+export interface FooterItem {
+  items: {
+    external?: boolean;
+    href: string;
+    title: string;
+  }[];
   title: string;
-  url: string;
+}
+
+export type MainNavItem = NavItemWithOptionalChildren;
+
+export interface NavItem {
+  description?: string;
   disabled?: boolean;
   external?: boolean;
-  shortcut?: [string, string];
   icon?: keyof typeof Icons;
-  label?: string;
-  description?: string;
   isActive?: boolean;
   items?: NavItem[];
+  label?: string;
+  shortcut?: [string, string];
+  title: string;
+  url: string;
 }
 
 export interface NavItemWithChildren extends NavItem {
@@ -20,16 +31,5 @@ export interface NavItemWithChildren extends NavItem {
 export interface NavItemWithOptionalChildren extends NavItem {
   items?: NavItemWithChildren[];
 }
-
-export interface FooterItem {
-  title: string;
-  items: {
-    title: string;
-    href: string;
-    external?: boolean;
-  }[];
-}
-
-export type MainNavItem = NavItemWithOptionalChildren;
 
 export type SidebarNavItem = NavItemWithChildren;

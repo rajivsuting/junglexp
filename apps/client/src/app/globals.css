@@ -4,11 +4,17 @@
 :root {
   --background: #f3eee7;
   --foreground: #313131;
-  --container: 930px;
+  --container: 90%;
 }
 
 .container {
-  max-width: var(--container);
+  max-width: 100%;
+  padding: 0 1rem;
+
+  @media (min-width: 768px) {
+    max-width: var(--container);
+    padding: 0 1rem;
+  }
 }
 
 @theme inline {
@@ -74,4 +80,92 @@ body {
 
 #mobile-menu-toggle:checked ~ div .mobile-menu-item {
   animation: slideInFade 0.4s ease-out forwards;
+}
+
+/* Wedding carousel animations */
+@keyframes weddingSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes weddingSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes weddingSlideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@keyframes weddingSlideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+.animate-wedding-in-right {
+  animation: weddingSlideInRight 0.45s ease both;
+}
+
+.animate-wedding-in-left {
+  animation: weddingSlideInLeft 0.45s ease both;
+}
+
+.animate-wedding-out-left {
+  animation: weddingSlideOutLeft 0.45s ease both;
+}
+
+.animate-wedding-out-right {
+  animation: weddingSlideOutRight 0.45s ease both;
+}
+
+/* Sliding strip animations for wedding center carousel */
+@keyframes weddingStripNext {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes weddingStripPrev {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.animate-wedding-strip-next {
+  animation: weddingStripNext 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.animate-wedding-strip-prev {
+  animation: weddingStripPrev 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }

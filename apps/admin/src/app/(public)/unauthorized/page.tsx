@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { ShieldAlert } from "lucide-react";
-import Link from "next/link";
+import { ShieldAlert } from 'lucide-react';
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 
 export default function UnauthorizedPage() {
   return (
@@ -13,19 +14,18 @@ export default function UnauthorizedPage() {
           <div className="space-y-2">
             <h1 className="text-2xl font-bold">Access Denied</h1>
             <p className="text-muted-foreground">
-              You don't have permission to access this page. Please contact your administrator if you believe this is an error.
+              You don&apos;t have permission to access this page. Please contact
+              your administrator if you believe this is an error.
             </p>
           </div>
         </div>
 
         <div className="space-y-3">
           <Link href="/">
-            <Button className="w-full">
-              Go to Dashboard
-            </Button>
+            <Button className="w-full">Go to Dashboard</Button>
           </Link>
           <Link href="/sign-out">
-            <Button variant="outline" className="w-full">
+            <Button className="w-full" variant="outline">
               Sign Out
             </Button>
           </Link>
@@ -36,6 +36,6 @@ export default function UnauthorizedPage() {
 }
 
 export const metadata = {
-  title: "Unauthorized",
   description: "Access denied",
+  title: "Unauthorized",
 };

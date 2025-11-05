@@ -1,34 +1,25 @@
 "use client";
 
-import { Check, Loader2, PlusCircle, XCircle } from "lucide-react";
-import * as React from "react";
+import { Check, Loader2, PlusCircle, XCircle } from 'lucide-react';
+import * as React from 'react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+    Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+
+import type { Option } from "@/types/data-table";
 
 import type { Column } from "@tanstack/react-table";
-import type { Option } from "@/types/data-table";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
-  title?: string;
   multiple?: boolean;
+  title?: string;
 
   // Called when popover opens and no options are present yet
   fetchOptions?: (ctx: { column?: Column<TData, TValue> }) => Promise<Option[]>;
@@ -52,13 +43,13 @@ interface DataTableFacetedFilterProps<TData, TValue> {
 
 export function DataTableAsyncFacetedFilter<TData, TValue>({
   column,
-  title,
-  multiple,
   fetchOptions,
-  searchOptions,
   initialOptions = [],
-  searchDebounceMs = 300,
   mapOptions,
+  multiple,
+  searchDebounceMs = 300,
+  searchOptions,
+  title,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
@@ -71,7 +62,7 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
   // Prevent redundant fetches and searches
   const tokenRef = React.useRef(0);
   const lastQueryRef = React.useRef<string>("");
-  const lastResultRef = React.useRef<Option[] | null>(null);
+  const lastResultRef = React.useRef<null | Option[]>(null);
 
   const columnFilterValue = column?.getFilterValue();
   const selectedValues = React.useMemo(
@@ -168,7 +159,6 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
 
   return (
     <Popover
-      open={open}
       onOpenChange={async (next) => {
         setOpen(next);
         if (next && !searchOptions) {
@@ -178,16 +168,17 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
         // If using server-side search and you want a search on open, you can opt-in:
         // if (next && searchOptions && query.trim().length > 0) { ...trigger once... }
       }}
+      open={open}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="border-dashed">
+        <Button className="border-dashed" size="sm" variant="outline">
           {selectedValues?.size > 0 ? (
             <div
-              role="button"
               aria-label={`Clear ${title} filter`}
-              tabIndex={0}
-              onClick={onReset}
               className="focus-visible:ring-ring rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-1 focus-visible:outline-none"
+              onClick={onReset}
+              role="button"
+              tabIndex={0}
             >
               <XCircle />
             </div>
@@ -200,20 +191,20 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
           {selectedValues?.size > 0 && (
             <>
               <Separator
-                orientation="vertical"
                 className="mx-0.5 data-[orientation=vertical]:h-4"
+                orientation="vertical"
               />
               <Badge
-                variant="secondary"
                 className="rounded-sm px-1 font-normal lg:hidden"
+                variant="secondary"
               >
                 {selectedValues.size}
               </Badge>
               <div className="hidden items-center gap-1 lg:flex">
                 {selectedValues.size > 2 ? (
                   <Badge
-                    variant="secondary"
                     className="rounded-sm px-1 font-normal"
+                    variant="secondary"
                   >
                     {selectedValues.size} selected
                   </Badge>
@@ -222,9 +213,9 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
                       <Badge
-                        variant="secondary"
-                        key={option.value}
                         className="rounded-sm px-1 font-normal"
+                        key={option.value}
+                        variant="secondary"
                       >
                         {option.label}
                       </Badge>
@@ -235,14 +226,14 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[12.5rem] p-0" align="start">
+      <PopoverContent align="start" className="w-[12.5rem] p-0">
         <Command
           shouldFilter={false /* server search or manual filter below */}
         >
           <CommandInput
+            onValueChange={setQuery}
             placeholder={title}
             value={query}
-            onValueChange={setQuery}
           />
           <CommandList className="max-h-full">
             <CommandEmpty>
@@ -261,9 +252,9 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
                 const isSelected = selectedValues.has(option.value);
                 return (
                   <CommandItem
+                    disabled={loading}
                     key={option.value}
                     onSelect={() => onItemSelect(option, isSelected)}
-                    disabled={loading}
                   >
                     <div
                       className={cn(
@@ -298,8 +289,8 @@ export function DataTableAsyncFacetedFilter<TData, TValue>({
                 <CommandSeparator />
                 <CommandGroup>
                   <CommandItem
-                    onSelect={() => onReset()}
                     className="justify-center text-center"
+                    onSelect={() => onReset()}
                   >
                     Clear filters
                   </CommandItem>

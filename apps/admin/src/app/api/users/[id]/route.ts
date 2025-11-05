@@ -1,6 +1,7 @@
-import { auth } from "@repo/auth/auth.config";
-import { db, eq, Users } from "@repo/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+
+import { auth } from '@repo/auth/auth.config';
+import { db, eq, Users } from '@repo/db';
 
 // DELETE /api/users/[id] - Delete user (admin only)
 // export async function DELETE(
@@ -66,7 +67,7 @@ import { NextRequest, NextResponse } from "next/server";
 // GET /api/users/[id] - Get user by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -78,7 +79,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Users can only access their own data unless they're admin
     if (
@@ -126,7 +127,7 @@ export async function GET(
 // PUT /api/users/[id] - Update user
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -138,7 +139,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
 
     // Users can only update their own data unless they're admin
@@ -162,7 +163,7 @@ export async function PUT(
     }
 
     // Prepare update data
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
 
     if (body.name) updateData.name = body.name;
     if (body.firstName) updateData.firstName = body.firstName;

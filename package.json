@@ -26,5 +26,8 @@
     "apps/*",
     "packages/*"
   ],
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.6.0",
+  "dependencies": {
+    "framer-motion": "^12.23.24"
+  }
 }
