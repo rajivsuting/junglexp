@@ -154,7 +154,7 @@ export default function FineDiningPage() {
           <div className="relative">
             <button
               aria-label="Previous restaurant"
-              className="absolute left-0 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white text-2xl text-[#2b2b2b] shadow-lg transition-all hover:bg-[#f8f8f8]"
+              className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-xl text-[#2b2b2b] shadow-lg transition-all hover:bg-[#f8f8f8] md:left-0 md:h-12 md:w-12 md:text-2xl"
               onClick={() =>
                 setActiveRestaurant(
                   (activeRestaurant - 1 + restaurants.length) %
@@ -166,7 +166,7 @@ export default function FineDiningPage() {
             </button>
             <button
               aria-label="Next restaurant"
-              className="absolute right-0 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white text-2xl text-[#2b2b2b] shadow-lg transition-all hover:bg-[#f8f8f8]"
+              className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-xl text-[#2b2b2b] shadow-lg transition-all hover:bg-[#f8f8f8] md:right-0 md:h-12 md:w-12 md:text-2xl"
               onClick={() =>
                 setActiveRestaurant((activeRestaurant + 1) % restaurants.length)
               }
@@ -174,17 +174,20 @@ export default function FineDiningPage() {
               ›
             </button>
 
-            <div className="overflow-hidden px-12">
+            <div className="overflow-hidden px-4 md:px-12">
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
-                  transform: `translateX(-${activeRestaurant * 50}%)`,
+                  transform: `translateX(-${activeRestaurant * 100}%)`,
                 }}
               >
                 {restaurants.map((restaurant, idx) => (
-                  <div className="w-1/2 flex-shrink-0 px-4" key={idx}>
+                  <div
+                    className="w-full flex-shrink-0 px-2 md:w-1/2 md:px-4"
+                    key={idx}
+                  >
                     <div className="bg-white shadow-sm">
-                      <div className="relative h-[400px] overflow-hidden">
+                      <div className="relative h-[300px] overflow-hidden md:h-[400px]">
                         <Image
                           alt={restaurant.name}
                           className="object-cover transition-transform duration-500 hover:scale-105"
@@ -192,11 +195,11 @@ export default function FineDiningPage() {
                           src={restaurant.image}
                         />
                       </div>
-                      <div className="p-8">
-                        <h3 className="mb-4 font-serif text-2xl font-light tracking-[0.08em] uppercase text-[#2b2b2b]">
+                      <div className="p-6 md:p-8">
+                        <h3 className="mb-3 font-serif text-xl font-light tracking-[0.08em] uppercase text-[#2b2b2b] md:mb-4 md:text-2xl">
                           {restaurant.name}
                         </h3>
-                        <p className="mb-6 font-serif text-sm leading-relaxed text-[#5a5a5a]">
+                        <p className="mb-4 font-serif text-sm leading-relaxed text-[#5a5a5a] md:mb-6">
                           {restaurant.description}
                         </p>
                         <button className="inline-flex items-center gap-2 font-serif text-sm tracking-[0.08em] uppercase text-[#c9a961] transition-all hover:gap-3">

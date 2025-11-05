@@ -16,7 +16,7 @@ async function canModifyUser(id: string) {
 
   // Get target user from database
   const targetUser = await db
-    .select({ user_role: schema.Users.userRole, id: schema.Users.id })
+    .select({ id: schema.Users.id, user_role: schema.Users.userRole })
     .from(schema.Users)
     .where(eq(schema.Users.id, id))
     .limit(1);
@@ -43,6 +43,14 @@ async function canModifyUser(id: string) {
   return user;
 }
 
+// Helper function to get current session
+async function getCurrentSession() {
+  const headersList = await import("next/headers").then((m) => m.headers());
+  return await auth.api.getSession({
+    headers: headersList,
+  });
+}
+
 // Role check helper
 async function requireSuperAdmin() {
   const session = await getCurrentSession();
@@ -50,14 +58,6 @@ async function requireSuperAdmin() {
   if (!session?.user || session.user.userRole !== "super_admin") {
     throw new Error("Access denied. Super admin role required.");
   }
-}
-
-// Helper function to get current session
-async function getCurrentSession() {
-  const headersList = await import("next/headers").then((m) => m.headers());
-  return await auth.api.getSession({
-    headers: headersList,
-  });
 }
 
 export const createUser = async (data: TNewUser) => {
