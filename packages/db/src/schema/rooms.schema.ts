@@ -1,17 +1,10 @@
 import {
-  index,
-  integer,
-  pgEnum,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+    index, integer, pgEnum, pgTable, serial, text, timestamp, varchar
+} from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
-import { Resort } from "./resort.schema";
-import { RoomTypes } from "./room-types.schema";
+import { Resort } from './resort.schema';
+import { RoomTypes } from './room-types.schema';
 
 export const roomStatusEnum = pgEnum("room_status", [
   "available",
@@ -31,8 +24,8 @@ export const Rooms = pgTable(
       .references(() => RoomTypes.id, { onDelete: "cascade" })
       .notNull(),
 
-    room_number: varchar("room_number", { length: 50 }).notNull().unique(),
     floor: integer("floor").notNull(),
+    room_number: varchar("room_number", { length: 50 }).notNull().unique(),
     status: roomStatusEnum("status").default("available"),
 
     notes: text("notes"),
@@ -52,14 +45,13 @@ export const Rooms = pgTable(
 );
 
 export const insertRoomSchema = createInsertSchema(Rooms, {
-  room_number: (schema) =>
-    schema.room_number.min(1, "Room number is required").max(50),
-  floor: (schema) => schema.floor.min(0, "Floor must be 0 or greater"),
+  floor: (floor) => floor.min(0, "Floor must be 0 or greater"),
+  room_number: (room_number) =>
+    room_number.min(1, "Room number is required").max(50),
 });
 
 export const selectRoomSchema = createSelectSchema(Rooms);
 
-export type TRoomBase = typeof Rooms.$inferSelect;
 export type TNewRoom = typeof Rooms.$inferInsert;
+export type TRoomBase = typeof Rooms.$inferSelect;
 export type TRoomStatus = (typeof roomStatusEnum.enumValues)[number];
-

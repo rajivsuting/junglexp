@@ -1,16 +1,8 @@
-import {
-  index,
-  integer,
-  pgEnum,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+import { index, integer, pgEnum, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
-import { Images } from "./images.schema";
-import { Resort } from "./resort.schema";
+import { Images } from './images.schema';
+import { Resort } from './resort.schema';
 
 export const galleryCategoryEnum = pgEnum("gallery_category", [
   "rooms",
@@ -33,24 +25,24 @@ export const Gallery = pgTable(
       .references(() => Resort.id, { onDelete: "cascade" })
       .notNull(),
 
-    title: text("title").notNull(),
     description: text("description"),
-    
-    type: galleryTypeEnum("type").notNull().default("image"),
+    title: text("title").notNull(),
+
     image_id: integer("image_id").references(() => Images.id, {
       onDelete: "cascade",
     }),
-    video_url: text("video_url"),
+    type: galleryTypeEnum("type").notNull().default("image"),
     video_thumbnail_id: integer("video_thumbnail_id").references(
       () => Images.id,
       { onDelete: "set null" }
     ),
-    
+    video_url: text("video_url"),
+
     category: galleryCategoryEnum("category").notNull().default("general"),
-    
+
     is_featured: integer("is_featured").notNull().default(0),
     order: integer("order").notNull().default(0),
-    
+
     created_at: timestamp("created_at", { precision: 0 }).defaultNow(),
     updated_at: timestamp("updated_at", { precision: 0 })
       .defaultNow()
@@ -67,7 +59,6 @@ export const Gallery = pgTable(
 export const insertGallerySchema = createInsertSchema(Gallery);
 
 export type TGalleryBase = typeof Gallery.$inferSelect;
-export type TNewGallery = typeof Gallery.$inferInsert;
 export type TGalleryCategory = (typeof galleryCategoryEnum.enumValues)[number];
 export type TGalleryType = (typeof galleryTypeEnum.enumValues)[number];
-
+export type TNewGallery = typeof Gallery.$inferInsert;

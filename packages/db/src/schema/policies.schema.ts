@@ -1,5 +1,5 @@
-import { index, pgEnum, pgTable, serial, text } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+import { index, pgEnum, pgTable, serial, text } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const policyKindEnum = pgEnum("policy_kind", ["include", "exclude"]);
 
@@ -18,8 +18,7 @@ export const Policies = pgTable(
 
 export const insertPoliciesSchema = createInsertSchema(Policies);
 
-export type TPolicyBase = typeof Policies.$inferSelect;
-export type TNewPolicy = typeof Policies.$inferInsert;
 export type TInsertPolicy = typeof insertPoliciesSchema;
+export type TNewPolicy = typeof Policies.$inferInsert;
+export type TPolicyBase = typeof Policies.$inferSelect;
 export type TPolicyKind = (typeof policyKindEnum.enumValues)[number];
-
