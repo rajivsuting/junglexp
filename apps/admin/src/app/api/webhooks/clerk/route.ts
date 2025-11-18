@@ -1,8 +1,9 @@
-import { eq } from 'drizzle-orm';
-import { headers } from 'next/headers';
-import { NextResponse } from 'next/server';
-import { Webhook } from 'svix';
+import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { NextResponse } from "next/server";
+import { Webhook } from "svix";
 
+import type { TNewUser } from "@repo/db";
 import type { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
 
 export const runtime = "nodejs";
@@ -42,6 +43,8 @@ export async function POST(req: Request): Promise<NextResponse> {
   }
 
   const { type, data } = payload;
+
+  console.log("payload", payload);
 
   if (type === "user.created") {
     return createUser(data);
@@ -91,20 +94,29 @@ async function updateUser(data: UserJSON) {
   // Extract role from public metadata
   const role = (data.public_metadata as any)?.role;
 
-  const updateData: any = {
+  const updateData: Partial<TNewUser> = {
     first_name: data.first_name ?? "",
     last_name: data.last_name ?? "",
   };
 
   // Only update role if it's provided in metadata
   if (role !== undefined) {
-    updateData.role = Number(role);
+    updateData.user_role = role;
   }
 
-  await db
-    .update(schema.Users)
-    .set(updateData)
-    .where(eq(schema.Users.user_id, data.id));
+  console.log("updateData", updateData);
+
+  try {
+    const updated = await db
+      .update(schema.Users)
+      .set(updateData)
+      .where(eq(schema.Users.user_id, data.id))
+      .returning();
+
+    console.log("updated", updated);
+  } catch (error) {
+    console.error("Error updating user:", error);
+  }
 
   return NextResponse.json(
     {

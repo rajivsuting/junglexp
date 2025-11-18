@@ -1,10 +1,10 @@
 "use server";
 
-import { and, count, eq, ilike } from 'drizzle-orm';
+import { and, count, eq, ilike } from "drizzle-orm";
 
-import { clerkClient, currentUser } from '@clerk/nextjs/server';
-import { db, schema } from '@repo/db';
-import { userRoles } from '@repo/db/schema/user';
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { db, schema } from "@repo/db";
+import { userRoles } from "@repo/db/schema/user";
 
 import type { TUser } from "@repo/db";
 export type TGetUsersFilters = {
@@ -230,8 +230,6 @@ export const updateUser = async (
 
     return {
       success: true,
-      user: dbUser[0],
-      clerkUser,
     };
   } catch (error) {
     console.error("Error updating user:", error);
