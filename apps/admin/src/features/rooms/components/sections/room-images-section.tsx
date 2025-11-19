@@ -24,7 +24,7 @@ import type { FormImage as FileUploaderFormImage } from "@/components/file-uploa
 import type { TRoom } from "@repo/db/schema/types";
 
 const imagesFormSchema = z.object({
-  images: ImagesArraySchema(1, 8).default([]),
+  images: ImagesArraySchema(1, 20).default([]),
 });
 
 type ImagesFormData = z.infer<typeof imagesFormSchema>;

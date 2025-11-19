@@ -1,10 +1,10 @@
 "use client";
 
-import { User } from "lucide-react";
-import { useState } from "react";
+import { User } from 'lucide-react';
+import { useState } from 'react';
 
-import { NaturalistBookingModal } from "@/components/naturalist-booking-modal";
-import { Button } from "@/components/ui/button";
+import { NaturalistBookingModal } from '@/components/naturalist-booking-modal';
+import { Button } from '@/components/ui/button';
 
 interface Activity {
   id: number;
@@ -29,8 +29,6 @@ export function BookNaturalistButton({
   activities = [],
 }: BookNaturalistButtonProps) {
   const [showBookingModal, setShowBookingModal] = useState(false);
-
-  console.log("activities", activities);
 
   return (
     <>

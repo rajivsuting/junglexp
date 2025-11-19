@@ -64,6 +64,20 @@
       "when": 1759976961100,
       "tag": "0008_equal_argent",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1763569375860,
+      "tag": "0009_mighty_colossus",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1763569784896,
+      "tag": "0010_complex_red_wolf",
+      "breakpoints": true
     }
   ]
 }

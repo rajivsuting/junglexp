@@ -1,17 +1,17 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import { FAQSection } from "@/components/faq-section";
-import ReviewsSection from "@/components/ReviewsSection";
+import { FAQSection } from '@/components/faq-section';
+import ReviewsSection from '@/components/ReviewsSection';
 
-import { BookingCardDesktop } from "./components/booking-card/booking-card-desktop";
-import { BookingCardMobile } from "./components/booking-card/booking-cark-mobile";
-import NearbySection from "./components/nearby-section";
-import { RoomsSection } from "./components/rooms-section";
-import { StayAmenitiesSection } from "./components/stay-amenities-section";
-import { StayImageGallery } from "./components/stay-image-gallery";
-import { StayPoliciesSection } from "./components/stay-policies-section";
-import { StaySaftyFeatures } from "./components/stay-safty-features";
-import { StayTitleSection } from "./components/stay-title-section";
+import { BookingCardDesktop } from './components/booking-card/booking-card-desktop';
+import { BookingCardMobile } from './components/booking-card/booking-cark-mobile';
+import NearbySection from './components/nearby-section';
+import { RoomsSection } from './components/rooms-section';
+import { StayAmenitiesSection } from './components/stay-amenities-section';
+import { StayImageGallery } from './components/stay-image-gallery';
+import { StayPoliciesSection } from './components/stay-policies-section';
+import { StaySaftyFeatures } from './components/stay-safty-features';
+import { StayTitleSection } from './components/stay-title-section';
 
 import type { THotel, THotelPolicy } from "@repo/db/index";
 interface StayDetailsProps {
@@ -116,16 +116,16 @@ export default function StayDetails(props: Partial<StayDetailsProps>) {
 
           {/* Description */}
           <section className="pb-6 border-b border-border">
-            <p className="text-primary whitespace-pre-line leading-relaxed">
+            <p className="text-primary text-justify whitespace-pre-line leading-relaxed">
               {description}
             </p>
           </section>
 
           {/* What's Included Section */}
-          <StayPoliciesSection policies={included} kind="include" />
+          {/* <StayPoliciesSection policies={included} kind="include" /> */}
 
           {/* What's Not Included Section */}
-          <StayPoliciesSection policies={excluded} kind="exclude" />
+          {/* <StayPoliciesSection policies={excluded} kind="exclude" /> */}
 
           {/* Amenities */}
           <StayAmenitiesSection amenities={amenities} />
@@ -156,6 +156,12 @@ export default function StayDetails(props: Partial<StayDetailsProps>) {
           <div className="md:hidden">
             <Suspense>
               <NearbySection
+                redirectUrl={stay.redirect_url}
+                url={stay.map_url}
+                location={{
+                  lon: stay.location.x,
+                  lat: stay.location.y,
+                }}
                 hotelId={stay.id}
                 hotelName={stay.name}
                 city={stay.zone.park.city.name}
@@ -173,6 +179,12 @@ export default function StayDetails(props: Partial<StayDetailsProps>) {
           <div className="lg:col-span-1 hidden lg:block">
             <Suspense>
               <NearbySection
+                redirectUrl={stay.redirect_url}
+                url={stay.map_url}
+                location={{
+                  lon: stay.location.x,
+                  lat: stay.location.y,
+                }}
                 hotelId={stay.id}
                 hotelName={stay.name}
                 city={stay.zone.park.city.name}

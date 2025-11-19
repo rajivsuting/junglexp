@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import StayDetails from "@/screens/stays-page";
-import { getHotelBySlug } from "@repo/actions/hotels.actions";
+import StayDetails from '@/screens/stays-page';
+import { getHotelBySlug } from '@repo/actions/hotels.actions';
 
 export default async function ActivitiesPage({
   params,

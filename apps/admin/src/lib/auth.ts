@@ -1,8 +1,8 @@
-import { eq } from "drizzle-orm";
-import { cache } from "react";
+import { eq } from 'drizzle-orm';
+import { cache } from 'react';
 
-import { currentUser } from "@clerk/nextjs/server";
-import { db, schema } from "@repo/db";
+import { currentUser } from '@clerk/nextjs/server';
+import { db, schema } from '@repo/db';
 
 export const ROLES = {
   USER: "user",
@@ -54,7 +54,6 @@ export const getCurrentUserRole = cache(async (): Promise<UserRole | null> => {
  */
 export const hasRole = async (requiredRole: UserRole): Promise<boolean> => {
   const userRole = await getCurrentUserRole();
-
   if (userRole === null) {
     return false;
   }

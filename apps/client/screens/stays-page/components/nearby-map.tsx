@@ -14,6 +14,12 @@ type NearbyMapProps = {
   hotelName: string;
   city: string;
   places: NearbyPlace[];
+  url?: string | null;
+  location: {
+    lat: number;
+    lon: number;
+  };
+  redirectUrl?: string | null;
 };
 
 const buildEmbedSrc = (
@@ -21,19 +27,29 @@ const buildEmbedSrc = (
   city: string,
   selected?: { lat?: number | null; lon?: number | null }
 ) => {
-  if (selected && selected.lat != null && selected.lon != null) {
-    const q = `${selected.lat},${selected.lon}`;
-    return `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=14&output=embed`;
+  if (!!selected?.lat && !!selected?.lon) {
+    const q = `${selected.lon},${selected.lat}`;
+
+    return `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=18&output=embed`;
   }
   const q = `${hotelName}, ${city}`;
-  return `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=13&output=embed`;
+  return `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=18&output=embed`;
 };
 
-export default function NearbyMap({ hotelName, city, places }: NearbyMapProps) {
-  const src = buildEmbedSrc(hotelName, city);
+export default function NearbyMap({
+  hotelName,
+  city,
+  places,
+  url,
+  redirectUrl,
+  location,
+}: NearbyMapProps) {
+  const src = url || buildEmbedSrc(hotelName, city, location);
 
   const mapQuery = encodeURIComponent(`${hotelName}, ${city}`);
-  const mapsViewUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+  const mapsViewUrl =
+    redirectUrl ||
+    `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
   return (
     <div className="overflow-hidden border border-border">

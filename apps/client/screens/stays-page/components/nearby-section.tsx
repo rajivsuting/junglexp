@@ -7,8 +7,14 @@ import NearbyMap from './nearby-map';
 
 type NearbySectionProps = {
   hotelId: number;
+  url?: string | null;
   hotelName: string;
   city: string;
+  location: {
+    lat: number;
+    lon: number;
+  };
+  redirectUrl?: string | null;
 };
 
 const formatDuration = (meters: number) => {
@@ -31,9 +37,12 @@ const iconFor = (name: string, mode: "walk" | "drive") => {
 };
 
 const NearbySection = async ({
+  url,
   hotelId,
   hotelName,
   city,
+  location,
+  redirectUrl,
 }: NearbySectionProps) => {
   const places = await getNearbyPlacesToHotel(hotelId);
 
@@ -47,7 +56,14 @@ const NearbySection = async ({
         Explore the area
       </h2>
       {/* Map embed with selectable nearby places */}
-      <NearbyMap hotelName={hotelName} city={city} places={places as any} />
+      <NearbyMap
+        redirectUrl={redirectUrl}
+        url={url}
+        location={location}
+        hotelName={hotelName}
+        city={city}
+        places={places as any}
+      />
 
       {/* Nearby list */}
       <div className="mt-6 space-y-5">

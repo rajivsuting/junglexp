@@ -1,9 +1,6 @@
 "use server";
-import { and, count, db, eq, ilike, inArray } from "@repo/db/index";
-import {
-  SouvenirBookings,
-  souvenirBookingStatusEnum,
-} from "@repo/db/schema/souvenir-bookings";
+import { and, count, db, eq, ilike, inArray } from '@repo/db/index';
+import { SouvenirBookings, souvenirBookingStatusEnum } from '@repo/db/schema/souvenir-bookings';
 
 import type { TNewSouvenirBooking } from "@repo/db/schema/souvenir-bookings";
 
@@ -73,8 +70,6 @@ export const getSouvenirBookings = async (
 };
 
 export const createSouvenirBooking = async (booking: TNewSouvenirBooking) => {
-  console.log("booking", booking);
-
   const newBooking = await db
     .insert(SouvenirBookings)
     .values(booking)

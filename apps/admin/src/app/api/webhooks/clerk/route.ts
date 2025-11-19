@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
-import { Webhook } from "svix";
+import { eq } from 'drizzle-orm';
+import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { Webhook } from 'svix';
 
 import type { TNewUser } from "@repo/db";
 import type { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
@@ -43,8 +43,6 @@ export async function POST(req: Request): Promise<NextResponse> {
   }
 
   const { type, data } = payload;
-
-  console.log("payload", payload);
 
   if (type === "user.created") {
     return createUser(data);
@@ -104,16 +102,12 @@ async function updateUser(data: UserJSON) {
     updateData.user_role = role;
   }
 
-  console.log("updateData", updateData);
-
   try {
     const updated = await db
       .update(schema.Users)
       .set(updateData)
       .where(eq(schema.Users.user_id, data.id))
       .returning();
-
-    console.log("updated", updated);
   } catch (error) {
     console.error("Error updating user:", error);
   }

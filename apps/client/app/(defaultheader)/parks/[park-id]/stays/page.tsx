@@ -1,25 +1,20 @@
-import { Image as ImageIcon, Star } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { Image as ImageIcon, Star } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import { getHotelsByParkId } from '@repo/actions/hotels.actions';
+import { getNationalParkBySlug } from '@repo/actions/parks.actions';
 
 // Force dynamic rendering to avoid build-time database calls
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
-export const fetchCache = 'force-no-store';
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { getHotelsByParkId } from "@repo/actions/hotels.actions";
-import { getNationalParkBySlug } from "@repo/actions/parks.actions";
+export const fetchCache = "force-no-store";
 
 import type { TRoomBase, TRoomPlan } from "@repo/db/index";
 
@@ -262,7 +257,11 @@ export default async function AllStaysPage(props: PageProps) {
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
               {/* <Button size="lg">Start Planning</Button> */}
-              <Link href={`/parks/${park.slug}/contact`}>
+              <Link
+                href={`https://wa.me/917428006473?text=Enquiry%20for%20Stays%20in%20${encodeURIComponent(
+                  park.name
+                )}`}
+              >
                 <Button variant="outline" size="lg">
                   Contact Us
                 </Button>

@@ -8,7 +8,9 @@ import { z } from 'zod';
 
 import { FileUploader, hasValidImages } from '@/components/file-uploader';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import {
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
 import { ImagesArraySchema } from '@/lib/image-schema';
 import { uploadFilesWithProgress } from '@/lib/upload-files';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,7 +26,7 @@ import type { FormImage as FileUploaderFormImage } from "@/components/file-uploa
 import type { TActivity } from "@repo/db/index";
 
 const imagesFormSchema = z.object({
-  images: ImagesArraySchema(5, 15).default([]),
+  images: ImagesArraySchema(5, 20).default([]),
 });
 
 type ImagesFormData = z.infer<typeof imagesFormSchema>;
@@ -178,7 +180,6 @@ export const ActivityImagesSection = ({
       // Reset upload progress
       setUploadProgress({});
     } catch (error) {
-      console.error("Error saving images:", error);
       toast.error("Failed to save images. Please try again.");
       setIsUploading(false);
     } finally {
@@ -208,6 +209,7 @@ export const ActivityImagesSection = ({
                   showValidation={hasAttemptedSubmit}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

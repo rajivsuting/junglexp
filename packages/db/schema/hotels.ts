@@ -1,22 +1,14 @@
-import { sql } from "drizzle-orm";
+import { sql } from 'drizzle-orm';
 import {
-  boolean,
-  doublePrecision,
-  geometry,
-  index,
-  integer,
-  pgEnum,
-  pgTable,
-  serial,
-  text,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+    boolean, doublePrecision, geometry, index, integer, pgEnum, pgTable, serial, text
+} from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
-import { Faqs } from "./faqs";
-import { Images } from "./image";
-import { Policies } from "./policies";
-import { SaftyFeatures } from "./safty-features";
-import { Zones } from "./zones";
+import { Faqs } from './faqs';
+import { Images } from './image';
+import { Policies } from './policies';
+import { SaftyFeatures } from './safty-features';
+import { Zones } from './zones';
 
 // Define a Postgres enum named "park_status" with allowed values
 export const hotelTypeEnum = pgEnum("hotel_type", ["resort", "forest", "home"]);
@@ -42,6 +34,10 @@ export const Hotels = pgTable(
     }).notNull(),
     status: hotelStatusEnum("status").default("active"),
     is_featured: boolean("is_featured").default(false),
+
+    redirect_url: text("redirect_url").notNull().default(""),
+    map_url: text("map_url").notNull().default(""),
+    address: text("address").notNull().default(""),
   },
   (table) => [
     index("hotels_location_idx").on(table.location),

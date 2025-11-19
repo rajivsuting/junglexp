@@ -26,7 +26,7 @@ import type {
 } from "@repo/db/schema/types";
 export const getHotelsByParkSlug = async (slug: string) => {
   if (!db) return [];
-  
+
   const hotels = await db
     .select({
       hotel: Hotels,
@@ -163,7 +163,7 @@ type TCreateHotePayload = {
 
 export const createNewHotel = async (hotel: TNewHotel) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   const parsedHotel = insertHotelSchema.parse({
     ...hotel,
   });
@@ -185,7 +185,7 @@ export const updateHotel = async (
   hotel: Partial<TNewHotel>
 ) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   const [updatedHotel] = await db
     .update(Hotels)
     .set(hotel)
@@ -197,7 +197,7 @@ export const updateHotel = async (
 
 export const getHotelById = async (hotelId: number) => {
   if (!db) return null;
-  
+
   const hotel = await db!.query.Hotels.findFirst({
     where: eq(Hotels.id, hotelId),
     with: {
@@ -239,7 +239,7 @@ export const getHotelById = async (hotelId: number) => {
 
 export const getHotelBySlug = async (slug: string) => {
   if (!db) return null;
-  
+
   const hotel = await db!.query.Hotels.findFirst({
     where: eq(Hotels.slug, slug),
     with: {
@@ -304,7 +304,7 @@ export const createHotelImages = async (
   imageIds: number[]
 ) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   const hotelImages = imageIds.map((imageId) => ({
     hotel_id: hotelId,
     image_id: imageId,
@@ -318,7 +318,7 @@ export const deleteHotelImages = async (
   imageIds?: number[]
 ) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   if (imageIds && imageIds.length > 0) {
     return await db
       .delete(HotelImages)
@@ -340,7 +340,7 @@ export const deleteHotelImages = async (
 
 export const getHotelImages = async (hotelId: number) => {
   if (!db) return [];
-  
+
   return await db!.query.HotelImages.findMany({
     where: eq(HotelImages.hotel_id, hotelId),
     with: {
@@ -358,7 +358,7 @@ export const updateHotelImages = async (
   }>
 ) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   // Get existing hotel images
   const existing = await db
     .select()
@@ -459,7 +459,7 @@ export const updateHotelPolicies = async (
   policyIds: number[]
 ) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   // Get existing hotel policies with the specified kind using database join
   const existing = await db
     .select({
@@ -559,7 +559,7 @@ export const updateHotelPolicies = async (
 
 export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
   if (!db) return [];
-  
+
   // First get all hotels in the park
   const whereConditions = [eq(NationalParks.id, parkId)];
 
@@ -731,7 +731,7 @@ export const getHotels = async (filters: {
   is_featured?: string[];
 }) => {
   if (!db) return { hotels: [], total: 0 };
-  
+
   const { page = 1, limit = 10, search, status, is_featured } = filters;
 
   // Build where conditions
@@ -785,7 +785,7 @@ export const updateHotelAmenities = async (
   amenityIds: number[]
 ) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   // Get existing hotel amenities
   const existing = await db
     .select()
@@ -870,7 +870,7 @@ export const updateHotelSafetyFeatures = async (
   safetyFeatureIds: number[]
 ) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   // Get existing hotel safety features
   const existing = await db
     .select()
@@ -953,7 +953,7 @@ export const updateHotelSafetyFeatures = async (
 
 export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
   if (!db) throw new Error("Database connection not available");
-  
+
   // Get existing hotel FAQs
   const existing = await db
     .select()
@@ -1037,7 +1037,7 @@ export const getNearbyPlacesToHotel = async (
   limit: number = 10
 ) => {
   if (!db) return [];
-  
+
   const hGeom = sql`(SELECT ${Hotels.location} FROM ${Hotels} WHERE ${Hotels.id} = ${hotelId})`;
 
   const imagesAgg = sql<TPlaceImage[]>`

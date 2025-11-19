@@ -60,6 +60,12 @@ const hotelDetailsSchema = z.object({
     .number()
     .min(-180, "Longitude must be between -180 and 180")
     .max(180, "Longitude must be between -180 and 180"),
+  address: z.string().min(1, "Address is required"),
+  map_url: z.string().url("Invalid map URL").min(1, "Map URL is required"),
+  redirect_url: z
+    .string()
+    .url("Invalid redirect URL")
+    .min(1, "Redirect URL is required"),
   status: z.enum(hotelStatusEnum.enumValues, {
     required_error: "Hotel status is required",
   }),
@@ -117,21 +123,6 @@ export const HotelDetailsSection = ({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const defaultValues = useMemo(() => {
-    return {
-      name: initialData?.name || "",
-      description: initialData?.description || "",
-      park_id: initialData?.zone?.park.id.toString(),
-      zone_id: initialData?.zone_id?.toString() || "",
-      hotel_type: initialData?.hotel_type || undefined,
-      rating: initialData?.rating || 1,
-      latitude: initialData?.location?.x || 0,
-      longitude: initialData?.location?.y || 0,
-      status: initialData?.status || "active",
-      is_featured: initialData?.is_featured || false,
-    };
-  }, [initialData]);
-
   const form = useForm<HotelDetailsFormData>({
     resolver: zodResolver(hotelDetailsSchema),
     defaultValues: {
@@ -145,6 +136,9 @@ export const HotelDetailsSection = ({
       longitude: initialData?.location?.y || 0,
       status: initialData?.status || "active",
       is_featured: initialData?.is_featured || false,
+      map_url: initialData?.map_url || "",
+      address: initialData?.address || "",
+      redirect_url: initialData?.redirect_url || "",
     },
     mode: "onChange", // Enable validation on change for better UX
   });
@@ -190,13 +184,15 @@ export const HotelDetailsSection = ({
             status: data.status,
             is_featured: data.is_featured,
             location: { x: data.longitude, y: data.latitude },
+            map_url: data.map_url,
+            address: data.address,
+            redirect_url: data.redirect_url,
           });
           toast.success("Hotel updated successfully");
 
           onSuccess?.(result?.id.toString() || "");
           return;
         } catch (error) {
-          console.error("Error creating hotel:", error);
           toast.error("Failed to update hotel. Please try again.");
         } finally {
           setIsSubmitting(false);
@@ -216,6 +212,9 @@ export const HotelDetailsSection = ({
         status: data.status,
         is_featured: data.is_featured,
         location: { x: data.longitude, y: data.latitude },
+        map_url: data.map_url,
+        address: data.address,
+        redirect_url: data.redirect_url,
       });
       toast.success("Hotel created successfully");
 
@@ -230,7 +229,6 @@ export const HotelDetailsSection = ({
         form.reset();
       }
     } catch (error) {
-      console.error("Error creating hotel:", error);
       toast.error("Failed to create hotel. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -459,6 +457,64 @@ export const HotelDetailsSection = ({
             )}
           />
         </div>
+
+        {/* Map URL */}
+        <FormField
+          control={form.control}
+          name="map_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Map URL *</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Enter map URL"
+                  {...field}
+                  disabled={isSubmitting}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Redirect URL */}
+        <FormField
+          control={form.control}
+          name="redirect_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Redirect URL *</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Enter redirect URL"
+                  {...field}
+                  disabled={isSubmitting}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        {/* Address */}
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Address *</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Enter address"
+                  {...field}
+                  disabled={isSubmitting}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Create/Update Hotel Button */}
         <div className="pt-4">

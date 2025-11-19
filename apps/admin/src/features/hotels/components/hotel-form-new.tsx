@@ -200,7 +200,7 @@ export default function HotelForm({
             </CollapsibleSection>
 
             {/* Includes Section */}
-            <CollapsibleSection
+            {/* <CollapsibleSection
               title="Includes"
               isExpanded={sectionsExpanded.includes}
               onToggle={() => toggleSection("includes")}
@@ -219,10 +219,10 @@ export default function HotelForm({
                 }}
                 hotelId={hotelId}
               />
-            </CollapsibleSection>
+            </CollapsibleSection> */}
 
             {/* Excludes Section */}
-            <CollapsibleSection
+            {/* <CollapsibleSection
               title="Excludes"
               isExpanded={sectionsExpanded.excludes}
               onToggle={() => toggleSection("excludes")}
@@ -240,7 +240,7 @@ export default function HotelForm({
                 }}
                 hotelId={hotelId}
               />
-            </CollapsibleSection>
+            </CollapsibleSection> */}
 
             {/* Amenities Section */}
             <CollapsibleSection

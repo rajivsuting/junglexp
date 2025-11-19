@@ -1,0 +1,1 @@
+ALTER TABLE "hotels" ADD COLUMN "redirect_url" text DEFAULT '' NOT NULL;

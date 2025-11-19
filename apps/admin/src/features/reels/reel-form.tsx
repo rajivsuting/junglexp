@@ -154,7 +154,6 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
   const currentForm = isEdit ? (updatefFrm as any) : form;
 
   const onSubmitUpdate = async (data: z.infer<typeof updateSchema>) => {
-    console.log("onSubmit", data);
     try {
       setLoading(true);
       await updateReel(initialData?.id ?? "", {

@@ -1,14 +1,16 @@
-import { FAQSection } from "@/components/faq-section";
-import ReviewsSection from "@/components/ReviewsSection";
+import { FAQSection } from '@/components/faq-section';
+import ReviewsSection from '@/components/ReviewsSection';
 
-import { StayAmenitiesSection } from "../stays-page/components/stay-amenities-section";
-import { StayPoliciesSection } from "../stays-page/components/stay-policies-section";
-import { ActivityImageGallery } from "./components/activity-image-gallery";
-import { ActivityItinerarySection } from "./components/activity-itinerary-section";
-import { ActivityPackagesSection } from "./components/activity-packages-section";
-import { ActivityTitleSection } from "./components/activity-title-section";
-import { ActivityBookingCardDesktop } from "./components/booking-card/activity-booking-card-desktop";
-import { ActivityBookingCardMobile } from "./components/booking-card/activity-booking-card-mobile";
+import { StayAmenitiesSection } from '../stays-page/components/stay-amenities-section';
+import { StayPoliciesSection } from '../stays-page/components/stay-policies-section';
+import { ActivityImageGallery } from './components/activity-image-gallery';
+import { ActivityItinerarySection } from './components/activity-itinerary-section';
+import { ActivityPackagesSection } from './components/activity-packages-section';
+import { ActivityTitleSection } from './components/activity-title-section';
+import {
+    ActivityBookingCardDesktop
+} from './components/booking-card/activity-booking-card-desktop';
+import { ActivityBookingCardMobile } from './components/booking-card/activity-booking-card-mobile';
 
 import type {
   TActivityAmenity,
@@ -122,7 +124,7 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
         <div className="lg:col-span-2">
           {/* Description */}
           <section className="pb-6 border-b border-border">
-            <p className="text-primary whitespace-pre-line leading-relaxed">
+            <p className="text-primary text-justify whitespace-pre-line leading-relaxed">
               {description}
             </p>
           </section>
