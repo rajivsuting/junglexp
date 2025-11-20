@@ -1,11 +1,11 @@
 "use client";
-import { useTheme } from "next-themes";
-import React from "react";
+import { useTheme } from 'next-themes';
+import React from 'react';
 
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import { ClerkProvider } from '@clerk/nextjs';
+import { dark } from '@clerk/themes';
 
-import { ActiveThemeProvider } from "../active-theme";
+import { ActiveThemeProvider } from '../active-theme';
 
 export default function Providers({
   activeThemeValue,
@@ -24,6 +24,7 @@ export default function Providers({
           appearance={{
             baseTheme: resolvedTheme === "dark" ? dark : undefined,
           }}
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
         >
           {children}
         </ClerkProvider>
