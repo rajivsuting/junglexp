@@ -17,4 +17,4 @@ export const storage = new Storage({
   },
 });
 
-export const bucket = storage.bucket(process.env.GCP_BUCKET_NAME!);
+export const bucket = () => storage.bucket(process.env.GCP_BUCKET_NAME!);

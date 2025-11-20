@@ -52,7 +52,7 @@ export async function uploadVideo(params: UploadVideoParams) {
     throw new Error("Upload data is empty");
   }
 
-  await bucket.file(key).save(body, {
+  await bucket().file(key).save(body, {
     contentType,
     resumable: false,
   });

@@ -89,7 +89,7 @@ async function uploadAndMakeVariantsFromBuffer(
       const { buffer, metadata } = await processImage(input, size);
       const fileName = tsName(originalName, cfg.suffix);
       const destination = `uploads/${fileName}`;
-      await bucket.file(destination).save(buffer, {
+      await bucket().file(destination).save(buffer, {
         contentType: "image/webp",
         resumable: false,
       });
@@ -126,10 +126,12 @@ async function uploadAndMakeVariantsFromFile(
 
 async function saveChunk(sessionId: string, index: number, chunkBuf: Buffer) {
   const key = `uploads/chunks/${sessionId}/${index}`;
-  await bucket.file(key).save(chunkBuf, {
-    resumable: false,
-    metadata: { contentType: "application/octet-stream" },
-  });
+  await bucket()
+    .file(key)
+    .save(chunkBuf, {
+      resumable: false,
+      metadata: { contentType: "application/octet-stream" },
+    });
   return key;
 }
 
@@ -139,15 +141,15 @@ async function composeChunks(
   composedKey: string
 ) {
   const sources = Array.from({ length: total }, (_, i) =>
-    bucket.file(`uploads/chunks/${sessionId}/${i}`)
+    bucket().file(`uploads/chunks/${sessionId}/${i}`)
   );
-  // bucket.combine performs GCS compose under the hood
-  await bucket.combine(sources, bucket.file(composedKey));
+  // bucket().combine performs GCS compose under the hood
+  await bucket().combine(sources, bucket().file(composedKey));
 }
 
 async function cleanupChunks(sessionId: string, total: number) {
   const deletions = Array.from({ length: total }, (_, i) =>
-    bucket
+    bucket()
       .file(`uploads/chunks/${sessionId}/${i}`)
       .delete({ ignoreNotFound: true })
   );
@@ -215,7 +217,7 @@ export async function POST(req: NextRequest) {
       await composeChunks(sessionId, total, composedKey);
 
       // Download composed object and generate variants
-      const [composedBuffer] = await bucket.file(composedKey).download();
+      const [composedBuffer] = await bucket().file(composedKey).download();
       const result = await uploadAndMakeVariantsFromBuffer(
         composedBuffer,
         name
@@ -224,7 +226,7 @@ export async function POST(req: NextRequest) {
       // Cleanup
       await cleanupChunks(sessionId, total);
       // Optional: remove raw composed object after variants created
-      await bucket
+      await bucket()
         .file(composedKey)
         .delete({ ignoreNotFound: true })
         .catch(() => {});
