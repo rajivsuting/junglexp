@@ -1,16 +1,15 @@
 "use client";
 
-import { Bed, ChevronLeft, ChevronRight, Expand } from "lucide-react";
-import Image from "next/image";
-import { useMemo, useState } from "react";
+import { Bed, ChevronLeft, ChevronRight, Expand } from 'lucide-react';
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 
-import { RoomAmenitiesSection } from "./room-amenities-section";
+import { RoomAmenitiesSection } from './room-amenities-section';
 
 import type { TRoom, TRoomPlan } from "@repo/db/schema/types";
 
