@@ -37,7 +37,7 @@ export type TGetActivitiesByParkSlugFilters = {
 };
 
 export const getActivities = async (filters: TGetActivitiesFilters) => {
-  if (!db()) return { activities: [], total: 0, totalPages: 0 };
+  if (!db) return { activities: [], total: 0, totalPages: 0 };
 
   const where = and(
     filters.search ? ilike(Activities.name, `%${filters.search}%`) : undefined,
@@ -48,7 +48,7 @@ export const getActivities = async (filters: TGetActivitiesFilters) => {
       : undefined
   );
 
-  const totalResponse = await db()
+  const totalResponse = await db
     .select({ count: count() })
     .from(Activities)
     .where(where);
@@ -58,7 +58,7 @@ export const getActivities = async (filters: TGetActivitiesFilters) => {
   const limit = Math.max(1, filters.limit || 10);
   const offset = (page - 1) * limit;
 
-  const activities = await db()!.query.Activities.findMany({
+  const activities = await db!.query.Activities.findMany({
     where,
     limit,
     offset,
@@ -107,12 +107,12 @@ export const getActivities = async (filters: TGetActivitiesFilters) => {
 export const getActivitiesByParkSlug = async (
   filters: TGetActivitiesByParkSlugFilters
 ) => {
-  if (!db()) return { activities: [], total: 0, totalPages: 0 };
+  if (!db) return { activities: [], total: 0, totalPages: 0 };
 
   // First, find the park by slug if park_slug is provided
   let parkId: number | undefined;
   if (filters.park_slug) {
-    const park = await db()!.query.NationalParks.findFirst({
+    const park = await db!.query.NationalParks.findFirst({
       where: eq(NationalParks.slug, filters.park_slug),
       columns: { id: true },
     });
@@ -134,7 +134,7 @@ export const getActivitiesByParkSlug = async (
     parkId ? eq(Activities.park_id, parkId) : undefined
   );
 
-  const totalResponse = await db()
+  const totalResponse = await db
     .select({ count: count() })
     .from(Activities)
     .where(where);
@@ -148,7 +148,7 @@ export const getActivitiesByParkSlug = async (
   const offset =
     page !== undefined && limit !== undefined ? (page - 1) * limit : undefined;
 
-  const activities = await db()!.query.Activities.findMany({
+  const activities = await db!.query.Activities.findMany({
     where,
     limit,
     offset,
@@ -195,9 +195,9 @@ export const getActivitiesByParkSlug = async (
 };
 
 export const getActivityById = async (id: number) => {
-  if (!db()) return null;
+  if (!db) return null;
 
-  const activity = await db()!.query.Activities.findFirst({
+  const activity = await db!.query.Activities.findFirst({
     where: eq(Activities.id, id),
     with: {
       park: {
@@ -237,9 +237,9 @@ export const getActivityById = async (id: number) => {
 };
 
 export const getActivityBySlug = async (slug: string) => {
-  if (!db()) return null;
+  if (!db) return null;
 
-  const activity = await db()!.query.Activities.findFirst({
+  const activity = await db!.query.Activities.findFirst({
     where: eq(Activities.slug, slug),
     with: {
       park: {
@@ -280,7 +280,7 @@ export const getActivityBySlug = async (slug: string) => {
 };
 
 export const createActivity = async (data: TCreateActivity) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Generate slug from name
   const slug = generateSlug(data.name, {
@@ -298,7 +298,7 @@ export const createActivity = async (data: TCreateActivity) => {
     description: data.description!,
   };
 
-  const [activity] = await db()!
+  const [activity] = await db!
     .insert(Activities)
     .values(activityData)
     .returning();
@@ -309,9 +309,9 @@ export const updateActivity = async (
   id: number,
   data: Partial<TNewActivity>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [activity] = await db()
+  const [activity] = await db
     .update(Activities)
     .set({ ...data, updated_at: new Date() })
     .where(eq(Activities.id, id))
@@ -320,16 +320,16 @@ export const updateActivity = async (
 };
 
 export const deleteActivity = async (id: number): Promise<void> => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  await db()!.delete(Activities).where(eq(Activities.id, id));
+  await db!.delete(Activities).where(eq(Activities.id, id));
 };
 
 // Activity Images
 export const createActivityImage = async (data: TNewActivityImage) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [image] = await db()!.insert(ActivityImages).values(data).returning();
+  const [image] = await db!.insert(ActivityImages).values(data).returning();
   return image;
 };
 
@@ -337,9 +337,9 @@ export const updateActivityImage = async (
   id: number,
   data: Partial<TNewActivityImage>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [image] = await db()
+  const [image] = await db
     .update(ActivityImages)
     .set(data)
     .where(eq(ActivityImages.id, id))
@@ -348,9 +348,9 @@ export const updateActivityImage = async (
 };
 
 export const deleteActivityImage = async (id: number): Promise<void> => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  await db()!.delete(ActivityImages).where(eq(ActivityImages.id, id));
+  await db!.delete(ActivityImages).where(eq(ActivityImages.id, id));
 };
 
 export const updateActivityImages = async (
@@ -361,10 +361,10 @@ export const updateActivityImages = async (
     alt_text?: string;
   }>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Get existing activity images
-  const existing = await db()
+  const existing = await db
     .select()
     .from(ActivityImages)
     .where(eq(ActivityImages.activity_id, activityId));
@@ -390,7 +390,7 @@ export const updateActivityImages = async (
   // Delete removed images
   if (imagesToDelete.length > 0 && db) {
     operations.push(
-      db()!
+      db!
         .delete(ActivityImages)
         .where(
           and(
@@ -408,7 +408,7 @@ export const updateActivityImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db()!.insert(ActivityImages).values(newImages));
+    operations.push(db!.insert(ActivityImages).values(newImages));
   }
 
   // Update order for existing images
@@ -421,7 +421,7 @@ export const updateActivityImages = async (
       const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
       if (updateData && img.order !== updateData.order) {
         operations.push(
-          db()!
+          db!
             .update(ActivityImages)
             .set({ order: updateData.order })
             .where(eq(ActivityImages.id, img.id))
@@ -441,7 +441,7 @@ export const updateActivityImages = async (
   );
   if (imageAltTextUpdates.length > 0 && db) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db()!
+      db!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))
@@ -450,9 +450,9 @@ export const updateActivityImages = async (
   }
 
   // Return updated activity images
-  if (!db()) return [];
+  if (!db) return [];
 
-  return await db()
+  return await db
     .select()
     .from(ActivityImages)
     .where(eq(ActivityImages.activity_id, activityId))
@@ -461,9 +461,9 @@ export const updateActivityImages = async (
 
 // Activity Itinerary
 export const createActivityItinerary = async (data: TNewActivityItinerary) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [itinerary] = await db()
+  const [itinerary] = await db
     .insert(ActivityItinerary)
     .values(data)
     .returning();
@@ -474,9 +474,9 @@ export const updateActivityItinerary = async (
   id: number,
   data: Partial<TNewActivityItinerary>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [itinerary] = await db()
+  const [itinerary] = await db
     .update(ActivityItinerary)
     .set(data)
     .where(eq(ActivityItinerary.id, id))
@@ -493,10 +493,10 @@ export const updateActivityItineraries = async (
     order: number; // desired order in UI
   }>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Fetch existing itinerary items for this activity
-  const existing = await db()
+  const existing = await db
     .select({
       id: ActivityItinerary.id,
       title: ActivityItinerary.title,
@@ -517,7 +517,7 @@ export const updateActivityItineraries = async (
   const idsToDelete = [...existingIds].filter((id) => !incomingIds.has(id));
   if (idsToDelete.length > 0) {
     operations.push(
-      db()
+      db
         .delete(ActivityItinerary)
         .where(inArray(ActivityItinerary.id, idsToDelete))
     );
@@ -527,16 +527,14 @@ export const updateActivityItineraries = async (
   const itemsToCreate = itineraryItems.filter((i) => i.id === undefined);
   if (itemsToCreate.length > 0) {
     operations.push(
-      db()!
-        .insert(ActivityItinerary)
-        .values(
-          itemsToCreate.map((i) => ({
-            activity_id: activityId,
-            title: i.title,
-            description: i.description,
-            order: i.order,
-          }))
-        )
+      db!.insert(ActivityItinerary).values(
+        itemsToCreate.map((i) => ({
+          activity_id: activityId,
+          title: i.title,
+          description: i.description,
+          order: i.order,
+        }))
+      )
     );
   }
 
@@ -560,7 +558,7 @@ export const updateActivityItineraries = async (
 
     if (needsUpdate) {
       operations.push(
-        db()
+        db
           .update(ActivityItinerary)
           .set({
             title: incoming.title,
@@ -577,7 +575,7 @@ export const updateActivityItineraries = async (
   }
 
   // Return updated itinerary, ordered
-  return db()
+  return db
     .select()
     .from(ActivityItinerary)
     .where(eq(ActivityItinerary.activity_id, activityId))
@@ -585,16 +583,16 @@ export const updateActivityItineraries = async (
 };
 
 export const deleteActivityItinerary = async (id: number): Promise<void> => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  await db()!.delete(ActivityItinerary).where(eq(ActivityItinerary.id, id));
+  await db!.delete(ActivityItinerary).where(eq(ActivityItinerary.id, id));
 };
 
 // Activity Amenities
 export const createActivityAmenity = async (data: TNewActivityAmenity) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [amenity] = await db()!
+  const [amenity] = await db!
     .insert(ActivityAmenities)
     .values(data)
     .returning();
@@ -605,9 +603,9 @@ export const updateActivityAmenity = async (
   id: number,
   data: Partial<TNewActivityAmenity>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [amenity] = await db()
+  const [amenity] = await db
     .update(ActivityAmenities)
     .set(data)
     .where(eq(ActivityAmenities.id, id))
@@ -616,17 +614,17 @@ export const updateActivityAmenity = async (
 };
 
 export const deleteActivityAmenity = async (id: number): Promise<void> => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  await db()!.delete(ActivityAmenities).where(eq(ActivityAmenities.id, id));
+  await db!.delete(ActivityAmenities).where(eq(ActivityAmenities.id, id));
 };
 
 // Activity Packages
 export const createActivityPackage = async (data: TCreateActivityPackage) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Get the next order number for this activity
-  const existingPackages = await db()
+  const existingPackages = await db
     .select({ order: ActivityPackages.order })
     .from(ActivityPackages)
     .where(eq(ActivityPackages.activity_id, data.activity_id))
@@ -648,7 +646,7 @@ export const createActivityPackage = async (data: TCreateActivityPackage) => {
     order: nextOrder,
   };
 
-  const [package_] = await db()
+  const [package_] = await db
     .insert(ActivityPackages)
     .values(packageData)
     .returning();
@@ -659,9 +657,9 @@ export const updateActivityPackage = async (
   id: number,
   data: Partial<TNewActivityPackage>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const [package_] = await db()
+  const [package_] = await db
     .update(ActivityPackages)
     .set(data)
     .where(eq(ActivityPackages.id, id))
@@ -670,9 +668,9 @@ export const updateActivityPackage = async (
 };
 
 export const deleteActivityPackage = async (id: number): Promise<void> => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  await db()!.delete(ActivityPackages).where(eq(ActivityPackages.id, id));
+  await db!.delete(ActivityPackages).where(eq(ActivityPackages.id, id));
 };
 
 export const updateActivityPackages = async (
@@ -688,10 +686,10 @@ export const updateActivityPackages = async (
     order: number; // desired order in UI
   }>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Fetch existing package items for this activity
-  const existing = await db()
+  const existing = await db
     .select({
       id: ActivityPackages.id,
       name: ActivityPackages.name,
@@ -716,7 +714,7 @@ export const updateActivityPackages = async (
   const idsToDelete = [...existingIds].filter((id) => !incomingIds.has(id));
   if (idsToDelete.length > 0) {
     operations.push(
-      db()
+      db
         .delete(ActivityPackages)
         .where(inArray(ActivityPackages.id, idsToDelete))
     );
@@ -726,20 +724,18 @@ export const updateActivityPackages = async (
   const itemsToCreate = packageItems.filter((i) => i.id === undefined);
   if (itemsToCreate.length > 0) {
     operations.push(
-      db()!
-        .insert(ActivityPackages)
-        .values(
-          itemsToCreate.map((i) => ({
-            activity_id: activityId,
-            name: i.name,
-            duration: i.duration,
-            number: i.number,
-            price: i.price,
-            price_1: i.price_1,
-            active: i.active,
-            order: i.order,
-          }))
-        )
+      db!.insert(ActivityPackages).values(
+        itemsToCreate.map((i) => ({
+          activity_id: activityId,
+          name: i.name,
+          duration: i.duration,
+          number: i.number,
+          price: i.price,
+          price_1: i.price_1,
+          active: i.active,
+          order: i.order,
+        }))
+      )
     );
   }
 
@@ -771,7 +767,7 @@ export const updateActivityPackages = async (
 
     if (needsUpdate) {
       operations.push(
-        db()
+        db
           .update(ActivityPackages)
           .set({
             name: incoming.name,
@@ -792,7 +788,7 @@ export const updateActivityPackages = async (
   }
 
   // Return updated packages, ordered
-  return db()
+  return db
     .select()
     .from(ActivityPackages)
     .where(eq(ActivityPackages.activity_id, activityId))
@@ -803,10 +799,10 @@ export const updateActivityAmenities = async (
   activityId: number,
   amenityIds: number[]
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Get existing activity amenities
-  const existing = await db()
+  const existing = await db
     .select()
     .from(ActivityAmenities)
     .where(eq(ActivityAmenities.activity_id, activityId));
@@ -829,7 +825,7 @@ export const updateActivityAmenities = async (
 
   // Delete amenities that are no longer needed
   if (amenitiesToDelete.length > 0) {
-    const deleteOperation = db()
+    const deleteOperation = db
       .delete(ActivityAmenities)
       .where(
         and(
@@ -848,9 +844,7 @@ export const updateActivityAmenities = async (
       order: amenityIds.indexOf(amenityId),
     }));
 
-    const createOperation = db()!
-      .insert(ActivityAmenities)
-      .values(newAmenities);
+    const createOperation = db!.insert(ActivityAmenities).values(newAmenities);
     operations.push(createOperation);
   }
 
@@ -865,7 +859,7 @@ export const updateActivityAmenities = async (
       const newOrder = amenityIds.indexOf(amenity.amenity_id);
 
       if (newOrder !== amenity.order) {
-        const updateOperation = db()
+        const updateOperation = db
           .update(ActivityAmenities)
           .set({ order: newOrder })
           .where(eq(ActivityAmenities.id, amenity.id));
@@ -880,7 +874,7 @@ export const updateActivityAmenities = async (
   }
 
   // Return updated amenities
-  return db()
+  return db
     .select()
     .from(ActivityAmenities)
     .where(eq(ActivityAmenities.activity_id, activityId))
@@ -892,10 +886,10 @@ export const updateActivityPolicies = async (
   kind: "include" | "exclude",
   policyIds: number[]
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Get existing hotel policies with the specified kind using database join
-  const existing = await db()
+  const existing = await db
     .select({
       id: ActivityPolicies.id,
       activity_id: ActivityPolicies.activity_id,
@@ -926,7 +920,7 @@ export const updateActivityPolicies = async (
 
   // Delete policies that are no longer needed - using database query with join
   if (policiesToDelete.length > 0) {
-    const deleteOperation = db()
+    const deleteOperation = db
       .delete(ActivityPolicies)
       .where(
         and(
@@ -945,7 +939,7 @@ export const updateActivityPolicies = async (
       order: policyIds.indexOf(policyId),
     }));
 
-    const createOperation = db()!.insert(ActivityPolicies).values(newPolicies);
+    const createOperation = db!.insert(ActivityPolicies).values(newPolicies);
     operations.push(createOperation);
   }
 
@@ -960,7 +954,7 @@ export const updateActivityPolicies = async (
       const newOrder = policyIds.indexOf(policy.policy_id);
 
       if (newOrder !== policy.order) {
-        const updateOperation = db()
+        const updateOperation = db
           .update(ActivityPolicies)
           .set({ order: newOrder })
           .where(eq(ActivityPolicies.id, policy.id));
@@ -975,7 +969,7 @@ export const updateActivityPolicies = async (
   }
 
   // Return updated policies using database query with join
-  return db()
+  return db
     .select({
       id: ActivityPolicies.id,
       activity_id: ActivityPolicies.activity_id,
@@ -996,9 +990,9 @@ export const updateActivityPolicies = async (
 };
 
 export const getPackagesByActivityId = async (activityId: string) => {
-  if (!db()) return [];
+  if (!db) return [];
 
-  return await db()!.query.ActivityPackages.findMany({
+  return await db!.query.ActivityPackages.findMany({
     where: and(
       eq(ActivityPackages.activity_id, Number(activityId)),
       eq(ActivityPackages.active, true)

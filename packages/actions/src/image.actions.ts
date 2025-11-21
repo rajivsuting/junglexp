@@ -7,9 +7,9 @@ import { bucket, toObjectNameFromUrl } from './libs/gcs';
 import type { TImage, TNewImage } from "@repo/db/schema/image";
 
 export const createImage = async (data: TNewImage) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const result = await db()!.insert(Images).values(data).returning();
+  const result = await db!.insert(Images).values(data).returning();
 
   if (!result[0]) {
     throw new Error("Failed to create image");
@@ -19,17 +19,17 @@ export const createImage = async (data: TNewImage) => {
 };
 
 export const createImages = async (data: TNewImage[]) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const result = await db()!.insert(Images).values(data).returning();
+  const result = await db!.insert(Images).values(data).returning();
 
   return result;
 };
 
 export const deleteImages = async (imageIds: number[]) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const deleted = await db()
+  const deleted = await db
     .delete(Images)
     .where(inArray(Images.id, imageIds))
     .returning();
@@ -51,9 +51,9 @@ export const deleteImages = async (imageIds: number[]) => {
 };
 
 export const updateImages = async (rows: Pick<TImage, "id" | "alt_text">[]) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const result = await db()
+  const result = await db
     .insert(Images)
     .values(rows as any)
     .onConflictDoUpdate({

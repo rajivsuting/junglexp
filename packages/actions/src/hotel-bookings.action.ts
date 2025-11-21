@@ -40,7 +40,7 @@ export const getHotelBookings = async (
   filter: THotelBookingsFilter,
   sort?: { id: string; desc: boolean }[]
 ) => {
-  if (!db()) return { data: [], total: 0 };
+  if (!db) return { data: [], total: 0 };
 
   const {
     search,
@@ -77,7 +77,7 @@ export const getHotelBookings = async (
     //       : [])
   );
 
-  const hotelBookings = await db()!.query.HotelBookings.findMany({
+  const hotelBookings = await db!.query.HotelBookings.findMany({
     where,
     with: {
       hotel: {
@@ -96,7 +96,7 @@ export const getHotelBookings = async (
     offset: (pageNum - 1) * limitNum,
   });
 
-  const total = await db()
+  const total = await db
     .select({ count: count() })
     .from(HotelBookings)
     .where(where);
@@ -105,9 +105,9 @@ export const getHotelBookings = async (
 };
 
 export const ceateHotelBooking = async (booking: TNewHotelBooking) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const newBooking = await db()!
+  const newBooking = await db!
     .insert(HotelBookings)
     .values(booking)
     .returning();
@@ -116,7 +116,7 @@ export const ceateHotelBooking = async (booking: TNewHotelBooking) => {
     throw new Error("Failed to create hotel booking");
   }
 
-  const _booking = await db()!.query.HotelBookings.findFirst({
+  const _booking = await db!.query.HotelBookings.findFirst({
     where: eq(HotelBookings.id, newBooking[0].id),
     with: {
       hotel: {
@@ -138,9 +138,9 @@ export const updateHotelBookingStatus = async (
   bookingId: number,
   status: (typeof hotelBookingStatusEnum.enumValues)[number]
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  const updatedBooking = await db()
+  const updatedBooking = await db
     .update(HotelBookings)
     .set({ status })
     .where(eq(HotelBookings.id, bookingId))
@@ -154,9 +154,9 @@ export const updateHotelBookingStatus = async (
 };
 
 export const getHotelBookingById = async (bookingId: number) => {
-  if (!db()) return null;
+  if (!db) return null;
 
-  const booking = await db()!.query.HotelBookings.findFirst({
+  const booking = await db!.query.HotelBookings.findFirst({
     where: eq(HotelBookings.id, bookingId),
     with: {
       hotel: {

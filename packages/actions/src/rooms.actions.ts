@@ -47,7 +47,7 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
   );
 
   // For count query, we need to use join to include hotel name search
-  const totalResponse = await db()
+  const totalResponse = await db
     .select({ count: count() })
     .from(Rooms)
     .leftJoin(schema.Hotels, eq(Rooms.hotel_id, schema.Hotels.id))
@@ -58,7 +58,7 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
   const limit = Math.max(1, filters.limit || 10);
   const offset = (page - 1) * limit;
 
-  const rooms = await db()!.query.Rooms.findMany({
+  const rooms = await db!.query.Rooms.findMany({
     where,
     limit,
     offset,
@@ -105,7 +105,7 @@ export const getRooms = async (filters: TGetRoomsFilters) => {
 export const createRoom = async (payload: TNewRoom) => {
   const parsed = roomsInsertSchema.parse(payload);
   // @ts-ignore
-  const [newRoom] = await db()!.insert(schema.Rooms).values(parsed).returning();
+  const [newRoom] = await db!.insert(schema.Rooms).values(parsed).returning();
 
   if (!newRoom) {
     throw new Error("Failed to create room");
@@ -120,7 +120,7 @@ export const updateRoom = async (
 ) => {
   const parsed = roomsInsertSchema.partial().parse(payload) as any;
   // @ts-ignore
-  const [updatedRoom] = await db()
+  const [updatedRoom] = await db
     .update(schema.Rooms)
     .set(parsed)
     .where(eq(schema.Rooms.id, roomId))
@@ -134,7 +134,7 @@ export const updateRoom = async (
 };
 
 export const deleteRoom = async (roomId: number) => {
-  const [deletedRoom] = await db()
+  const [deletedRoom] = await db
     .delete(schema.Rooms)
     .where(eq(schema.Rooms.id, roomId))
     .returning();
@@ -148,7 +148,7 @@ export const deleteRoom = async (roomId: number) => {
 
 export const getRoomById = async (roomId: number) => {
   try {
-    const room = await db()!.query.Rooms.findFirst({
+    const room = await db!.query.Rooms.findFirst({
       where: eq(schema.Rooms.id, roomId),
       with: {
         hotel: {
@@ -204,7 +204,7 @@ export const addRoomImages = async (roomId: number, imageIds: number[]) => {
     })
   ) as any;
   // @ts-ignore
-  const insertedImages = await db()
+  const insertedImages = await db
     .insert(RoomImages)
     .values(imagesToInsert)
     .returning();
@@ -213,14 +213,12 @@ export const addRoomImages = async (roomId: number, imageIds: number[]) => {
 };
 
 export const removeRoomImages = async (roomId: number, imageIds: number[]) => {
-  await db()!
-    .delete(RoomImages)
-    .where(
-      and(
-        eq(RoomImages.room_id, roomId)
-        // Note: This is a simplified version. For proper implementation, you'd use inArray
-      )
-    );
+  await db!.delete(RoomImages).where(
+    and(
+      eq(RoomImages.room_id, roomId)
+      // Note: This is a simplified version. For proper implementation, you'd use inArray
+    )
+  );
 };
 
 export const updateRoomImages = async (
@@ -232,7 +230,7 @@ export const updateRoomImages = async (
   }>
 ) => {
   // Get existing room images
-  const existing = await db()
+  const existing = await db
     .select()
     .from(RoomImages)
     .where(eq(RoomImages.room_id, roomId));
@@ -258,7 +256,7 @@ export const updateRoomImages = async (
   // Delete removed images
   if (imagesToDelete.length > 0) {
     operations.push(
-      db()
+      db
         .delete(RoomImages)
         .where(
           and(
@@ -276,7 +274,7 @@ export const updateRoomImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db()!.insert(RoomImages).values(newImages));
+    operations.push(db!.insert(RoomImages).values(newImages));
   }
 
   // Update order for existing images
@@ -289,7 +287,7 @@ export const updateRoomImages = async (
       const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
       if (updateData && img.order !== updateData.order) {
         operations.push(
-          db()
+          db
             .update(RoomImages)
             .set({ order: updateData.order })
             .where(eq(RoomImages.id, img.id))
@@ -309,7 +307,7 @@ export const updateRoomImages = async (
   );
   if (imageAltTextUpdates.length > 0) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db()
+      db
         .update(schema.Images)
         .set({ alt_text: update.alt_text })
         .where(eq(schema.Images.id, update.image_id))
@@ -318,7 +316,7 @@ export const updateRoomImages = async (
   }
 
   // Return updated room images
-  return await db()
+  return await db
     .select()
     .from(RoomImages)
     .where(eq(RoomImages.room_id, roomId))
@@ -338,7 +336,7 @@ export const addRoomAmenities = async (
     })
   ) as any;
   // @ts-ignore
-  const insertedAmenities = await db()
+  const insertedAmenities = await db
     .insert(RoomAmenities)
     .values(amenitiesToInsert)
     .returning();
@@ -350,14 +348,12 @@ export const removeRoomAmenities = async (
   roomId: number,
   amenityIds: number[]
 ) => {
-  await db()!
-    .delete(RoomAmenities)
-    .where(
-      and(
-        eq(RoomAmenities.room_id, roomId)
-        // Note: This is a simplified version. For proper implementation, you'd use inArray
-      )
-    );
+  await db!.delete(RoomAmenities).where(
+    and(
+      eq(RoomAmenities.room_id, roomId)
+      // Note: This is a simplified version. For proper implementation, you'd use inArray
+    )
+  );
 };
 
 // Sync room amenities: upsert new ones by order and remove those not present
@@ -366,7 +362,7 @@ export const updateRoomAmenities = async (
   orderedAmenityIds: number[]
 ) => {
   // Fetch existing amenities for the room
-  const existing = await db()
+  const existing = await db
     .select()
     .from(RoomAmenities)
     .where(eq(RoomAmenities.room_id, roomId));
@@ -387,7 +383,7 @@ export const updateRoomAmenities = async (
 
   if (toDelete.length > 0) {
     ops.push(
-      db()
+      db
         .delete(RoomAmenities)
         .where(
           and(
@@ -407,7 +403,7 @@ export const updateRoomAmenities = async (
       })
     );
     // @ts-ignore
-    ops.push(db()!.insert(RoomAmenities).values(values));
+    ops.push(db!.insert(RoomAmenities).values(values));
   }
 
   // Update order for existing items
@@ -417,7 +413,7 @@ export const updateRoomAmenities = async (
     if (newIndex === -1) continue; // will be deleted above
     if (item.order !== newIndex) {
       ops.push(
-        db()
+        db
           .update(RoomAmenities)
           .set({ order: newIndex })
           .where(eq(RoomAmenities.id, item.id))
@@ -430,7 +426,7 @@ export const updateRoomAmenities = async (
   }
 
   // Return updated list
-  return await db()
+  return await db
     .select()
     .from(RoomAmenities)
     .where(eq(RoomAmenities.room_id, roomId))
@@ -441,7 +437,7 @@ export const updateRoomAmenities = async (
 export const createRoomPlan = async (payload: TNewRoomPlan) => {
   const parsed = roomPlansInsertSchema.parse(payload);
   // @ts-ignore
-  const [newPlan] = await db()!.insert(RoomPlans).values(parsed).returning();
+  const [newPlan] = await db!.insert(RoomPlans).values(parsed).returning();
 
   if (!newPlan) {
     throw new Error("Failed to create room plan");
@@ -456,7 +452,7 @@ export const updateRoomPlan = async (
 ) => {
   const parsed = roomPlansInsertSchema.partial().parse(payload) as any;
   // @ts-ignore
-  const [updatedPlan] = await db()
+  const [updatedPlan] = await db
     .update(RoomPlans)
     .set(parsed)
     .where(eq(RoomPlans.id, planId))
@@ -470,7 +466,7 @@ export const updateRoomPlan = async (
 };
 
 export const deleteRoomPlan = async (planId: number) => {
-  const [deletedPlan] = await db()
+  const [deletedPlan] = await db
     .delete(RoomPlans)
     .where(eq(RoomPlans.id, planId))
     .returning();
@@ -483,7 +479,7 @@ export const deleteRoomPlan = async (planId: number) => {
 };
 
 export const getRoomPlansByRoomId = async (roomId: number) => {
-  const plans = await db()!.query.RoomPlans.findMany({
+  const plans = await db!.query.RoomPlans.findMany({
     where: eq(RoomPlans.room_id, roomId),
   });
 

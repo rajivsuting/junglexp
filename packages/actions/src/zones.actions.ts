@@ -20,12 +20,12 @@ export const getZones = async (filters: TGetZonesFilters) => {
     filters.park ? eq(Zones.park_id, filters.park) : undefined
   );
 
-  const totalResponse = await db()
+  const totalResponse = await db
     .select({ count: count() })
     .from(Zones)
     .where(where);
 
-  const zones = await db()!.query.Zones.findMany({
+  const zones = await db!.query.Zones.findMany({
     where,
     limit: filters.limit,
     offset:
@@ -44,7 +44,7 @@ export const getZones = async (filters: TGetZonesFilters) => {
 export const createZone = async (payload: TNewZone) => {
   const parsed = zonesInsertSchema.parse(payload);
   // @ts-ignore
-  const [newZone] = await db()!.insert(schema.Zones).values(parsed).returning();
+  const [newZone] = await db!.insert(schema.Zones).values(parsed).returning();
 
   if (!newZone) {
     throw new Error("Failed to create zone");
@@ -59,7 +59,7 @@ export const updateZone = async (
 ) => {
   const parsed = zonesInsertSchema.partial().parse(payload) as any;
   // @ts-ignore
-  const [updatedZone] = await db()
+  const [updatedZone] = await db
     .update(schema.Zones)
     .set(parsed)
     .where(eq(schema.Zones.id, zoneId))
@@ -73,7 +73,7 @@ export const updateZone = async (
 };
 
 export const deleteZone = async (zoneId: number) => {
-  const [deletedZone] = await db()
+  const [deletedZone] = await db
     .delete(schema.Zones)
     .where(eq(schema.Zones.id, zoneId))
     .returning();
@@ -87,7 +87,7 @@ export const deleteZone = async (zoneId: number) => {
 
 export const getZoneById = async (zoneId: number) => {
   try {
-    const zone = await db()!.query.Zones.findFirst({
+    const zone = await db!.query.Zones.findFirst({
       where: eq(schema.Zones.id, zoneId),
       with: {
         park: true,

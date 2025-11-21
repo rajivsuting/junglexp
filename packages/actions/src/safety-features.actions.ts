@@ -5,13 +5,13 @@ import { insertSaftyFeaturesSchema, SaftyFeatures } from '@repo/db/schema/safty-
 import type { TNewSaftyFeature } from "@repo/db/schema/safty-features";
 
 export const getAllSafetyFeatures = async () => {
-  return await db()!.query.SaftyFeatures.findMany();
+  return await db!.query.SaftyFeatures.findMany();
 };
 
 export const createSafetyFeature = async (data: TNewSaftyFeature) => {
   const parsed = insertSaftyFeaturesSchema.parse(data);
   // @ts-ignore
-  const [result] = await db()!.insert(SaftyFeatures).values(parsed).returning();
+  const [result] = await db!.insert(SaftyFeatures).values(parsed).returning();
 
   if (!result) {
     throw new Error("Failed to create safety feature");
@@ -27,7 +27,7 @@ export const createSafetyFeatures = async (data: TNewSaftyFeature[]) => {
     insertSaftyFeaturesSchema.parse(feature)
   ) as any;
   // @ts-ignore
-  const results = await db()
+  const results = await db
     .insert(SaftyFeatures)
     .values(parsedSafetyFeatures)
     .returning();

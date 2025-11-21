@@ -36,7 +36,7 @@ export const getCurrentUserRole = cache(async (): Promise<UserRole | null> => {
       return null;
     }
 
-    const dbUser = await db()
+    const dbUser = await db
       .select({ role: schema.Users.user_role })
       .from(schema.Users)
       .where(eq(schema.Users.user_id, clerkUser.id))

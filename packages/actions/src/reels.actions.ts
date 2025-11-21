@@ -14,8 +14,8 @@ export type TGetReelsFilters = {
 };
 
 const cacheReels = async () => {
-  if (!db()) return [];
-  return db()!.query.Reels.findMany({
+  if (!db) return [];
+  return db!.query.Reels.findMany({
     where: eq(Reels.status, "active"),
   });
 };
@@ -34,11 +34,11 @@ export const getReels = async (filters: TGetReelsFilters) => {
     status ? eq(Reels.status, status) : undefined
   );
 
-  if (!db()) return { reels: [], total: 0 };
+  if (!db) return { reels: [], total: 0 };
 
   const offset = (page - 1) * limit;
 
-  const rows = await db()!.query.Reels.findMany({
+  const rows = await db!.query.Reels.findMany({
     where,
     with: {},
     orderBy: [desc(Reels.status)],
@@ -46,7 +46,7 @@ export const getReels = async (filters: TGetReelsFilters) => {
     offset,
   });
 
-  const totalResponse = await db()
+  const totalResponse = await db
     .select({ value: count() })
     .from(Reels)
     .where(where);
@@ -57,21 +57,21 @@ export const getReels = async (filters: TGetReelsFilters) => {
 };
 
 export const getReelById = async (id: string) => {
-  if (!db()) return null;
-  const row = await db()!.query.Reels.findFirst({
+  if (!db) return null;
+  const row = await db!.query.Reels.findFirst({
     where: eq(Reels.id, id),
   });
   return row;
 };
 
 export const createReel = async (reel: TNewReel) => {
-  const inserted = await db()!.insert(Reels).values(reel).returning();
+  const inserted = await db!.insert(Reels).values(reel).returning();
   await getReelsFromCache();
   return inserted[0] ?? null;
 };
 
 export const updateReel = async (id: string, values: Partial<TNewReel>) => {
-  const updated = await db()
+  const updated = await db
     .update(Reels)
     .set(values)
     .where(eq(Reels.id, id))
@@ -81,7 +81,7 @@ export const updateReel = async (id: string, values: Partial<TNewReel>) => {
 };
 
 export const setReelStatus = async (id: string, status: TReelStatus) => {
-  const updated = await db()
+  const updated = await db
     .update(Reels)
     .set({ status })
     .where(eq(Reels.id, id))
@@ -91,7 +91,7 @@ export const setReelStatus = async (id: string, status: TReelStatus) => {
 };
 
 export const deleteReel = async (id: string) => {
-  await db()!.delete(Reels).where(eq(Reels.id, id));
+  await db!.delete(Reels).where(eq(Reels.id, id));
   getReelsFromCache();
   return { id };
 };

@@ -15,7 +15,7 @@ type GetNaturalistsFilters = {
 };
 
 export const getNaturalists = async (filters: GetNaturalistsFilters) => {
-  if (!db()) return { naturalists: [], total: 0 };
+  if (!db) return { naturalists: [], total: 0 };
 
   const { park_ids, search, page, limit } = filters;
 
@@ -24,7 +24,7 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
     search ? ilike(Naturalist.name, `%${search}%`) : undefined
   );
 
-  const naturalists = await db()!.query.Naturalist.findMany({
+  const naturalists = await db!.query.Naturalist.findMany({
     with: {
       image: true,
       park: true,
@@ -42,7 +42,7 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
         : undefined,
   });
 
-  const totalResponse = await db()
+  const totalResponse = await db
     .select({ count: count() })
     .from(Naturalist)
     .where(where);
@@ -50,9 +50,9 @@ export const getNaturalists = async (filters: GetNaturalistsFilters) => {
 };
 
 export const getNaturalistById = async (id: number) => {
-  if (!db()) return null;
+  if (!db) return null;
 
-  const naturalist = await db()!.query.Naturalist.findFirst({
+  const naturalist = await db!.query.Naturalist.findFirst({
     where: eq(Naturalist.id, id),
     with: {
       image: true,
@@ -80,7 +80,7 @@ export const createNaturalist = async (
   naturalist: TNewNaturalist,
   activityIds: number[] = []
 ) => {
-  const [newNaturalist] = await db()
+  const [newNaturalist] = await db
     .insert(Naturalist)
     .values(naturalist)
     .returning();
@@ -92,7 +92,7 @@ export const createNaturalist = async (
         activity_id: activityId,
       })
     );
-    await db().insert(NaturalistActivities).values(naturalistActivities);
+    await db.insert(NaturalistActivities).values(naturalistActivities);
   }
 
   return newNaturalist;
@@ -103,7 +103,7 @@ export const updateNaturalist = async (
   naturalist: Partial<TNewNaturalist>,
   activityIds?: number[]
 ) => {
-  const [updatedNaturalist] = await db()
+  const [updatedNaturalist] = await db
     .update(Naturalist)
     .set(naturalist)
     .where(eq(Naturalist.id, id))
@@ -112,7 +112,7 @@ export const updateNaturalist = async (
   // Update activities if provided
   if (activityIds !== undefined && updatedNaturalist) {
     // Get existing activities
-    const existingActivities = await db().query.NaturalistActivities.findMany({
+    const existingActivities = await db.query.NaturalistActivities.findMany({
       where: eq(NaturalistActivities.naturalist_id, id),
     });
 
@@ -132,14 +132,12 @@ export const updateNaturalist = async (
 
     // Delete removed activities
     if (toDelete.length > 0) {
-      await db()
-        .delete(NaturalistActivities)
-        .where(
-          inArray(
-            NaturalistActivities.id,
-            toDelete.map((a) => a.id)
-          )
-        );
+      await db.delete(NaturalistActivities).where(
+        inArray(
+          NaturalistActivities.id,
+          toDelete.map((a) => a.id)
+        )
+      );
     }
 
     // Add new activities
@@ -150,7 +148,7 @@ export const updateNaturalist = async (
           activity_id: activityId,
         })
       );
-      await db().insert(NaturalistActivities).values(newActivities);
+      await db.insert(NaturalistActivities).values(newActivities);
     }
   }
 

@@ -30,28 +30,28 @@ export interface UploadResult {
 }
 
 export const createNationalPark = async (payload: TNewNationalPark) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   const parsed = nationaParkInsertSchema.parse(payload);
   // @ts-ignore
-  const newPark = await db()!.insert(schema.NationalParks).values(parsed);
+  const newPark = await db!.insert(schema.NationalParks).values(parsed);
 
   return newPark;
 };
 
 export const deleteNationalPark = async (parkId: string) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
-  await db()
+  await db
     .delete(schema.NationalParks)
     .where(eq(schema.NationalParks.id, Number(parkId)));
 };
 
 export const getNationalParkById = async (parkId: string) => {
-  if (!db()) return null;
+  if (!db) return null;
 
   try {
-    const park = await db()!.query.NationalParks.findFirst({
+    const park = await db!.query.NationalParks.findFirst({
       where: eq(schema.NationalParks.id, Number(parkId)),
       with: {
         city: {
@@ -91,10 +91,10 @@ export const getNationalParkById = async (parkId: string) => {
 };
 
 export const getNationalParkBySlug = async (slug: string) => {
-  if (!db()) return null;
+  if (!db) return null;
   return getOrSet(
     () =>
-      db()!.query.NationalParks.findFirst({
+      db!.query.NationalParks.findFirst({
         where: eq(schema.NationalParks.slug, slug),
         with: {
           city: {
@@ -133,7 +133,7 @@ const upsertImages = async (
   isMobile: boolean,
   imagesPayload: CreateParkImagesPayload
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // 2) Insert new Images for any 'added' entries that include full image payload
   const toInsert = imagesPayload.added.filter(
@@ -143,7 +143,7 @@ const upsertImages = async (
   let insertedImages: { id: number; order: number }[] = [];
   if (toInsert.length > 0) {
     const imageRows = toInsert.map((a) => ({ ...a.image }));
-    const created = await db()!.insert(Images).values(imageRows).returning(); // TImage[]
+    const created = await db!.insert(Images).values(imageRows).returning(); // TImage[]
     if (!created || created.length !== toInsert.length) {
       throw new Error("Failed to insert images");
     }
@@ -205,7 +205,7 @@ const upsertImages = async (
 
   // 4) Apply removals: delete only for this park
   if (imagesPayload.removed.length > 0) {
-    await db()
+    await db
       .delete(ParkImages)
       .where(
         and(
@@ -227,7 +227,7 @@ const upsertImages = async (
   // - For each target in allForJoin:
   //   - If exists -> update order if changed
   //   - Else -> insert
-  const currentJoins = await db()
+  const currentJoins = await db
     .select()
     .from(ParkImages)
     .where(eq(ParkImages.park_id, parkId));
@@ -262,11 +262,11 @@ const upsertImages = async (
   }
 
   if (toInsertJoins.length > 0) {
-    await db()!.insert(ParkImages).values(toInsertJoins);
+    await db!.insert(ParkImages).values(toInsertJoins);
   }
 
   for (const u of toUpdate) {
-    await db()
+    await db
       .update(ParkImages)
       .set({ order: u.order })
       .where(
@@ -280,7 +280,7 @@ const upsertImages = async (
   );
   if (altTextUpdates.length > 0) {
     const altTextOperations = altTextUpdates.map((update) =>
-      db()!
+      db!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))
@@ -292,7 +292,7 @@ const upsertImages = async (
   const finalImageIds: number[] = allForJoin.map((x) => x.id as number);
   const imagesMap = new Map<number, any>();
   if (finalImageIds.length > 0) {
-    const imgs = await db()
+    const imgs = await db
       .select()
       .from(Images)
       .where(inArray(Images.id, finalImageIds));
@@ -300,7 +300,7 @@ const upsertImages = async (
   }
 
   // Re-read joins to ensure we reflect the latest order/state
-  const finalJoins = await db()
+  const finalJoins = await db
     .select()
     .from(ParkImages)
     .where(eq(ParkImages.park_id, parkId));
@@ -321,7 +321,7 @@ const upsertImages = async (
 export const getNationalParks = async (
   filters: TGetNationalParksFilters = {}
 ) => {
-  if (!db()) return { destinations: [], total: 0 };
+  if (!db) return { destinations: [], total: 0 };
 
   let where = undefined;
 
@@ -329,12 +329,12 @@ export const getNationalParks = async (
     where = ilike(schema.NationalParks.name, `%${filters.search}%`);
   }
 
-  const totalResponse = await db()!
+  const totalResponse = await db!
     .select({ count: count() })
     .from(NationalParks)
     .where(where);
 
-  const destinations = await db()!.query.NationalParks.findMany({
+  const destinations = await db!.query.NationalParks.findMany({
     where,
     limit: filters.limit,
     offset:
@@ -385,20 +385,20 @@ export const createPark = async (
   mobileImagesPayload: CreateParkImagesPayload,
   parkId?: number
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   const parsed = nationaParkInsertSchema.parse(data);
 
   // 1) Create or fetch park
   let park: TNationalParkBase;
   if (parkId) {
-    const found = await db()!.query.NationalParks.findFirst({
+    const found = await db!.query.NationalParks.findFirst({
       where: eq(schema.NationalParks.id, parkId),
     });
 
     if (!found) throw new Error("Failed to find park");
 
-    await db()
+    await db
       .update(NationalParks)
       .set({
         name: parsed.name,
@@ -412,7 +412,7 @@ export const createPark = async (
     park = found as TNationalParkBase;
   } else {
     // @ts-ignore
-    const [createdPark] = await db()
+    const [createdPark] = await db
       .insert(NationalParks)
       .values(parsed as any)
       .returning();
@@ -444,10 +444,10 @@ export const updateParkImages = async (
     alt_text?: string;
   }>
 ) => {
-  if (!db()) throw new Error("Database connection not available");
+  if (!db) throw new Error("Database connection not available");
 
   // Get existing place images
-  const existing = await db()
+  const existing = await db
     .select()
     .from(ParkImages)
     .where(eq(ParkImages.park_id, parkId));
@@ -473,7 +473,7 @@ export const updateParkImages = async (
   // Delete removed images
   if (imagesToDelete.length > 0) {
     operations.push(
-      db()
+      db
         .delete(ParkImages)
         .where(
           and(
@@ -492,7 +492,7 @@ export const updateParkImages = async (
       order: update.order,
     }));
 
-    operations.push(db()!.insert(ParkImages).values(newImages));
+    operations.push(db!.insert(ParkImages).values(newImages));
   }
 
   // Update order for existing images
@@ -505,7 +505,7 @@ export const updateParkImages = async (
       const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
       if (updateData && img.order !== updateData.order) {
         operations.push(
-          db()
+          db
             .update(ParkImages)
             .set({ order: updateData.order })
             .where(eq(ParkImages.id, img.id))
@@ -525,7 +525,7 @@ export const updateParkImages = async (
   );
   if (imageAltTextUpdates.length > 0) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db()!
+      db!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))
@@ -534,7 +534,7 @@ export const updateParkImages = async (
   }
 
   // Return updated place images
-  return await db()!
+  return await db!
     .select()
     .from(ParkImages)
     .where(eq(ParkImages.park_id, parkId))

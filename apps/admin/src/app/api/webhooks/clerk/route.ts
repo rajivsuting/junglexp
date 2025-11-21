@@ -71,15 +71,13 @@ async function createUser(data: UserJSON) {
   // Extract role from public metadata, default to 0 (regular user)
   const role = (data.public_metadata as any)?.role ?? "user";
 
-  await db()
-    .insert(schema.Users)
-    .values({
-      user_id: data.id,
-      email: data.email_addresses[0]!.email_address,
-      first_name: data.first_name ?? "",
-      last_name: data.last_name ?? "",
-      user_role: role as "user" | "admin" | "super_admin",
-    });
+  await db.insert(schema.Users).values({
+    user_id: data.id,
+    email: data.email_addresses[0]!.email_address,
+    first_name: data.first_name ?? "",
+    last_name: data.last_name ?? "",
+    user_role: role as "user" | "admin" | "super_admin",
+  });
 
   return NextResponse.json(
     {
@@ -105,7 +103,7 @@ async function updateUser(data: UserJSON) {
   }
 
   try {
-    const updated = await db()
+    const updated = await db
       .update(schema.Users)
       .set(updateData)
       .where(eq(schema.Users.user_id, data.id))
@@ -125,7 +123,7 @@ async function updateUser(data: UserJSON) {
 async function deleteUser(id?: string) {
   const { db, schema } = await import("@repo/db");
   if (id) {
-    await db().delete(schema.Users).where(eq(schema.Users.user_id, id));
+    await db.delete(schema.Users).where(eq(schema.Users.user_id, id));
 
     return NextResponse.json(
       {

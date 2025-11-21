@@ -13,7 +13,7 @@ import type { TNewPromotion, TPromotionBase } from "@repo/db/schema/promotions";
 
 async function revalidateActivePromotionsCache() {
   const key = await activePromotionsKey();
-  const rows = await db()
+  const rows = await db
     .select()
     .from(Promotions)
     .where(eq(Promotions.isActive, true))
@@ -23,7 +23,7 @@ async function revalidateActivePromotionsCache() {
 
 async function revalidateInactivePromotionsCache() {
   const key = await inactivePromotionsKey();
-  const rows = await db()
+  const rows = await db
     .select()
     .from(Promotions)
     .where(eq(Promotions.isActive, false))
@@ -35,7 +35,7 @@ export const createPromotion = async (data: TNewPromotion) => {
   const parsed = promotionInsertSchema.parse(data);
 
   if (parsed.isActive) {
-    const [last] = await db()
+    const [last] = await db
       .select({ order: Promotions.order })
       .from(Promotions)
       .where(eq(Promotions.isActive, true))
@@ -46,7 +46,7 @@ export const createPromotion = async (data: TNewPromotion) => {
     parsed.order = nextOrder;
   }
   // @ts-ignore
-  let [promotion] = await db()!.insert(Promotions).values(parsed).returning();
+  let [promotion] = await db!.insert(Promotions).values(parsed).returning();
 
   if (!promotion) throw new Error("Failed to create promotion");
 
@@ -65,7 +65,7 @@ export const updatePromotion = async (
 ) => {
   const parsed = promotionInsertSchema.parse(data);
   // @ts-ignore
-  return db()
+  return db
     .update(Promotions)
     .set(parsed as any)
     .where(eq(Promotions.id, id))
@@ -73,7 +73,7 @@ export const updatePromotion = async (
 };
 
 export async function setPromotionsActive(ids: number[], isActive: boolean) {
-  const [last] = await db()
+  const [last] = await db
     .select({ order: Promotions.order })
     .from(Promotions)
     .where(eq(Promotions.isActive, isActive))
@@ -83,7 +83,7 @@ export async function setPromotionsActive(ids: number[], isActive: boolean) {
   const nextOrder = (last?.order ?? 0) + 1;
 
   const updates = ids.map((id, index) =>
-    db()
+    db
       .update(Promotions)
       .set({ isActive, order: nextOrder + index })
       .where(eq(Promotions.id, id))
@@ -98,7 +98,7 @@ export async function setPromotionsActive(ids: number[], isActive: boolean) {
 }
 
 export async function setPromotionActive(id: number, isActive: boolean) {
-  const [current] = await db()
+  const [current] = await db
     .select()
     .from(Promotions)
     .where(eq(Promotions.id, id))
@@ -109,7 +109,7 @@ export async function setPromotionActive(id: number, isActive: boolean) {
 
   if (isActive) {
     // Find the max order in the target block
-    const [last] = await db()
+    const [last] = await db
       .select({ order: Promotions.order })
       .from(Promotions)
       .where(eq(Promotions.isActive, isActive))
@@ -118,7 +118,7 @@ export async function setPromotionActive(id: number, isActive: boolean) {
 
     const nextOrder = (last?.order ?? 0) + 1;
 
-    const [updated] = await db()
+    const [updated] = await db
       .update(Promotions)
       .set({ isActive, order: nextOrder })
       .where(eq(Promotions.id, id))
@@ -129,14 +129,14 @@ export async function setPromotionActive(id: number, isActive: boolean) {
 
     return updated;
   } else {
-    const [updated] = await db()
+    const [updated] = await db
       .update(Promotions)
       .set({ isActive, order: null })
       .where(eq(Promotions.id, id))
       .returning();
 
     // Get all remaining active promotions ordered by their current order
-    const remainingActivePromotions = await db()
+    const remainingActivePromotions = await db
       .select({ id: Promotions.id, order: Promotions.order })
       .from(Promotions)
       .where(eq(Promotions.isActive, true))
@@ -145,7 +145,7 @@ export async function setPromotionActive(id: number, isActive: boolean) {
     // Update the orders to maintain continuous sequence (1, 2, 3, ...)
     if (remainingActivePromotions.length > 0) {
       const orderUpdates = remainingActivePromotions.map((promotion, index) =>
-        db()
+        db
           .update(Promotions)
           .set({ order: index + 1 })
           .where(eq(Promotions.id, promotion.id))
@@ -164,7 +164,7 @@ export async function setPromotionActive(id: number, isActive: boolean) {
 export const getInactivePromotions = async () => {
   return getOrSet(
     async () =>
-      db()!.select().from(Promotions).where(eq(Promotions.isActive, false)),
+      db!.select().from(Promotions).where(eq(Promotions.isActive, false)),
     {
       key: await inactivePromotionsKey(),
     }
@@ -174,7 +174,7 @@ export const getInactivePromotions = async () => {
 export const getActivePromotions = async () => {
   return getOrSet(
     async () =>
-      db()!.select().from(Promotions).where(eq(Promotions.isActive, true)),
+      db!.select().from(Promotions).where(eq(Promotions.isActive, true)),
     {
       key: await activePromotionsKey(),
     }
@@ -183,7 +183,7 @@ export const getActivePromotions = async () => {
 
 export async function updatePromotionsOrder(promotionIds: number[]) {
   const updates = promotionIds.map((id, index) =>
-    db()
+    db
       .update(Promotions)
       .set({ order: index + 1 })
       .where(eq(Promotions.id, id))

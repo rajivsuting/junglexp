@@ -125,4 +125,4 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Export a Proxy that lazily initializes the database connection
-export const db = () => drizzle(process.env.DATABASE_URL!, { schema });
+export const db = drizzle(process.env.DATABASE_URL!, { schema });

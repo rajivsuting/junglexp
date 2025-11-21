@@ -44,12 +44,12 @@ export const getSouvenirs = async (_filters: TGetSouvenirsFilters) => {
 
   const where = filters.length > 0 ? and(...filters) : undefined;
 
-  const totalResponse = await db()
+  const totalResponse = await db
     .select({ count: count() })
     .from(Souvenirs)
     .where(where);
 
-  const souvenirs = await db()!.query.Souvenirs.findMany({
+  const souvenirs = await db!.query.Souvenirs.findMany({
     where,
     limit: _filters.limit,
     offset: _filters.page ? (_filters.page - 1) * _filters.limit : 0,
@@ -71,7 +71,7 @@ export const getSouvenirs = async (_filters: TGetSouvenirsFilters) => {
 
 export const getSouvenirById = async (id: string) => {
   if (!db) return null;
-  return db()!.query.Souvenirs.findFirst({
+  return db!.query.Souvenirs.findFirst({
     where: eq(Souvenirs.id, Number(id)),
     with: {
       park: true,
@@ -85,7 +85,7 @@ export const getSouvenirById = async (id: string) => {
 };
 
 export const getSouvenirBySlug = async (slug: string) => {
-  return db()!.query.Souvenirs.findFirst({
+  return db!.query.Souvenirs.findFirst({
     where: eq(Souvenirs.slug, slug),
 
     with: {
@@ -103,7 +103,7 @@ export const createSouvenir = async (
   data: Omit<TNewSouvenirBase, "images">,
   images: TNewImage[]
 ) => {
-  const result = await db()!.insert(Souvenirs).values(data).returning();
+  const result = await db!.insert(Souvenirs).values(data).returning();
 
   if (!result[0]) {
     throw new Error("Failed to create souvenir");
@@ -118,7 +118,7 @@ export const createSouvenir = async (
     order: index,
   }));
 
-  const souvenirImages = await db()
+  const souvenirImages = await db
     .insert(SouvenirImages)
     .values(souvenirImagestoStore)
     .returning();
@@ -140,7 +140,7 @@ export const updateSouvenir = async (
   images: TNewImage[] = [],
   imagesToDelete: number[] = []
 ) => {
-  const result = await db()
+  const result = await db
     .update(Souvenirs)
     .set(data)
     .where(eq(Souvenirs.id, id))
@@ -154,7 +154,7 @@ export const updateSouvenir = async (
 
   // Delete specified images from SouvenirImages table
   if (imagesToDelete.length > 0) {
-    await db()
+    await db
       .delete(SouvenirImages)
       .where(
         and(
@@ -176,14 +176,14 @@ export const updateSouvenir = async (
       order: index,
     }));
 
-    newSouvenirImages = await db()
+    newSouvenirImages = await db
       .insert(SouvenirImages)
       .values(souvenirImagesToStore)
       .returning();
   }
 
   // Fetch and return the updated souvenir with all current images
-  const updatedSouvenir = await db()!.query.Souvenirs.findFirst({
+  const updatedSouvenir = await db!.query.Souvenirs.findFirst({
     where: eq(Souvenirs.id, souvenirId),
     with: {
       park: true,
@@ -204,7 +204,7 @@ export const updateSouvenir = async (
 export const createSouvenirBase = async (
   data: Omit<TNewSouvenirBase, "images">
 ) => {
-  const result = await db()!.insert(Souvenirs).values(data).returning();
+  const result = await db!.insert(Souvenirs).values(data).returning();
   if (!result[0]) throw new Error("Failed to create souvenir");
   return result[0];
 };
@@ -214,7 +214,7 @@ export const updateSouvenirBase = async (
   id: number,
   data: Omit<TSouvenirBase, "id" | "created_at" | "updated_at">
 ) => {
-  const result = await db()
+  const result = await db
     .update(Souvenirs)
     .set(data)
     .where(eq(Souvenirs.id, id))
@@ -233,7 +233,7 @@ export const updateSouvenirImages = async (
   }>
 ) => {
   // Get existing souvenir images
-  const existing = await db()
+  const existing = await db
     .select()
     .from(SouvenirImages)
     .where(eq(SouvenirImages.souvenir_id, souvenirId));
@@ -254,7 +254,7 @@ export const updateSouvenirImages = async (
   // Delete removed join rows
   if (imagesToDelete.length > 0) {
     operations.push(
-      db()
+      db
         .delete(SouvenirImages)
         .where(
           and(
@@ -275,7 +275,7 @@ export const updateSouvenirImages = async (
       image_id: u.image_id,
       order: u.order,
     }));
-    operations.push(db()!.insert(SouvenirImages).values(rows));
+    operations.push(db!.insert(SouvenirImages).values(rows));
   }
 
   // Update order for existing join rows
@@ -287,7 +287,7 @@ export const updateSouvenirImages = async (
       const updateData = imageUpdates.find((u) => u.image_id === row.image_id);
       if (updateData && row.order !== updateData.order) {
         operations.push(
-          db()
+          db
             .update(SouvenirImages)
             .set({ order: updateData.order })
             .where(eq(SouvenirImages.id, row.id as number))
@@ -307,7 +307,7 @@ export const updateSouvenirImages = async (
   if (imageAltTextUpdates.length > 0) {
     await Promise.all(
       imageAltTextUpdates.map((u) =>
-        db()
+        db
           .update(Images)
           .set({ alt_text: u.alt_text! })
           .where(eq(Images.id, u.image_id))
@@ -316,7 +316,7 @@ export const updateSouvenirImages = async (
   }
 
   // Return updated list
-  return await db()
+  return await db
     .select()
     .from(SouvenirImages)
     .where(eq(SouvenirImages.souvenir_id, souvenirId));
