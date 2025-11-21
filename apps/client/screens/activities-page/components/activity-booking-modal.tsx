@@ -30,7 +30,9 @@ const bookingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   mobile: z.string().min(10, "Phone number must be at least 10 digits"),
-  preferredDate: z.date().nonoptional("Please select a date"),
+  preferredDate: z.date().refine((date) => date !== undefined, {
+    message: "Please select a date",
+  }),
   numberOfAdults: z.number().min(1, "At least 1 adult required"),
   numberOfKids: z.number().min(0, "Cannot be negative"),
   message: z.string().optional(),
