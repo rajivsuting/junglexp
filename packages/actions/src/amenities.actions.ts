@@ -1,42 +1,40 @@
-'use server'
-import { db } from '@repo/db/index'
+"use server";
+import { db } from '@repo/db/index';
+import { Amenities, insertAmenitiesSchema } from '@repo/db/schema/amenities';
 
-import { Amenities, insertAmenitiesSchema } from '@repo/db/schema/amenities'
-
-import type { TNewAmenity } from '@repo/db/schema/amenities'
+import type { TNewAmenity } from "@repo/db/schema/amenities";
 
 export const getAllAmenities = async () => {
-  if (!db) return []
+  if (!db()) return [];
 
-  return await db!.query.Amenities.findMany()
-}
+  return await db()!.query.Amenities.findMany();
+};
 
 export const createAmenity = async (data: TNewAmenity) => {
-  if (!db) throw new Error('Database connection not available')
+  if (!db()) throw new Error("Database connection not available");
 
-  const parsed = insertAmenitiesSchema.parse(data)
+  const parsed = insertAmenitiesSchema.parse(data);
   // @ts-ignore
-  const [result] = await db!.insert(Amenities).values(parsed).returning()
+  const [result] = await db()!.insert(Amenities).values(parsed).returning();
 
   if (!result) {
-    throw new Error('Failed to create amenity')
+    throw new Error("Failed to create amenity");
   }
 
-  return result
-}
+  return result;
+};
 
 export const createAmenities = async (data: TNewAmenity[]) => {
-  if (!db) throw new Error('Database connection not available')
+  if (!db) throw new Error("Database connection not available");
 
-  if (data.length === 0) return []
+  if (data.length === 0) return [];
 
-  const parsedAmenities = data.map(amenity => insertAmenitiesSchema.parse(amenity))
   // @ts-ignore
-  const results = await db.insert(Amenities).values(parsedAmenities).returning()
+  const results = await db().insert(Amenities).values(data).returning();
 
   if (!results || results.length === 0) {
-    throw new Error('Failed to create amenities')
+    throw new Error("Failed to create amenities");
   }
 
-  return results
-}
+  return results;
+};

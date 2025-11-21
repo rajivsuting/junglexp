@@ -25,9 +25,9 @@ import type {
   TRoomPlan,
 } from "@repo/db/schema/types";
 export const getHotelsByParkSlug = async (slug: string) => {
-  if (!db) return [];
+  if (!db()) return [];
 
-  const hotels = await db
+  const hotels = await db()
     .select({
       hotel: Hotels,
       zone: Zones,
@@ -91,7 +91,7 @@ type TCreateHotePayload = {
 //       parsedImages,
 //     };
 //   } catch (error) {
-//     await db.delete(Hotels).where(eq(Hotels.id, newHotel.id));
+//     await db().delete(Hotels).where(eq(Hotels.id, newHotel.id));
 //     throw error;
 //   }
 // };
@@ -101,7 +101,7 @@ type TCreateHotePayload = {
 //     ...hotel,
 //   });
 
-//   const [newHotel] = await db.insert(Hotels).values(parsedHotel).returning();
+//   const [newHotel] = await db().insert(Hotels).values(parsedHotel).returning();
 
 //   if (!newHotel) {
 //     return new Error("Failed to create hotel");
@@ -118,7 +118,7 @@ type TCreateHotePayload = {
 
 //   const [includes, images, excludes, policies, safetyFeatures, faqs] =
 //     await Promise.all([
-//       db.insert(Hotels).values(parsedHotel).returning(),
+//       db().insert(Hotels).values(parsedHotel).returning(),
 //       db
 //         .insert(HotelImages)
 //         .values(
@@ -128,11 +128,11 @@ type TCreateHotePayload = {
 //           }))
 //         )
 //         .returning(),
-//       db!.insert(HotelAmenities).values(parsedIncludes).returning(),
-//       db!.insert(HotelAmenities).values(parsedExcludes).returning(),
-//       db!.insert(HotelPolicies).values(parsedPolicies).returning(),
-//       db.insert(SaftyFeatures).values(parsedSaftyFeatures).returning(),
-//       db.insert(Faqs).values(parsedFaqs).returning(),
+//       db()!.insert(HotelAmenities).values(parsedIncludes).returning(),
+//       db()!.insert(HotelAmenities).values(parsedExcludes).returning(),
+//       db()!.insert(HotelPolicies).values(parsedPolicies).returning(),
+//       db().insert(SaftyFeatures).values(parsedSaftyFeatures).returning(),
+//       db().insert(Faqs).values(parsedFaqs).returning(),
 //     ]);
 
 //   await Promise.all([
@@ -162,13 +162,13 @@ type TCreateHotePayload = {
 // };
 
 export const createNewHotel = async (hotel: TNewHotel) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   const parsedHotel = insertHotelSchema.parse({
     ...hotel,
   });
 
-  const [newHotel] = await db
+  const [newHotel] = await db()
     .insert(Hotels)
     .values(parsedHotel as any)
     .returning();
@@ -184,9 +184,9 @@ export const updateHotel = async (
   hotelId: number,
   hotel: Partial<TNewHotel>
 ) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
-  const [updatedHotel] = await db
+  const [updatedHotel] = await db()
     .update(Hotels)
     .set(hotel)
     .where(eq(Hotels.id, hotelId))
@@ -196,9 +196,9 @@ export const updateHotel = async (
 };
 
 export const getHotelById = async (hotelId: number) => {
-  if (!db) return null;
+  if (!db()) return null;
 
-  const hotel = await db!.query.Hotels.findFirst({
+  const hotel = await db()!.query.Hotels.findFirst({
     where: eq(Hotels.id, hotelId),
     with: {
       zone: {
@@ -238,9 +238,9 @@ export const getHotelById = async (hotelId: number) => {
 };
 
 export const getHotelBySlug = async (slug: string) => {
-  if (!db) return null;
+  if (!db()) return null;
 
-  const hotel = await db!.query.Hotels.findFirst({
+  const hotel = await db()!.query.Hotels.findFirst({
     where: eq(Hotels.slug, slug),
     with: {
       zone: {
@@ -303,24 +303,24 @@ export const createHotelImages = async (
   hotelId: number,
   imageIds: number[]
 ) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   const hotelImages = imageIds.map((imageId) => ({
     hotel_id: hotelId,
     image_id: imageId,
   }));
 
-  return await db!.insert(HotelImages).values(hotelImages).returning();
+  return await db()!.insert(HotelImages).values(hotelImages).returning();
 };
 
 export const deleteHotelImages = async (
   hotelId: number,
   imageIds?: number[]
 ) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   if (imageIds && imageIds.length > 0) {
-    return await db
+    return await db()
       .delete(HotelImages)
       .where(
         and(
@@ -331,7 +331,7 @@ export const deleteHotelImages = async (
       .returning();
   } else {
     // Delete all images for the hotel
-    return await db
+    return await db()
       .delete(HotelImages)
       .where(eq(HotelImages.hotel_id, hotelId))
       .returning();
@@ -339,9 +339,9 @@ export const deleteHotelImages = async (
 };
 
 export const getHotelImages = async (hotelId: number) => {
-  if (!db) return [];
+  if (!db()) return [];
 
-  return await db!.query.HotelImages.findMany({
+  return await db()!.query.HotelImages.findMany({
     where: eq(HotelImages.hotel_id, hotelId),
     with: {
       image: true,
@@ -357,10 +357,10 @@ export const updateHotelImages = async (
     alt_text?: string;
   }>
 ) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   // Get existing hotel images
-  const existing = await db
+  const existing = await db()
     .select()
     .from(HotelImages)
     .where(eq(HotelImages.hotel_id, hotelId));
@@ -386,7 +386,7 @@ export const updateHotelImages = async (
   // Delete removed images
   if (imagesToDelete.length > 0) {
     operations.push(
-      db
+      db()
         .delete(HotelImages)
         .where(
           and(
@@ -404,7 +404,7 @@ export const updateHotelImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db!.insert(HotelImages).values(newImages));
+    operations.push(db()!.insert(HotelImages).values(newImages));
   }
 
   // Update order for existing images
@@ -417,7 +417,7 @@ export const updateHotelImages = async (
       const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
       if (updateData && img.order !== updateData.order) {
         operations.push(
-          db
+          db()
             .update(HotelImages)
             .set({ order: updateData.order })
             .where(eq(HotelImages.id, img.id))
@@ -437,7 +437,7 @@ export const updateHotelImages = async (
   );
   if (imageAltTextUpdates.length > 0) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db!
+      db()!
         .update(Images)
         .set({ alt_text: update.alt_text })
         .where(eq(Images.id, update.image_id))
@@ -446,7 +446,7 @@ export const updateHotelImages = async (
   }
 
   // Return updated hotel images
-  return await db!
+  return await db()!
     .select()
     .from(HotelImages)
     .where(eq(HotelImages.hotel_id, hotelId))
@@ -458,10 +458,10 @@ export const updateHotelPolicies = async (
   kind: "include" | "exclude",
   policyIds: number[]
 ) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   // Get existing hotel policies with the specified kind using database join
-  const existing = await db
+  const existing = await db()
     .select({
       id: HotelPolicies.id,
       hotel_id: HotelPolicies.hotel_id,
@@ -490,7 +490,7 @@ export const updateHotelPolicies = async (
 
   // Delete policies that are no longer needed - using database query with join
   if (policiesToDelete.length > 0) {
-    const deleteOperation = db
+    const deleteOperation = db()
       .delete(HotelPolicies)
       .where(
         and(
@@ -509,7 +509,7 @@ export const updateHotelPolicies = async (
       order: policyIds.indexOf(policyId),
     }));
 
-    const createOperation = db!.insert(HotelPolicies).values(newPolicies);
+    const createOperation = db()!.insert(HotelPolicies).values(newPolicies);
     operations.push(createOperation);
   }
 
@@ -524,7 +524,7 @@ export const updateHotelPolicies = async (
       const newOrder = policyIds.indexOf(policy.policy_id);
 
       if (newOrder !== policy.order) {
-        const updateOperation = db
+        const updateOperation = db()
           .update(HotelPolicies)
           .set({ order: newOrder })
           .where(eq(HotelPolicies.id, policy.id));
@@ -539,7 +539,7 @@ export const updateHotelPolicies = async (
   }
 
   // Return updated policies using database query with join
-  return db
+  return db()
     .select({
       id: HotelPolicies.id,
       hotel_id: HotelPolicies.hotel_id,
@@ -558,7 +558,7 @@ export const updateHotelPolicies = async (
 };
 
 export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
-  if (!db) return [];
+  if (!db()) return [];
 
   // First get all hotels in the park
   const whereConditions = [eq(NationalParks.id, parkId)];
@@ -568,7 +568,7 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
     whereConditions.push(eq(Hotels.hotel_type, type));
   }
 
-  const hotelsInPark = await db
+  const hotelsInPark = await db()
     .select({
       hotel: Hotels,
       zone: Zones,
@@ -587,7 +587,7 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
     return [];
   }
 
-  const hotelImages = await db
+  const hotelImages = await db()
     .select({
       hotel_id: HotelImages.hotel_id,
       order: HotelImages.order,
@@ -617,7 +617,7 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
   );
 
   // Fetch rooms for these hotels
-  const rooms = await db
+  const rooms = await db()
     .select({
       id: Rooms.id,
       hotel_id: Rooms.hotel_id,
@@ -639,7 +639,7 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
     Array<{ order: number; image: TImage }>
   > = {};
   if (roomIds.length > 0) {
-    const roomImages = await db
+    const roomImages = await db()
       .select({
         room_id: RoomImages.room_id,
         order: RoomImages.order,
@@ -666,7 +666,7 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
   // Fetch plans for these rooms
   let plansByRoomId: Record<number, Array<TRoomPlanBase>> = {};
   if (roomIds.length > 0) {
-    const plans = await db
+    const plans = await db()
       .select({
         id: RoomPlans.id,
         room_id: RoomPlans.room_id,
@@ -730,7 +730,7 @@ export const getHotels = async (filters: {
   status?: string[];
   is_featured?: string[];
 }) => {
-  if (!db) return { hotels: [], total: 0 };
+  if (!db()) return { hotels: [], total: 0 };
 
   const { page = 1, limit = 10, search, status, is_featured } = filters;
 
@@ -754,7 +754,7 @@ export const getHotels = async (filters: {
   const whereClause =
     whereConditions.length > 0 ? and(...whereConditions) : undefined;
 
-  const hotels = await db!.query.Hotels.findMany({
+  const hotels = await db()!.query.Hotels.findMany({
     where: whereClause,
     limit: limit,
     offset: (page - 1) * limit,
@@ -772,7 +772,7 @@ export const getHotels = async (filters: {
     },
   });
 
-  const total = await db
+  const total = await db()
     .select({ count: count() })
     .from(Hotels)
     .where(whereClause);
@@ -784,10 +784,10 @@ export const updateHotelAmenities = async (
   hotelId: number,
   amenityIds: number[]
 ) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   // Get existing hotel amenities
-  const existing = await db
+  const existing = await db()
     .select()
     .from(HotelAmenities)
     .where(eq(HotelAmenities.hotel_id, hotelId));
@@ -810,7 +810,7 @@ export const updateHotelAmenities = async (
 
   // Delete amenities that are no longer needed
   if (amenitiesToDelete.length > 0) {
-    const deleteOperation = db
+    const deleteOperation = db()
       .delete(HotelAmenities)
       .where(
         and(
@@ -829,7 +829,7 @@ export const updateHotelAmenities = async (
       order: amenityIds.indexOf(amenityId),
     }));
 
-    const createOperation = db!.insert(HotelAmenities).values(newAmenities);
+    const createOperation = db()!.insert(HotelAmenities).values(newAmenities);
     operations.push(createOperation);
   }
 
@@ -843,7 +843,7 @@ export const updateHotelAmenities = async (
     if (amenity.amenity_id !== null) {
       const newOrder = amenityIds.indexOf(amenity.amenity_id);
       if (amenity.order !== newOrder) {
-        const updateOperation = db
+        const updateOperation = db()
           .update(HotelAmenities)
           .set({ order: newOrder })
           .where(eq(HotelAmenities.id, amenity.id));
@@ -858,7 +858,7 @@ export const updateHotelAmenities = async (
   }
 
   // Return updated amenities
-  return await db
+  return await db()
     .select()
     .from(HotelAmenities)
     .where(eq(HotelAmenities.hotel_id, hotelId))
@@ -869,10 +869,10 @@ export const updateHotelSafetyFeatures = async (
   hotelId: number,
   safetyFeatureIds: number[]
 ) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   // Get existing hotel safety features
-  const existing = await db
+  const existing = await db()
     .select()
     .from(HotelSaftyFeatures)
     .where(eq(HotelSaftyFeatures.hotel_id, hotelId));
@@ -895,7 +895,7 @@ export const updateHotelSafetyFeatures = async (
 
   // Delete safety features that are no longer needed
   if (featuresToDelete.length > 0) {
-    const deleteOperation = db
+    const deleteOperation = db()
       .delete(HotelSaftyFeatures)
       .where(
         and(
@@ -914,7 +914,9 @@ export const updateHotelSafetyFeatures = async (
       order: safetyFeatureIds.indexOf(featureId),
     }));
 
-    const createOperation = db!.insert(HotelSaftyFeatures).values(newFeatures);
+    const createOperation = db()!
+      .insert(HotelSaftyFeatures)
+      .values(newFeatures);
     operations.push(createOperation);
   }
 
@@ -929,7 +931,7 @@ export const updateHotelSafetyFeatures = async (
     if (feature.safty_feature_id !== null) {
       const newOrder = safetyFeatureIds.indexOf(feature.safty_feature_id);
       if (feature.order !== newOrder) {
-        const updateOperation = db
+        const updateOperation = db()
           .update(HotelSaftyFeatures)
           .set({ order: newOrder })
           .where(eq(HotelSaftyFeatures.id, feature.id));
@@ -944,7 +946,7 @@ export const updateHotelSafetyFeatures = async (
   }
 
   // Return updated safety features
-  return await db
+  return await db()
     .select()
     .from(HotelSaftyFeatures)
     .where(eq(HotelSaftyFeatures.hotel_id, hotelId))
@@ -952,10 +954,10 @@ export const updateHotelSafetyFeatures = async (
 };
 
 export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
-  if (!db) throw new Error("Database connection not available");
+  if (!db()) throw new Error("Database connection not available");
 
   // Get existing hotel FAQs
-  const existing = await db
+  const existing = await db()
     .select()
     .from(HotelFaqs)
     .where(eq(HotelFaqs.hotel_id, hotelId));
@@ -978,7 +980,7 @@ export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
 
   // Delete FAQs that are no longer needed
   if (faqsToDelete.length > 0) {
-    const deleteOperation = db
+    const deleteOperation = db()
       .delete(HotelFaqs)
       .where(
         and(
@@ -997,7 +999,7 @@ export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
       order: faqIds.indexOf(faqId),
     }));
 
-    const createOperation = db!.insert(HotelFaqs).values(newFaqs);
+    const createOperation = db()!.insert(HotelFaqs).values(newFaqs);
     operations.push(createOperation);
   }
 
@@ -1010,7 +1012,7 @@ export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
     if (faq.faq_id !== null) {
       const newOrder = faqIds.indexOf(faq.faq_id);
       if (faq.order !== newOrder) {
-        const updateOperation = db
+        const updateOperation = db()
           .update(HotelFaqs)
           .set({ order: newOrder })
           .where(eq(HotelFaqs.id, faq.id));
@@ -1025,7 +1027,7 @@ export const updateHotelFaqs = async (hotelId: number, faqIds: number[]) => {
   }
 
   // Return updated FAQs
-  return await db
+  return await db()
     .select()
     .from(HotelFaqs)
     .where(eq(HotelFaqs.hotel_id, hotelId))
@@ -1036,7 +1038,7 @@ export const getNearbyPlacesToHotel = async (
   hotelId: number,
   limit: number = 10
 ) => {
-  if (!db) return [];
+  if (!db()) return [];
 
   const hGeom = sql`(SELECT ${Hotels.location} FROM ${Hotels} WHERE ${Hotels.id} = ${hotelId})`;
 
@@ -1062,7 +1064,7 @@ export const getNearbyPlacesToHotel = async (
   )
 `;
 
-  const rows = await db
+  const rows = await db()
     .select({
       ...getTableColumns(Places),
       distance_in_meters: sql<number>`ST_Distance(${Places.location}::geography, ${hGeom}::geography)`,

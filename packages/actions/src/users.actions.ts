@@ -1,10 +1,10 @@
 "use server";
 
-import { and, count, eq, ilike } from "drizzle-orm";
+import { and, count, eq, ilike } from 'drizzle-orm';
 
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
-import { db, schema } from "@repo/db";
-import { userRoles } from "@repo/db/schema/user";
+import { clerkClient, currentUser } from '@clerk/nextjs/server';
+import { db, schema } from '@repo/db';
+import { userRoles } from '@repo/db/schema/user';
 
 import type { TUser } from "@repo/db";
 export type TGetUsersFilters = {
@@ -33,7 +33,7 @@ async function canModifyUser(targetUserId: string) {
   }
 
   // Get target user from database
-  const targetUser = await db
+  const targetUser = await db()
     .select({ user_role: schema.Users.user_role })
     .from(schema.Users)
     .where(eq(schema.Users.user_id, targetUserId))
@@ -92,12 +92,12 @@ export const getUsers = async (filters: TGetUsersFilters = {}) => {
       : and(...conditions);
   }
 
-  const totalResponse = await db
+  const totalResponse = await db()
     .select({ count: count() })
     .from(schema.Users)
     .where(where);
 
-  const users = await db
+  const users = await db()
     .select()
     .from(schema.Users)
     .where(where)
@@ -120,7 +120,7 @@ export const getUsers = async (filters: TGetUsersFilters = {}) => {
 export const getUserById = async (id: string) => {
   await requireSuperAdmin();
 
-  const user = await db
+  const user = await db()
     .select()
     .from(schema.Users)
     .where(eq(schema.Users.user_id, id))
@@ -163,7 +163,7 @@ export const createUser = async (data: {
 
     // The webhook will handle creating the user in our database
     // But we can also create it here to ensure consistency
-    const dbUser = await db
+    const dbUser = await db()
       .insert(schema.Users)
       .values({
         user_id: clerkUser.id,
@@ -222,7 +222,7 @@ export const updateUser = async (
     if (data.lastName) dbUpdateData.last_name = data.lastName;
     if (data.role !== undefined) dbUpdateData.role = data.role;
 
-    const dbUser = await db
+    const dbUser = await db()
       .update(schema.Users)
       .set(dbUpdateData)
       .where(eq(schema.Users.user_id, userId))
@@ -250,7 +250,7 @@ export const deleteUser = async (userId: string) => {
     await client.users.deleteUser(userId);
 
     // Delete user from our database (webhook should handle this too)
-    await db!.delete(schema.Users).where(eq(schema.Users.user_id, userId));
+    await db()!.delete(schema.Users).where(eq(schema.Users.user_id, userId));
 
     return {
       success: true,

@@ -49,7 +49,7 @@ export const getActivityBookings = async (
       : undefined
   );
 
-  const activityBookings = await db.query.ActivityBookings.findMany({
+  const activityBookings = await db().query.ActivityBookings.findMany({
     where,
     with: {
       activity: {
@@ -64,7 +64,7 @@ export const getActivityBookings = async (
     offset: (pageNum - 1) * limitNum,
   });
 
-  const total = await db
+  const total = await db()
     .select({ count: count() })
     .from(ActivityBookings)
     .where(where);
@@ -73,7 +73,7 @@ export const getActivityBookings = async (
 };
 
 export const createActivityBooking = async (booking: TNewActivityBooking) => {
-  const newBooking = await db
+  const newBooking = await db()
     .insert(ActivityBookings)
     .values(booking)
     .returning();
@@ -82,7 +82,7 @@ export const createActivityBooking = async (booking: TNewActivityBooking) => {
     throw new Error("Failed to create activity booking");
   }
 
-  const _booking = await db.query.ActivityBookings.findFirst({
+  const _booking = await db().query.ActivityBookings.findFirst({
     where: eq(ActivityBookings.id, newBooking[0].id),
     with: {
       activity: {
@@ -101,7 +101,7 @@ export const updateActivityBookingStatus = async (
   bookingId: string,
   status: (typeof activityBookingStatusEnum.enumValues)[number]
 ) => {
-  const updatedBooking = await db
+  const updatedBooking = await db()
     .update(ActivityBookings)
     .set({ status })
     .where(eq(ActivityBookings.id, bookingId))
@@ -115,7 +115,7 @@ export const updateActivityBookingStatus = async (
 };
 
 export const getActivityBookingById = async (bookingId: string) => {
-  const booking = await db.query.ActivityBookings.findFirst({
+  const booking = await db().query.ActivityBookings.findFirst({
     where: eq(ActivityBookings.id, bookingId),
     with: {
       activity: true,

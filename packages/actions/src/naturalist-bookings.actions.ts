@@ -1,9 +1,8 @@
 "use server";
-import { and, count, db, eq, gte, ilike, lte } from "@repo/db/index";
+import { and, count, db, eq, gte, ilike, lte } from '@repo/db/index';
 import {
-  NaturalistBookings,
-  naturalistBookingStatusEnum,
-} from "@repo/db/schema/naturalist-bookings";
+    NaturalistBookings, naturalistBookingStatusEnum
+} from '@repo/db/schema/naturalist-bookings';
 
 import type { TNewNaturalistBooking } from "@repo/db/schema/naturalist-bookings";
 
@@ -22,8 +21,8 @@ type TNaturalistBookingsFilter = {
 export const getNaturalistBookings = async (
   filter: TNaturalistBookingsFilter
 ) => {
-  if (!db) return { naturalistBookings: [], total: 0 };
-  
+  if (!db()) return { naturalistBookings: [], total: 0 };
+
   const { search, page, limit, park_id, status, date_of_safari, slot } = filter;
 
   // Parse date_of_safari if provided (format: "timestamp1,timestamp2")
@@ -61,7 +60,7 @@ export const getNaturalistBookings = async (
           : [])
   );
 
-  const naturalistBookings = await db!.query.NaturalistBookings.findMany({
+  const naturalistBookings = await db()!.query.NaturalistBookings.findMany({
     where,
     with: {
       park: true,
@@ -70,7 +69,7 @@ export const getNaturalistBookings = async (
     offset: (pageNum - 1) * limitNum,
   });
 
-  const total = await db
+  const total = await db()
     .select({ count: count() })
     .from(NaturalistBookings)
     .where(where);
@@ -81,9 +80,9 @@ export const getNaturalistBookings = async (
 export const createNaturalistBooking = async (
   booking: TNewNaturalistBooking
 ) => {
-  if (!db) throw new Error("Database connection not available");
-  
-  const newBooking = await db
+  if (!db()) throw new Error("Database connection not available");
+
+  const newBooking = await db()
     .insert(NaturalistBookings)
     .values(booking)
     .returning();
@@ -99,9 +98,9 @@ export const updateNaturalistBookingStatus = async (
   bookingId: number,
   status: (typeof naturalistBookingStatusEnum.enumValues)[number]
 ) => {
-  if (!db) throw new Error("Database connection not available");
-  
-  const updatedBooking = await db
+  if (!db()) throw new Error("Database connection not available");
+
+  const updatedBooking = await db()
     .update(NaturalistBookings)
     .set({ status })
     .where(eq(NaturalistBookings.id, bookingId))
@@ -115,9 +114,9 @@ export const updateNaturalistBookingStatus = async (
 };
 
 export const getNaturalistBookingById = async (bookingId: number) => {
-  if (!db) return null;
-  
-  const booking = await db!.query.NaturalistBookings.findFirst({
+  if (!db()) return null;
+
+  const booking = await db()!.query.NaturalistBookings.findFirst({
     where: eq(NaturalistBookings.id, bookingId),
     with: {
       park: true,

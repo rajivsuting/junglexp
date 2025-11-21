@@ -1,6 +1,6 @@
 "use server";
-import { and, count, db, eq, ilike, inArray } from "@repo/db/index";
-import { Naturalist, NaturalistActivities } from "@repo/db/schema/naturalist";
+import { and, count, db, eq, ilike, inArray } from '@repo/db/index';
+import { Naturalist, NaturalistActivities } from '@repo/db/schema/naturalist';
 
 import type {
   TNewNaturalist,
@@ -92,7 +92,7 @@ export const createNaturalist = async (
         activity_id: activityId,
       })
     );
-    await db.insert(NaturalistActivities).values(naturalistActivities);
+    await db().insert(NaturalistActivities).values(naturalistActivities);
   }
 
   return newNaturalist;
@@ -112,7 +112,7 @@ export const updateNaturalist = async (
   // Update activities if provided
   if (activityIds !== undefined && updatedNaturalist) {
     // Get existing activities
-    const existingActivities = await db.query.NaturalistActivities.findMany({
+    const existingActivities = await db().query.NaturalistActivities.findMany({
       where: eq(NaturalistActivities.naturalist_id, id),
     });
 
@@ -132,12 +132,14 @@ export const updateNaturalist = async (
 
     // Delete removed activities
     if (toDelete.length > 0) {
-      await db.delete(NaturalistActivities).where(
-        inArray(
-          NaturalistActivities.id,
-          toDelete.map((a) => a.id)
-        )
-      );
+      await db()
+        .delete(NaturalistActivities)
+        .where(
+          inArray(
+            NaturalistActivities.id,
+            toDelete.map((a) => a.id)
+          )
+        );
     }
 
     // Add new activities
@@ -148,7 +150,7 @@ export const updateNaturalist = async (
           activity_id: activityId,
         })
       );
-      await db.insert(NaturalistActivities).values(newActivities);
+      await db().insert(NaturalistActivities).values(newActivities);
     }
   }
 

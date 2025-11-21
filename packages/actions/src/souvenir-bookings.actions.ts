@@ -44,7 +44,7 @@ export const getSouvenirBookings = async (
     status ? inArray(SouvenirBookings.status, status) : undefined
   );
 
-  const souvenirBookings = await db.query.SouvenirBookings.findMany({
+  const souvenirBookings = await db().query.SouvenirBookings.findMany({
     where,
     with: {
       souvenir: {
@@ -61,7 +61,7 @@ export const getSouvenirBookings = async (
     offset: (pageNum - 1) * limitNum,
   });
 
-  const total = await db
+  const total = await db()
     .select({ count: count() })
     .from(SouvenirBookings)
     .where(where);
@@ -70,7 +70,7 @@ export const getSouvenirBookings = async (
 };
 
 export const createSouvenirBooking = async (booking: TNewSouvenirBooking) => {
-  const newBooking = await db
+  const newBooking = await db()
     .insert(SouvenirBookings)
     .values(booking)
     .returning();
@@ -79,7 +79,7 @@ export const createSouvenirBooking = async (booking: TNewSouvenirBooking) => {
     throw new Error("Failed to create souvenir booking");
   }
 
-  const _booking = await db.query.SouvenirBookings.findFirst({
+  const _booking = await db().query.SouvenirBookings.findFirst({
     where: eq(SouvenirBookings.id, newBooking[0].id),
     with: {
       souvenir: true,
@@ -92,7 +92,7 @@ export const updateSouvenirBookingStatus = async (
   bookingId: string,
   status: (typeof souvenirBookingStatusEnum.enumValues)[number]
 ) => {
-  const updatedBooking = await db
+  const updatedBooking = await db()
     .update(SouvenirBookings)
     .set({ status })
     .where(eq(SouvenirBookings.id, bookingId))
@@ -106,7 +106,7 @@ export const updateSouvenirBookingStatus = async (
 };
 
 export const getSouvenirBookingById = async (bookingId: string) => {
-  const booking = await db.query.SouvenirBookings.findFirst({
+  const booking = await db().query.SouvenirBookings.findFirst({
     where: eq(SouvenirBookings.id, bookingId),
     with: {
       souvenir: {

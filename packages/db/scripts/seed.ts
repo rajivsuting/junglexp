@@ -1,24 +1,24 @@
-import { config } from "dotenv";
-import { drizzle } from "drizzle-orm/neon-http";
+import { config } from 'dotenv';
+import { drizzle, NeonHttpDatabase } from 'drizzle-orm/neon-http';
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from '@neondatabase/serverless';
 
-import { Cities } from "../schema/city";
-import { HotelImages, Hotels } from "../schema/hotels";
-import { Images } from "../schema/image";
-import { NationalParks, ParkImages } from "../schema/park";
-import { States } from "../schema/state";
-import { Users } from "../schema/user";
-import { Zones } from "../schema/zones";
-import citiesData from "./cities.json";
-import hotelImagesData from "./hotel_images.json";
-import hotelsData from "./hotels.json";
-import imagesData from "./images.json";
-import nationalParksData from "./national_parks.json";
-import parkImagesData from "./park_images.json";
-import statesData from "./states.json";
-import usersData from "./users.json";
-import zonesData from "./zones.json";
+import { Cities } from '../schema/city';
+import { HotelImages, Hotels } from '../schema/hotels';
+import { Images } from '../schema/image';
+import { NationalParks, ParkImages } from '../schema/park';
+import { States } from '../schema/state';
+import { Users } from '../schema/user';
+import { Zones } from '../schema/zones';
+import citiesData from './cities.json';
+import hotelImagesData from './hotel_images.json';
+import hotelsData from './hotels.json';
+import imagesData from './images.json';
+import nationalParksData from './national_parks.json';
+import parkImagesData from './park_images.json';
+import statesData from './states.json';
+import usersData from './users.json';
+import zonesData from './zones.json';
 
 // Type declarations for JSON data
 type StateData = {
@@ -117,7 +117,7 @@ const parkImages = parkImagesData as ParkImageData[];
 config({ path: "../../.env" });
 
 const sql = neon(process.env.DATABASE_URL!);
-const db = drizzle(sql);
+const db = drizzle(sql) as NeonHttpDatabase<Record<string, never>>;
 
 async function seedStates() {
   console.log("🌱 Seeding states...");

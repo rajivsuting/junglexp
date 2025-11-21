@@ -1,14 +1,11 @@
 "use server";
 
-import { and, count, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, count, eq, ilike, inArray, or } from 'drizzle-orm';
 
-import { db, schema } from "@repo/db";
-import { PlaceImages, Places } from "@repo/db/schema/places";
-import { createPoint } from "@repo/db/utils/postgis";
-import {
-  generateSlug,
-  generateUniqueSlug,
-} from "@repo/db/utils/slug-generator";
+import { db, schema } from '@repo/db';
+import { PlaceImages, Places } from '@repo/db/schema/places';
+import { createPoint } from '@repo/db/utils/postgis';
+import { generateSlug, generateUniqueSlug } from '@repo/db/utils/slug-generator';
 
 import type { TNewPlace, TPlaceBase } from "@repo/db/schema/places";
 export interface TGetPlacesFilters {
@@ -90,7 +87,7 @@ export const getPlaces = async (
       searchConditions.length > 0 ? or(...searchConditions) : undefined;
 
     // Get total count
-    const totalResult = await db!
+    const totalResult = await db()!
       .select({ count: count() })
       .from(schema.Places)
       .where(where);
@@ -99,7 +96,7 @@ export const getPlaces = async (
     const totalPages = Math.ceil(total / limit);
 
     // Get places with pagination and images
-    const places = await db!.query.Places.findMany({
+    const places = await db()!.query.Places.findMany({
       where,
       limit,
       offset,
@@ -130,7 +127,7 @@ export const getPlaceById = async (
   id: number
 ): Promise<TPlaceWithImages | null> => {
   try {
-    const place = await db!.query.Places.findFirst({
+    const place = await db()!.query.Places.findFirst({
       where: eq(schema.Places.id, id),
       with: {
         images: {
@@ -152,7 +149,7 @@ export const getPlaceBySlug = async (
   slug: string
 ): Promise<TPlaceBase | null> => {
   try {
-    const [place] = await db
+    const [place] = await db()
       .select()
       .from(schema.Places)
       .where(eq(schema.Places.slug, slug));
@@ -165,7 +162,7 @@ export const getPlaceBySlug = async (
 };
 
 const getExistingSlugs = async (): Promise<string[]> => {
-  const existingSlugs = await db
+  const existingSlugs = await db()
     .select({ slug: Places.slug })
     .from(schema.Places);
   return existingSlugs.map((p) => p.slug);
@@ -183,7 +180,7 @@ export const createPlace = async (
     let slug = generateSlug(data.name);
     slug = generateUniqueSlug(slug, existingSlugList);
 
-    const [newPlace] = await db
+    const [newPlace] = await db()
       .insert(schema.Places)
       .values({ ...data, slug })
       .returning();
@@ -201,7 +198,7 @@ export const createPlace = async (
 
       if (toInsert.length > 0) {
         const imageRows = toInsert.map((a) => a.image);
-        const created = await db
+        const created = await db()
           .insert(schema.Images)
           .values(imageRows)
           .returning();
@@ -214,7 +211,7 @@ export const createPlace = async (
             order: toInsert[idx]!.order,
           }));
 
-          await db!.insert(schema.PlaceImages).values(placeImageRows);
+          await db()!.insert(schema.PlaceImages).values(placeImageRows);
         }
       }
     }
@@ -246,7 +243,7 @@ export const updatePlace = async (
       slug = generateUniqueSlug(slug, existingSlugList);
     }
 
-    const [updatedPlace] = await db
+    const [updatedPlace] = await db()
       .update(schema.Places)
       .set({ ...data, slug })
       .where(eq(schema.Places.id, id))
@@ -260,7 +257,7 @@ export const updatePlace = async (
     if (imagesPayload) {
       // Handle removed images
       if (imagesPayload.removed.length > 0) {
-        await db
+        await db()
           .delete(schema.PlaceImages)
           .where(
             and(
@@ -278,7 +275,7 @@ export const updatePlace = async (
 
         if (toInsert.length > 0) {
           const imageRows = toInsert.map((a) => a.image);
-          const created = await db
+          const created = await db()
             .insert(schema.Images)
             .values(imageRows)
             .returning();
@@ -290,7 +287,7 @@ export const updatePlace = async (
               order: toInsert[idx]!.order,
             }));
 
-            await db!.insert(schema.PlaceImages).values(placeImageRows);
+            await db()!.insert(schema.PlaceImages).values(placeImageRows);
           }
         }
       }
@@ -298,7 +295,7 @@ export const updatePlace = async (
       // Handle existing images with updated order
       if (imagesPayload.existing.length > 0) {
         for (const existing of imagesPayload.existing) {
-          await db
+          await db()
             .update(schema.PlaceImages)
             .set({ order: existing.order })
             .where(
@@ -320,7 +317,7 @@ export const updatePlace = async (
 
 export const deletePlace = async (id: number): Promise<void> => {
   try {
-    await db!.delete(schema.Places).where(eq(schema.Places.id, id));
+    await db()!.delete(schema.Places).where(eq(schema.Places.id, id));
   } catch (error) {
     console.error("Error deleting place:", error);
     throw new Error("Failed to delete place");
@@ -397,7 +394,7 @@ export const updatePlaceImages = async (
   }>
 ) => {
   // Get existing place images
-  const existing = await db
+  const existing = await db()
     .select()
     .from(schema.PlaceImages)
     .where(eq(schema.PlaceImages.place_id, placeId));
@@ -423,7 +420,7 @@ export const updatePlaceImages = async (
   // Delete removed images
   if (imagesToDelete.length > 0) {
     operations.push(
-      db
+      db()
         .delete(schema.PlaceImages)
         .where(
           and(
@@ -441,7 +438,7 @@ export const updatePlaceImages = async (
       image_id: update.image_id,
       order: update.order,
     }));
-    operations.push(db!.insert(schema.PlaceImages).values(newImages));
+    operations.push(db()!.insert(schema.PlaceImages).values(newImages));
   }
 
   // Update order for existing images
@@ -454,7 +451,7 @@ export const updatePlaceImages = async (
       const updateData = imageUpdates.find((u) => u.image_id === img.image_id);
       if (updateData && img.order !== updateData.order) {
         operations.push(
-          db
+          db()
             .update(schema.PlaceImages)
             .set({ order: updateData.order })
             .where(eq(schema.PlaceImages.id, img.id))
@@ -474,7 +471,7 @@ export const updatePlaceImages = async (
   );
   if (imageAltTextUpdates.length > 0) {
     const altTextOperations = imageAltTextUpdates.map((update) =>
-      db
+      db()
         .update(schema.Images)
         .set({ alt_text: update.alt_text })
         .where(eq(schema.Images.id, update.image_id))
@@ -483,7 +480,7 @@ export const updatePlaceImages = async (
   }
 
   // Return updated place images
-  return await db
+  return await db()
     .select()
     .from(schema.PlaceImages)
     .where(eq(schema.PlaceImages.place_id, placeId))
