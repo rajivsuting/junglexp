@@ -5,7 +5,7 @@ import { db, schema } from '@repo/db';
 import { Zones, zonesInsertSchema } from '@repo/db/schema/zones';
 
 import type { TZone } from "@repo/db/schema/types";
-import type { TNewZone, TZoneBase } from "@repo/db/schema/zones";
+import type { TNewZone } from "@repo/db/schema/zones";
 
 type TGetZonesFilters = {
   search?: string | undefined;
