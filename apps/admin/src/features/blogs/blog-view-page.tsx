@@ -1,3 +1,4 @@
+import { getBlogCategories } from "@repo/actions/blog-categories.actions";
 import { BlogForm } from "./components/blog-form";
 import { getBlogById } from "@repo/actions/blogs.actions";
 import { notFound } from "next/navigation";
@@ -20,5 +21,7 @@ export default async function BlogViewPage({ blogId }: BlogViewPageProps) {
     }
   }
 
-  return <BlogForm initialData={blog} />;
+  const categories = await getBlogCategories();
+
+  return <BlogForm initialData={blog} categories={categories} />;
 }

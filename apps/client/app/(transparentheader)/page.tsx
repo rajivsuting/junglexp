@@ -8,9 +8,11 @@ import LodgesSection from "@/components/LodgesSection";
 import Map from "@/components/Map";
 import { SafariSection } from "@/components/safari-section";
 import { getNationalParkBySlug } from "@repo/actions/parks.actions";
+import { getConfiguration } from "@repo/actions/configurations.actions";
 
 export const generateMetadata = async () => {
   const park = await getNationalParkBySlug("jim-corbet-national-park");
+
   return {
     title: park?.name,
     description: park?.description,
@@ -23,11 +25,24 @@ export const generateMetadata = async () => {
 };
 
 export default async function HomePage() {
-  const park = await getNationalParkBySlug("jim-corbet-national-park");
+  const [park, homePageTitleConfig] = await Promise.all([
+    getNationalParkBySlug("jim-corbet-national-park"),
+    getConfiguration("home_page_title"),
+  ]);
 
   if (!park) {
     return null;
   }
+
+  const homePageTitle = homePageTitleConfig?.value || (
+    <span>
+      Plan Your Next
+      <br />
+      Safari to <span className="font-bold">Jim Corbett</span>
+      <br />
+      National Park
+    </span>
+  );
 
   return (
     <div className="bg-background text-foreground font-sans">
@@ -48,15 +63,13 @@ export default async function HomePage() {
           <p className="text-sm md:text-[16px] font-light mb-4 text-white">
             DISCOVER . EXPLORE . EXPERIENCE
           </p>
-          <p className="text-[32px] md:text-[62px] font-light mb-6 w-full md:leading-18 text-white drop-shadow">
-            <span>
-              Plan Your Next
-              <br />
-              Safari to <span className="font-bold">Jim Corbett</span>
-              <br />
-              National Park
-            </span>
-          </p>
+          <div className="text-[32px] md:text-[62px] font-light mb-6 w-full md:leading-18 text-white drop-shadow">
+            {typeof homePageTitle === "string" ? (
+              <span dangerouslySetInnerHTML={{ __html: homePageTitle }} />
+            ) : (
+              homePageTitle
+            )}
+          </div>
           <div className="flex items-center gap-4">
             <Link
               href="/parks/jim-corbet-national-park/stays?stay-type=resort"

@@ -12,6 +12,7 @@ import {
 import { ActivityBookings } from "./activity-bookings";
 import { Amenities } from "./amenities";
 import { Blogs } from "./blogs";
+import { BlogCategories } from "./blog-categories";
 import { Cities } from "./city";
 import { Faqs } from "./faqs";
 import { HotelAmenities } from "./hotel-amenities";
@@ -414,4 +415,12 @@ export const blogsRelations = relations(Blogs, ({ one }) => ({
     fields: [Blogs.thumbnail_image_id],
     references: [Images.id],
   }),
+  category: one(BlogCategories, {
+    fields: [Blogs.category_id],
+    references: [BlogCategories.id],
+  }),
+}));
+
+export const blogCategoriesRelations = relations(BlogCategories, ({ many }) => ({
+  blogs: many(Blogs),
 }));

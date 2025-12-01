@@ -251,7 +251,11 @@ export default async function SafarisAndActivitiesPage(props: PageProps) {
                           <>
                             <div className="text-lg font-bold mb-1">
                               From ₹
-                              {activity.packages[0].price_1.toLocaleString()}
+                              {activity.packages[0].price.toLocaleString()}{" "}
+                              <span className="text-xs text-muted-foreground line-through">
+                                ₹{" "}
+                                {activity.packages[0].price_1.toLocaleString()}
+                              </span>
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Per person

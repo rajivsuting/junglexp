@@ -22,4 +22,7 @@ export * from "./naturalist-bookings.actions";
 export * from "./souvenir-bookings.actions";
 export * from "./activity-bookings.actions";
 export * from "./blogs.actions";
+export * from "./blog-categories.actions";
 export * from "./email.actions";
+export * from "./configurations.actions";
+

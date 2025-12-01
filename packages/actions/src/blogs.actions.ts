@@ -1,6 +1,6 @@
 "use server";
 
-import { db, eq, desc, sql } from "@repo/db";
+import { db, eq, desc, sql, and, ne } from "@repo/db";
 import { Blogs, createBlogSchema } from "@repo/db/schema/blogs";
 import { generateSlug } from "@repo/db/utils/slug-generator";
 import { z } from "zod";
@@ -29,6 +29,7 @@ export async function getBlogs({
     orderBy: [desc(Blogs.created_at)],
     with: {
       thumbnail: true,
+      category: true,
     },
   });
 
@@ -47,6 +48,35 @@ export async function getBlogs({
   };
 }
 
+export async function getRelatedBlogs({
+  categoryId,
+  excludeBlogId,
+  limit = 3,
+}: {
+  categoryId: number;
+  excludeBlogId?: number;
+  limit?: number;
+}) {
+  if (!db) throw new Error("Database connection not available");
+
+  const conditions = and(
+    eq(Blogs.category_id, categoryId),
+    excludeBlogId ? ne(Blogs.id, excludeBlogId) : undefined
+  );
+
+  const data = await db.query.Blogs.findMany({
+    where: conditions,
+    limit,
+    orderBy: [desc(Blogs.created_at)],
+    with: {
+      thumbnail: true,
+      category: true,
+    },
+  });
+
+  return data;
+}
+
 export async function getBlogBySlug(slug: string) {
   if (!db) throw new Error("Database connection not available");
 
@@ -54,6 +84,7 @@ export async function getBlogBySlug(slug: string) {
     where: eq(Blogs.slug, slug),
     with: {
       thumbnail: true,
+      category: true,
     },
   });
 
@@ -67,6 +98,7 @@ export async function getBlogById(id: number) {
     where: eq(Blogs.id, id),
     with: {
       thumbnail: true,
+      category: true,
     },
   });
 
@@ -96,6 +128,7 @@ export async function createBlog(data: z.infer<typeof createBlogSchema>) {
     .insert(Blogs)
     .values({
       title: validated.title,
+      category_id: validated.category_id,
       content: validated.content,
       thumbnail_image_id: validated.thumbnail_image_id,
       slug: uniqueSlug,

@@ -23,6 +23,7 @@ export function ActivityBookingCardDesktop({
   maxGroupSize,
 }: ActivityBookingCardDesktopProps) {
   const price = packages?.[0]?.price || basePrice;
+  const originalPrice = packages?.[0]?.price_1 || basePrice;
   const maxParticipants = packages?.[0]?.number || maxGroupSize || 10;
 
   const scrollToPackages = () => {
@@ -39,7 +40,10 @@ export function ActivityBookingCardDesktop({
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-bold">
-                ₹{price.toLocaleString()}
+                ₹{price.toLocaleString()}{" "}
+                <span className="text-base font-thin line-through">
+                  ₹{originalPrice.toLocaleString()}
+                </span>
               </CardTitle>
               <p className="text-muted-foreground text-sm">per person</p>
             </div>

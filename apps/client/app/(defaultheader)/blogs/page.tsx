@@ -22,5 +22,7 @@ export default async function Page({
     page,
   });
 
+  console.log("data", data);
+
   return <BlogsPage blogs={data} totalPages={totalPages} currentPage={page} />;
 }

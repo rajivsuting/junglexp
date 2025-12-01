@@ -23,10 +23,19 @@ import { createImages } from "@repo/actions/image.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { TBlog } from "@repo/db/index";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { TBlogCategory, TBlog } from "@repo/db/index";
 import { Loader2 } from "lucide-react";
+import { CreateCategoryDialog } from "./create-category-dialog";
+import { Separator } from "@/components/ui/separator";
 
-// Extending TBlog to include thumbnail for initial data type
+// Extending TBlog to include thumbnail and category for initial data type
 type BlogWithThumbnail = TBlog & {
   thumbnail: {
     id: number;
@@ -36,10 +45,12 @@ type BlogWithThumbnail = TBlog & {
     original_url: string;
     alt_text: string;
   } | null;
+  category: TBlogCategory;
 };
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
+  category_id: z.coerce.number().min(1, "Category is required"),
   content: z.string().min(1, "Content is required"),
   // We use an array for the file uploader, but enforce max 1
   thumbnail: ImagesArraySchema(1, 1),
@@ -49,11 +60,13 @@ type BlogFormValues = z.infer<typeof formSchema>;
 
 interface BlogFormProps {
   initialData?: BlogWithThumbnail | null;
+  categories: TBlogCategory[];
   pageTitle?: string;
 }
 
 export const BlogForm: React.FC<BlogFormProps> = ({
   initialData,
+  categories,
   pageTitle,
 }) => {
   const router = useRouter();
@@ -78,6 +91,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || "",
+      category_id: initialData?.category_id || 0,
       content: initialData?.content || "",
       thumbnail: defaultThumbnail,
     },
@@ -127,6 +141,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
       if (initialData) {
         await updateBlog(initialData.id, {
           title: data.title,
+          category_id: data.category_id,
           content: data.content,
           thumbnail_image_id: thumbnailImageId,
         });
@@ -134,6 +149,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
       } else {
         await createBlog({
           title: data.title,
+          category_id: data.category_id,
           content: data.content,
           thumbnail_image_id: thumbnailImageId,
         });
@@ -178,6 +194,41 @@ export const BlogForm: React.FC<BlogFormProps> = ({
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="category_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  disabled={isSubmitting}
+                  onValueChange={field.onChange}
+                  value={field.value ? field.value.toString() : ""}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <div className="p-2">
+                      <CreateCategoryDialog />
+                    </div>
+                    {categories.map((category) => (
+                      <SelectItem
+                        key={category.id}
+                        value={category.id.toString()}
+                      >
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/ui/table/data-table-column-h
 import { CellAction } from "./cell-action";
 import type { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import type { TBlog } from "@repo/db/index";
+import type { TBlog, TBlogCategory } from "@repo/db/index";
 import { Search } from "lucide-react";
 
 type BlogWithThumbnail = TBlog & {
@@ -16,6 +16,7 @@ type BlogWithThumbnail = TBlog & {
     original_url: string;
     alt_text: string;
   } | null;
+  category: TBlogCategory;
 };
 
 export const columns: ColumnDef<BlogWithThumbnail>[] = [
@@ -79,6 +80,13 @@ export const columns: ColumnDef<BlogWithThumbnail>[] = [
       variant: "text",
       icon: Search,
     },
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
+    cell: ({ row }) => (
+      <div className="font-medium">{row.original.category?.name}</div>
+    ),
   },
   {
     accessorKey: "created_at",

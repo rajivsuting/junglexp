@@ -5,6 +5,7 @@ import FormCardSkeleton from "@/components/form-card-skeleton";
 import PageContainer from "@/components/layout/page-container";
 import { BlogForm } from "@/features/blogs/components/blog-form";
 import { getBlogById } from "@repo/actions/blogs.actions";
+import { getBlogCategories } from "@repo/actions/blog-categories.actions";
 
 export const metadata = {
   title: "Edit Blog",
@@ -22,7 +23,10 @@ export default async function EditBlogPage({ params }: PageProps) {
     notFound();
   }
 
-  const blog = await getBlogById(id);
+  const [blog, categories] = await Promise.all([
+    getBlogById(id),
+    getBlogCategories(),
+  ]);
 
   if (!blog) {
     notFound();
@@ -32,7 +36,11 @@ export default async function EditBlogPage({ params }: PageProps) {
     <PageContainer scrollable>
       <div className="flex-1 space-y-4">
         <Suspense fallback={<FormCardSkeleton />}>
-          <BlogForm pageTitle="Edit Blog" initialData={blog as any} />
+          <BlogForm
+            pageTitle="Edit Blog"
+            initialData={blog as any}
+            categories={categories}
+          />
         </Suspense>
       </div>
     </PageContainer>

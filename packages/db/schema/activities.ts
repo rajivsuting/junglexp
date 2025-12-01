@@ -18,6 +18,11 @@ import { Images } from "./image";
 import { NationalParks } from "./park";
 import { Policies } from "./policies";
 
+export const activityDateTypeEnum = pgEnum("activity_date_type", [
+  "predefined",
+  "any",
+]);
+
 export const Activities = pgTable(
   "activities",
   {
@@ -25,6 +30,9 @@ export const Activities = pgTable(
     name: text("name").notNull(),
     description: text("description").notNull(),
     slug: text("slug").notNull(),
+    date_type: activityDateTypeEnum("date_type")
+      .default("predefined")
+      .notNull(),
 
     park_id: integer("park_id").references(() => NationalParks.id, {
       onDelete: "cascade",
@@ -142,6 +150,7 @@ export const createActivitySchema = z.object({
     .max(255, "Activity name must be less than 255 characters"),
   description: z.string().min(1, "Activity description is required"),
   park_id: z.number().int().positive().optional(),
+  date_type: z.enum(["predefined", "any"]).optional().default("predefined"),
 });
 
 /**

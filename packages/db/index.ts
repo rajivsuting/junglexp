@@ -1,34 +1,56 @@
-import { config } from 'dotenv';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { config } from "dotenv";
+import { drizzle } from "drizzle-orm/neon-http";
 
 import {
-    Activities, ActivityAmenities, ActivityDates, ActivityImages, ActivityItinerary, ActivityPackages,
-    ActivityPolicies
-} from './schema/activities';
-import { ActivityBookings, activityBookingStatusEnum } from './schema/activity-bookings';
-import { Amenities } from './schema/amenities';
-import { Blogs } from './schema/blogs';
-import { Cities } from './schema/city';
-import { Faqs } from './schema/faqs';
-import { HotelAmenities } from './schema/hotel-amenities';
-import { HotelBookings, hotelBookingStatusEnum } from './schema/hotel-bookings';
-import { HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures } from './schema/hotels';
-import { Images } from './schema/image';
-import { Naturalist, NaturalistActivities } from './schema/naturalist';
-import { NaturalistBookings, naturalistBookingStatusEnum } from './schema/naturalist-bookings';
-import { NationalParks, ParkImages } from './schema/park';
-import { PlaceImages, Places } from './schema/places';
-import { Policies } from './schema/policies';
-import { Promotions } from './schema/promotions';
-import { Reels, reelsStatusEnum } from './schema/reels';
-import * as relations from './schema/relations';
-import { RoomAmenities, RoomImages, RoomPlans, Rooms } from './schema/rooms';
-import { SaftyFeatures } from './schema/safty-features';
-import { SouvenirBookings, souvenirBookingStatusEnum } from './schema/souvenir-bookings';
-import { SouvenirImages, Souvenirs } from './schema/souvenirs';
-import { States } from './schema/state';
-import { Users } from './schema/user';
-import { Zones } from './schema/zones';
+  Activities,
+  ActivityAmenities,
+  ActivityDates,
+  ActivityImages,
+  ActivityItinerary,
+  ActivityPackages,
+  ActivityPolicies,
+} from "./schema/activities";
+import {
+  ActivityBookings,
+  activityBookingStatusEnum,
+} from "./schema/activity-bookings";
+import { Amenities } from "./schema/amenities";
+import { Blogs } from "./schema/blogs";
+import { BlogCategories } from "./schema/blog-categories";
+import { Cities } from "./schema/city";
+import { Faqs } from "./schema/faqs";
+import { HotelAmenities } from "./schema/hotel-amenities";
+import { HotelBookings, hotelBookingStatusEnum } from "./schema/hotel-bookings";
+import {
+  HotelFaqs,
+  HotelImages,
+  HotelPolicies,
+  Hotels,
+  HotelSaftyFeatures,
+} from "./schema/hotels";
+import { Images } from "./schema/image";
+import { Naturalist, NaturalistActivities } from "./schema/naturalist";
+import {
+  NaturalistBookings,
+  naturalistBookingStatusEnum,
+} from "./schema/naturalist-bookings";
+import { NationalParks, ParkImages } from "./schema/park";
+import { PlaceImages, Places } from "./schema/places";
+import { Policies } from "./schema/policies";
+import { Promotions } from "./schema/promotions";
+import { Reels, reelsStatusEnum } from "./schema/reels";
+import * as relations from "./schema/relations";
+import { RoomAmenities, RoomImages, RoomPlans, Rooms } from "./schema/rooms";
+import { SaftyFeatures } from "./schema/safty-features";
+import {
+  SouvenirBookings,
+  souvenirBookingStatusEnum,
+} from "./schema/souvenir-bookings";
+import { SouvenirImages, Souvenirs } from "./schema/souvenirs";
+import { States } from "./schema/state";
+import { Users } from "./schema/user";
+import { Zones } from "./schema/zones";
+import { Configurations } from "./schema/configurations";
 
 export * from "drizzle-orm";
 export { nationaParkInsertSchema } from "./schema/park";
@@ -67,6 +89,7 @@ export type {
   TNewActivityPackage,
 } from "./schema/activities";
 export type { TBlog, TNewBlog } from "./schema/blogs";
+export type { TBlogCategory, TNewBlogCategory } from "./schema/blog-categories";
 export * from "./schema/types";
 
 export const schemaWithoutRelations = {
@@ -109,6 +132,7 @@ export const schemaWithoutRelations = {
   NaturalistBookings,
   naturalistBookingStatusEnum,
   Reels,
+  Configurations,
   reelsStatusEnum,
   SouvenirBookings,
   souvenirBookingStatusEnum,
@@ -116,6 +140,7 @@ export const schemaWithoutRelations = {
   activityBookingStatusEnum,
   NaturalistActivities,
   Blogs,
+  BlogCategories,
 };
 
 export const schema = {

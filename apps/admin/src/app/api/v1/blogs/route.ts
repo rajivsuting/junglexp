@@ -32,12 +32,14 @@ export async function POST(request: Request) {
     const contentType = request.headers.get("content-type") || "";
     let title: string;
     let content: string;
+    let categoryId: number;
     let thumbnailImageId: number | undefined;
 
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData();
       title = formData.get("title") as string;
       content = formData.get("content") as string;
+      categoryId = parseInt(formData.get("category_id") as string, 10);
 
       const imageFile = formData.get("image") as File | null;
 
@@ -63,6 +65,7 @@ export async function POST(request: Request) {
       const body = await request.json();
       title = body.title;
       content = body.content;
+      categoryId = body.category_id;
       thumbnailImageId = body.thumbnail_image_id;
     }
 
@@ -79,6 +82,7 @@ export async function POST(request: Request) {
     const blogData = {
       title,
       content,
+      category_id: categoryId,
       thumbnail_image_id: thumbnailImageId,
     };
 

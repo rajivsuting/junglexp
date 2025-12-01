@@ -37,9 +37,22 @@ const getPriceTier = (rating: number) => {
 
 // Get price range based on hotel type and rating
 const getPriceRange = (rooms: TRoomBase & { plans: TRoomPlan[] }[]) => {
-  const min = Math.min(...rooms.map((r) => r.plans[0]?.price || 0));
-  const max = Math.max(...rooms.map((r) => r.plans[0]?.price || 0));
-  return { min: min === 0 ? (max == 0 ? "NA" : max) : min, max: max };
+  if (rooms.length === 0) return { min: 0, max: 0 };
+
+  const min = Math.min(
+    ...rooms.map((r) => {
+      if (r.plans.length === 0) return 0;
+      return Math.min(...r.plans.map((p) => p.price || 0)) || 0;
+    })
+  );
+  const max = Math.max(
+    ...rooms.map((r) => {
+      if (r.plans.length === 0) return 0;
+      return Math.max(...r.plans.map((p) => p.price || 0)) || 0;
+    })
+  );
+
+  return { min: min === 0 ? (max == 0 ? 0 : max) : min, max: max };
 };
 
 export const generateMetadata = async ({ params }: PageProps) => {

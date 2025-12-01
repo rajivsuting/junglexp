@@ -9,17 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 import { ActivityBookingModal } from "./activity-booking-modal";
-import type { TActivityPackageBase } from "@repo/db/index";
-
-interface Activity {
-  id: number;
-  name: string;
-  slug?: string;
-}
+import type { TActivity, TActivityPackageBase } from "@repo/db/index";
 
 interface ActivityPackagesSectionProps {
   packages: TActivityPackageBase[];
-  activity: Activity;
+  activity: TActivity;
 }
 
 export function ActivityPackagesSection({
@@ -51,7 +45,7 @@ export function ActivityPackagesSection({
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
           {packages.map((pkg) => (
             <Card
               key={pkg.id}
@@ -70,18 +64,10 @@ export function ActivityPackagesSection({
               )} */}
 
               <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 justify-between">
                   <CardTitle className="text-lg font-bold">
                     {pkg.name}
                   </CardTitle>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-primary">
-                      ₹{pkg.price.toLocaleString()}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      per person
-                    </div>
-                  </div>
                 </div>
 
                 {/* {pkg.description && (
@@ -89,6 +75,18 @@ export function ActivityPackagesSection({
                     {pkg.description}
                   </p>
                 )} */}
+                <div className="text-left">
+                  <div className="text-2xl font-bold text-primary">
+                    ₹{pkg.price.toLocaleString()}
+                    <span className="text-sm font-thin line-through">
+                      {" "}
+                      ₹{pkg.price_1.toLocaleString()}
+                    </span>
+                    <div className="text-sm text-muted-foreground">
+                      per person
+                    </div>
+                  </div>
+                </div>
               </CardHeader>
 
               <CardContent className="space-y-4">

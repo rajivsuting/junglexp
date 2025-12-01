@@ -35,11 +35,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createActivityBooking } from "@repo/actions";
-import { getActivityDates } from "@repo/actions/activities.actions";
+import {
+  getActivityDates,
+  getActivityById,
+} from "@repo/actions/activities.actions";
 
 import type { TActivityBookingBase } from "@repo/db/schema/activity-bookings";
 import { toast } from "sonner";
-import type { TActivityPackageBase } from "@repo/db/index";
+import type { TActivity, TActivityPackageBase } from "@repo/db/index";
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -55,17 +58,11 @@ const bookingSchema = z.object({
 
 type BookingFormData = z.infer<typeof bookingSchema>;
 
-interface Activity {
-  id: number;
-  name: string;
-  slug?: string;
-}
-
 interface ActivityBookingModalProps {
   isOpen: boolean;
   onChangeState: (state: boolean) => void;
   selectedPackage: TActivityPackageBase;
-  activity: Activity;
+  activity: TActivity;
 }
 
 export function ActivityBookingModal({
@@ -74,7 +71,6 @@ export function ActivityBookingModal({
   selectedPackage,
   activity,
 }: ActivityBookingModalProps) {
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [bookingDetails, setBookingDetails] =
@@ -82,21 +78,24 @@ export function ActivityBookingModal({
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
   const [loadingDates, setLoadingDates] = useState(false);
 
+  const dateType = "any";
+
   useEffect(() => {
-    const fetchDates = async () => {
+    const fetchData = async () => {
       if (!activity.id) return;
+      if (dateType === "any") return;
       try {
         setLoadingDates(true);
         const dates = await getActivityDates(activity.id);
         setAvailableDates(dates.map((d) => new Date(d)));
       } catch (error) {
-        console.error("Failed to fetch available dates", error);
+        console.error("Failed to fetch data", error);
       } finally {
         setLoadingDates(false);
       }
     };
     if (isOpen) {
-      fetchDates();
+      fetchData();
     }
   }, [activity.id, isOpen]);
 
@@ -256,6 +255,23 @@ export function ActivityBookingModal({
                       <Loader2 className="h-4 w-4 animate-spin" />
                       Loading dates...
                     </div>
+                  ) : dateType === "any" ? (
+                    <Input
+                      type="date"
+                      min={format(new Date(), "yyyy-MM-dd")}
+                      value={
+                        watchedValues.preferredDate
+                          ? format(watchedValues.preferredDate, "yyyy-MM-dd")
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value) {
+                          const date = new Date(value + "T00:00:00");
+                          setValue("preferredDate", date);
+                        }
+                      }}
+                    />
                   ) : availableDates.length > 0 ? (
                     <Select
                       value={

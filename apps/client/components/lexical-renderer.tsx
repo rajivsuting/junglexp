@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 type TextNode = {
   text: string;
@@ -174,7 +174,7 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
     case "horizontalrule":
       return <hr key={index} className="my-8 border-t border-gray-200" />;
     default:
-      return <div key={index}>{children}</div>;
+      return <Fragment key={index}>{children}</Fragment>;
   }
 }
 

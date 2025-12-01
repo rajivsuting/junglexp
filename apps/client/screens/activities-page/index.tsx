@@ -69,10 +69,7 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
           </section>
 
           {/* Packages Section - Key feature for activities */}
-          <ActivityPackagesSection
-            packages={packages}
-            activity={{ id: activity.id, name, slug }}
-          />
+          <ActivityPackagesSection packages={packages} activity={activity} />
 
           {/* Itinerary Section - Key feature for activities */}
           <ActivityItinerarySection itinerary={itinerary as any} />

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { TBlog } from "@repo/db/index";
+import type { TBlog, TBlogCategory } from "@repo/db/index";
 import { LexicalRenderer } from "@/components/lexical-renderer";
 import { calculateReadTime } from "@/lib/utils";
 import Link from "next/link";
@@ -12,6 +12,7 @@ type BlogWithThumbnail = TBlog & {
     original_url: string;
     alt_text: string;
   } | null;
+  category: TBlogCategory;
 };
 
 interface BlogDetailsProps {
@@ -45,7 +46,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
           <span
             className={`inline-block rounded-full bg-primary/10 px-4 py-1 text-xs font-bold uppercase tracking-wider text-primary`}
           >
-            ARTICLE
+            {blog.category.name}
           </span>
         </div>
 
