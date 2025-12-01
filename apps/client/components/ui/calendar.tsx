@@ -59,20 +59,20 @@ function Calendar({
         day_hidden: "invisible",
         ...classNames,
       }}
-      components={{
-        PreviousMonthButton: ({ className, ...props }) => (
-          <ChevronLeft
-            className={cn("size-4", className)}
-            {...(props as any)}
-          />
-        ),
-        NextMonthButton: ({ className, ...props }) => (
-          <ChevronRight
-            className={cn("size-4", className)}
-            {...(props as any)}
-          />
-        ),
-      }}
+      // components={{
+      //   PreviousMonthButton: ({ className, ...props }) => (
+      //     <ChevronLeft
+      //       className={cn("size-4", className)}
+      //       {...(props as any)}
+      //     />
+      //   ),
+      //   NextMonthButton: ({ className, ...props }) => (
+      //     <ChevronRight
+      //       className={cn("size-4", className)}
+      //       {...(props as any)}
+      //     />
+      //   ),
+      // }}
       {...props}
     />
   );
