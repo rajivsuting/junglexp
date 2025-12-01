@@ -12,6 +12,20 @@ type PageProps = {
   params: Promise<{ "souvenir-id": string }>;
 };
 
+export const generateMetadata = async ({ params }: PageProps) => {
+  const souvenir = await getSouvenirBySlug(params["souvenir-id"]);
+  if (!souvenir) return notFound();
+
+  return {
+    title: souvenir.name,
+    description: souvenir.description,
+    openGraph: {
+      title: souvenir.name,
+      description: souvenir.description,
+      images: souvenir.images.map((image) => image.image?.small_url),
+    },
+  };
+};
 export default async function SouvenirDetailsPage(props: PageProps) {
   const params = await props.params;
 

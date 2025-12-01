@@ -290,34 +290,9 @@ export function ActivityBookingModal({
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Input
-                      type="date"
-                      min={new Date().toISOString().split("T")[0]}
-                      disabled={loadingDates}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !watchedValues.preferredDate && "text-muted-foreground"
-                      )}
-                      value={
-                        watchedValues.preferredDate
-                          ? format(watchedValues.preferredDate, "yyyy-MM-dd")
-                          : ""
-                      }
-                      onChange={(e) => {
-                        const dateString = e.target.value;
-                        if (!dateString) return;
-
-                        const selectedDate = new Date(dateString + "T00:00:00");
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-
-                        if (selectedDate < today) {
-                          return; // Invalid date (past)
-                        }
-
-                        setValue("preferredDate", selectedDate);
-                      }}
-                    />
+                    <p className="text-sm text-muted-foreground">
+                      No dates available
+                    </p>
                   )}
                   {errors.preferredDate && (
                     <p className="text-sm text-destructive">

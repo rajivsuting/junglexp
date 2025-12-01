@@ -2,8 +2,12 @@ import BlogsPage from "@/screens/blogs-page";
 import { getBlogs } from "@repo/actions/blogs.actions";
 
 export const metadata = {
-  title: "Our Blog",
+  title: "Junglexp Blog",
   description: "Read our latest stories and updates.",
+  openGraph: {
+    title: "Junglexp Blog",
+    description: "Read our latest stories and updates.",
+  },
 };
 
 export default async function Page({

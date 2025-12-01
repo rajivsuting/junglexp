@@ -1,15 +1,20 @@
-import { Clock, Image as ImageIcon, Star, Users } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { Clock, Image as ImageIcon, Star, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { getActivitiesByParkSlug } from '@repo/actions/activities.actions';
-import { getNationalParkBySlug } from '@repo/actions/parks.actions';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { getActivitiesByParkSlug } from "@repo/actions/activities.actions";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
 // Force dynamic rendering to avoid build-time database calls
 export const dynamic = "force-dynamic";
@@ -18,6 +23,20 @@ export const fetchCache = "force-no-store";
 
 type PageProps = {
   params: Promise<{ "park-id": string }>;
+};
+
+export const generateMetadata = async ({ params }: PageProps) => {
+  const park = await getNationalParkBySlug(params["park-id"]);
+  if (!park) return notFound();
+  return {
+    title: `${park.name} Activities`,
+    description: `${park.name} offers a diverse range of activities from exciting safaris to cultural experiences and adventure activities.`,
+    openGraph: {
+      title: `${park.name} Activities`,
+      description: `${park.name} offers a diverse range of activities from exciting safaris to cultural experiences and adventure activities.`,
+      images: park.images.map((image) => image.image?.small_url),
+    },
+  };
 };
 
 // Duration tier mapping based on activity duration

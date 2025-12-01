@@ -1,23 +1,37 @@
-import { Briefcase, MapPin, User } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { Briefcase, MapPin, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { getNaturalists } from '@repo/actions/naturlists.actions';
-import { getNationalParkBySlug } from '@repo/actions/parks.actions';
+import { getNaturalists } from "@repo/actions/naturlists.actions";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
 type Props = {
-  params: Promise<{ 'park-id': string }>
-}
+  params: Promise<{ "park-id": string }>;
+};
 
+export const generateMetadata = async ({ params }: Props) => {
+  const { "park-id": parkSlug } = await params;
+  const park = await getNationalParkBySlug(parkSlug);
+  if (!park) return notFound();
+  return {
+    title: `${park.name} Naturalists`,
+    description: `${park.name} offers a full range of accommodation options from simple camps to some of the most sought after luxury lodges in the region.`,
+    openGraph: {
+      title: `${park.name} Naturalists`,
+      description: `${park.name} offers a full range of accommodation options from simple camps to some of the most sought after luxury lodges in the region.`,
+      images: park.images.map((image) => image.image?.small_url),
+    },
+  };
+};
 export default async function NaturalistsPage({ params }: Props) {
-  const { 'park-id': parkSlug } = await params
+  const { "park-id": parkSlug } = await params;
 
-  const park = await getNationalParkBySlug(parkSlug)
+  const park = await getNationalParkBySlug(parkSlug);
 
-  if (!park) return '' // notFound()
+  if (!park) return ""; // notFound()
 
-  const { naturalists } = await getNaturalists({ park_ids: [park.id] })
+  const { naturalists } = await getNaturalists({ park_ids: [park.id] });
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -141,5 +155,5 @@ export default async function NaturalistsPage({ params }: Props) {
         )}
       </div>
     </main>
-  )
+  );
 }

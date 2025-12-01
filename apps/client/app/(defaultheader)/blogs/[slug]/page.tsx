@@ -24,6 +24,11 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: blog.title,
     description: blog.content.substring(0, 160).replace(/<[^>]*>?/gm, ""),
+    openGraph: {
+      title: blog.title,
+      description: blog.content.substring(0, 160).replace(/<[^>]*>?/gm, ""),
+      images: blog.thumbnail?.small_url,
+    },
   };
 }
 

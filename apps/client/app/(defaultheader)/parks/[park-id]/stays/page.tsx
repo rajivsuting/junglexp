@@ -1,15 +1,20 @@
-import { Image as ImageIcon, Star } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { Image as ImageIcon, Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { getHotelsByParkId } from '@repo/actions/hotels.actions';
-import { getNationalParkBySlug } from '@repo/actions/parks.actions';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { getHotelsByParkId } from "@repo/actions/hotels.actions";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
 // Force dynamic rendering to avoid build-time database calls
 export const dynamic = "force-dynamic";
@@ -35,6 +40,21 @@ const getPriceRange = (rooms: TRoomBase & { plans: TRoomPlan[] }[]) => {
   const min = Math.min(...rooms.map((r) => r.plans[0]?.price || 0));
   const max = Math.max(...rooms.map((r) => r.plans[0]?.price || 0));
   return { min: min === 0 ? (max == 0 ? "NA" : max) : min, max: max };
+};
+
+export const generateMetadata = async ({ params }: PageProps) => {
+  const park = await getNationalParkBySlug(params["park-id"]);
+  if (!park) return notFound();
+
+  return {
+    title: `${park.name} Stays`,
+    description: `${park.name} offers a full range of accommodation options from simple camps to some of the most sought after luxury lodges in the region.`,
+    openGraph: {
+      title: `${park.name} Stays`,
+      description: `${park.name} offers a full range of accommodation options from simple camps to some of the most sought after luxury lodges in the region.`,
+      images: park.images.map((image) => image.image?.small_url),
+    },
+  };
 };
 
 export default async function AllStaysPage(props: PageProps) {

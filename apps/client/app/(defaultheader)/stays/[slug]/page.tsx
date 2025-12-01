@@ -1,7 +1,27 @@
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-import StayDetails from '@/screens/stays-page';
-import { getHotelBySlug } from '@repo/actions/hotels.actions';
+import StayDetails from "@/screens/stays-page";
+import { getHotelBySlug } from "@repo/actions/hotels.actions";
+
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export const generateMetadata = async ({ params }: PageProps) => {
+  const { slug } = await params;
+  const stay = await getHotelBySlug(slug);
+  if (!stay) return notFound();
+
+  return {
+    title: stay.name,
+    description: stay.description,
+    openGraph: {
+      title: stay.name,
+      description: stay.description,
+      images: stay.images.map((image) => image.image?.small_url),
+    },
+  };
+};
 
 export default async function ActivitiesPage({
   params,
