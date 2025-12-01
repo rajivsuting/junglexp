@@ -1,73 +1,23 @@
-import { FAQSection } from '@/components/faq-section';
-import ReviewsSection from '@/components/ReviewsSection';
+import { FAQSection } from "@/components/faq-section";
+import ReviewsSection from "@/components/ReviewsSection";
 
-import { StayAmenitiesSection } from '../stays-page/components/stay-amenities-section';
-import { StayPoliciesSection } from '../stays-page/components/stay-policies-section';
-import { ActivityImageGallery } from './components/activity-image-gallery';
-import { ActivityItinerarySection } from './components/activity-itinerary-section';
-import { ActivityPackagesSection } from './components/activity-packages-section';
-import { ActivityTitleSection } from './components/activity-title-section';
-import {
-    ActivityBookingCardDesktop
-} from './components/booking-card/activity-booking-card-desktop';
-import { ActivityBookingCardMobile } from './components/booking-card/activity-booking-card-mobile';
+import { StayAmenitiesSection } from "../stays-page/components/stay-amenities-section";
+import { StayPoliciesSection } from "../stays-page/components/stay-policies-section";
+import { ActivityImageGallery } from "./components/activity-image-gallery";
+import { ActivityItinerarySection } from "./components/activity-itinerary-section";
+import { ActivityPackagesSection } from "./components/activity-packages-section";
+import { ActivityTitleSection } from "./components/activity-title-section";
+import { ActivityBookingCardDesktop } from "./components/booking-card/activity-booking-card-desktop";
+import { ActivityBookingCardMobile } from "./components/booking-card/activity-booking-card-mobile";
 
-import type {
-  TActivityAmenity,
-  TActivityImage,
-  TActivityItineraryBase,
-  TActivityPolicy,
-} from "@repo/db/index";
+import type { TActivity, TActivityPolicy } from "@repo/db/index";
 // Define a more flexible type for the activity data we receive
-type ActivityData = {
-  id: number;
-  name: string;
-  slug?: string;
-  description: string;
-  rating?: number | null;
-  duration?: string | null;
-  difficulty?: string | null;
-  max_group_size?: number | null;
-  images: TActivityImage[];
-  zone?: {
-    name: string;
-    park?: {
-      name: string;
-      city?: {
-        name: string;
-        state?: {
-          name: string;
-        };
-      };
-    };
-  };
-  amenities: TActivityAmenity[];
-  policies: TActivityPolicy[];
-  itinerary: TActivityItineraryBase[];
-  packages: Array<{
-    id: number;
-    name: string;
-    description?: string | null;
-    price: number;
-    duration?: string | null;
-    max_participants?: number | null;
-    highlights?: string[];
-    included_items?: string[];
-    is_popular?: boolean;
-  }>;
-  faqs?: Array<{
-    faq: {
-      question: string;
-      answer: string;
-    };
-  }>;
-};
 
 interface ActivityDetailsProps {
-  activity: ActivityData;
+  activity: TActivity;
 }
 
-const getInclusions = (activity: ActivityData) => {
+const getInclusions = (activity: TActivity) => {
   const included: TActivityPolicy[] = [];
   const excluded: TActivityPolicy[] = [];
   for (const policy of activity.policies) {
@@ -90,13 +40,9 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
     description,
     amenities,
     images,
-    zone,
-    rating,
     itinerary,
     packages,
-    duration,
-    difficulty,
-    max_group_size,
+    park,
   } = activity;
 
   const { included, excluded } = getInclusions(activity);
@@ -107,14 +53,7 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
   return (
     <div className="max-w-7xl text-primary mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Title Section */}
-      <ActivityTitleSection
-        name={name}
-        rating={rating}
-        zone={zone!}
-        duration={duration}
-        difficulty={difficulty}
-        maxGroupSize={max_group_size}
-      />
+      <ActivityTitleSection name={name} park={park} />
 
       {/* Image Gallery */}
       <ActivityImageGallery images={images} />
@@ -147,28 +86,17 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
           {/* Amenities */}
           <StayAmenitiesSection amenities={amenities as any} />
 
-          <FAQSection
+          {/* <FAQSection
             faqs={activity.faqs?.map((item) => item.faq) || ([] as any)}
-          />
+          /> */}
         </div>
 
         {/* Booking Card - Desktop Only */}
-        <ActivityBookingCardDesktop
-          packages={packages}
-          basePrice={basePrice}
-          rating={rating || 0}
-          duration={duration}
-          maxGroupSize={max_group_size}
-        />
+        <ActivityBookingCardDesktop packages={packages} basePrice={basePrice} />
       </div>
 
       {/* Mobile/Tablet Fixed Bottom Button */}
-      <ActivityBookingCardMobile
-        packages={packages}
-        basePrice={basePrice}
-        rating={rating || 0}
-        maxGroupSize={max_group_size}
-      />
+      <ActivityBookingCardMobile packages={packages} basePrice={basePrice} />
 
       <ReviewsSection className="pt-16 pb-20 lg:pb-16" />
     </div>

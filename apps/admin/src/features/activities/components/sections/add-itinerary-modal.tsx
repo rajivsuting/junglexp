@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
-    Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-interface ItineraryItem {
+interface ItineraryItemData {
   title: string;
   description: string;
 }
@@ -19,19 +24,31 @@ interface ItineraryItem {
 interface AddItineraryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (item: ItineraryItem) => void;
+  onSave: (item: ItineraryItemData) => void;
+  initialData?: ItineraryItemData | null;
 }
 
 export const AddItineraryModal = ({
   isOpen,
   onClose,
-  onAdd,
+  onSave,
+  initialData,
 }: AddItineraryModalProps) => {
-  const [item, setItem] = useState<ItineraryItem>({
+  const [item, setItem] = useState<ItineraryItemData>({
     title: "",
     description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (initialData) {
+        setItem(initialData);
+      } else {
+        setItem({ title: "", description: "" });
+      }
+    }
+  }, [isOpen, initialData]);
 
   const handleSubmit = async () => {
     if (!item.title.trim()) {
@@ -46,13 +63,19 @@ export const AddItineraryModal = ({
 
     try {
       setIsSubmitting(true);
-      onAdd(item);
-      setItem({ title: "", description: "" });
+      onSave(item);
+      if (!initialData) {
+        setItem({ title: "", description: "" });
+      }
       onClose();
-      toast.success("Itinerary item added successfully");
+      toast.success(
+        initialData
+          ? "Itinerary item updated"
+          : "Itinerary item added successfully"
+      );
     } catch (error) {
-      console.error("Error adding itinerary item:", error);
-      toast.error("Failed to add itinerary item");
+      console.error("Error saving itinerary item:", error);
+      toast.error("Failed to save itinerary item");
     } finally {
       setIsSubmitting(false);
     }
@@ -67,10 +90,13 @@ export const AddItineraryModal = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Itinerary Item</DialogTitle>
+          <DialogTitle>
+            {initialData ? "Edit Itinerary Item" : "Add Itinerary Item"}
+          </DialogTitle>
           <DialogDescription>
-            Add a new item to the activity itinerary. You can reorder items
-            after adding them.
+            {initialData
+              ? "Edit the details of your itinerary item."
+              : "Add a new item to the activity itinerary. You can reorder items after adding them."}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -84,7 +110,7 @@ export const AddItineraryModal = ({
               disabled={isSubmitting}
             />
           </div>
-          <div className="grid gap-2">
+          <div className="grid gap-2 max-h-[50vh] overflow-y-auto">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
@@ -114,7 +140,11 @@ export const AddItineraryModal = ({
               isSubmitting || !item.title.trim() || !item.description.trim()
             }
           >
-            {isSubmitting ? "Adding..." : "Add Item"}
+            {isSubmitting
+              ? "Saving..."
+              : initialData
+                ? "Save Changes"
+                : "Add Item"}
           </Button>
         </DialogFooter>
       </DialogContent>

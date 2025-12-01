@@ -94,6 +94,7 @@ export const createActivityBooking = async (booking: TNewActivityBooking) => {
       },
     },
   });
+  
   return _booking;
 };
 

@@ -1,13 +1,22 @@
 import {
-    boolean, doublePrecision, geometry, index, integer, pgEnum, pgTable, serial, text, timestamp
-} from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
-import { z } from 'zod';
+  boolean,
+  doublePrecision,
+  geometry,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
-import { Amenities } from './amenities';
-import { Images } from './image';
-import { NationalParks } from './park';
-import { Policies } from './policies';
+import { Amenities } from "./amenities";
+import { Images } from "./image";
+import { NationalParks } from "./park";
+import { Policies } from "./policies";
 
 export const Activities = pgTable(
   "activities",
@@ -88,6 +97,15 @@ export const ActivityPackages = pgTable("activity_packages", {
   price_1: doublePrecision("price_1").notNull(),
 });
 
+export const ActivityDates = pgTable("activity_dates", {
+  id: serial("id").primaryKey(),
+  activity_id: integer("activity_id").references(() => Activities.id, {
+    onDelete: "cascade",
+  }),
+  date: timestamp("date").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
 /**
 --------------------------------------- Validations ---------------------------------------
 */
@@ -100,6 +118,7 @@ export const insertActivityAmenitiesSchema =
   createInsertSchema(ActivityAmenities);
 export const insertActivityPackagesSchema =
   createInsertSchema(ActivityPackages);
+export const insertActivityDatesSchema = createInsertSchema(ActivityDates);
 
 // Custom schema for activity package creation (excludes auto-generated fields)
 export const createActivityPackageSchema = z.object({
@@ -156,3 +175,6 @@ export type TActivityPackageBase = typeof ActivityPackages.$inferSelect;
 
 export type TNewActivityPolicy = typeof ActivityPolicies.$inferInsert;
 export type TActivityPolicyBase = typeof ActivityPolicies.$inferSelect;
+
+export type TNewActivityDate = typeof ActivityDates.$inferInsert;
+export type TActivityDateBase = typeof ActivityDates.$inferSelect;

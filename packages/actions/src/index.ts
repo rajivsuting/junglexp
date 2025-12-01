@@ -21,3 +21,5 @@ export * from "./hotel-bookings.action";
 export * from "./naturalist-bookings.actions";
 export * from "./souvenir-bookings.actions";
 export * from "./activity-bookings.actions";
+export * from "./blogs.actions";
+export * from "./email.actions";

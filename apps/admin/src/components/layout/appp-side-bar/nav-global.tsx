@@ -1,5 +1,5 @@
 "use client";
-import { Star } from "lucide-react";
+import { Star, FileText } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -17,6 +17,11 @@ const items = [
     title: "Promotions",
     url: "/promotions",
     icon: Star,
+  },
+  {
+    title: "Blogs",
+    url: "/blogs",
+    icon: FileText,
   },
 ];
 

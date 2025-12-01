@@ -186,19 +186,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Lodges Section */}
       <Suspense>
+        <SafariSection park={park as any} />
+      </Suspense>
+
+      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
+
+      {/* Lodges Section */}
+      {/* <Suspense>
         <LodgesSection park={park as any} />
       </Suspense>
       <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
       <Suspense>
         <ForestStaysSection park={park as any} />
-      </Suspense>
-      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
-
-      <Suspense>
-        <SafariSection park={park as any} />
-      </Suspense>
+      </Suspense> */}
 
       {/* Map Section (Placeholder) */}
       <Map />
@@ -217,15 +218,15 @@ export default async function HomePage() {
       <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
 
       {/* Reviews Section */}
-      <section className="py-16 bg-white">
+      {/* <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <h2 className="text-[#9B8B6C] text-3xl font-light mb-8">
             <span className="font-bold">JIM CORBETT NATIONAL PARK</span> REVIEWS
           </h2>
 
-          {/* <ReviewsSection /> */}
+          <ReviewsSection />
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }

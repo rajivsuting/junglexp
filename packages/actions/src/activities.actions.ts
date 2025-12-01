@@ -1,15 +1,20 @@
 "use server";
-import { and, count, eq, ilike, inArray, or } from 'drizzle-orm';
+import { and, count, eq, gte, ilike, inArray, or } from "drizzle-orm";
 
-import { db } from '@repo/db';
+import { db } from "@repo/db";
 import {
-    Activities, ActivityAmenities, ActivityImages, ActivityItinerary, ActivityPackages,
-    ActivityPolicies
-} from '@repo/db/schema/activities';
-import { Images } from '@repo/db/schema/image';
-import { NationalParks } from '@repo/db/schema/park';
-import { Policies } from '@repo/db/schema/policies';
-import { generateSlug } from '@repo/db/utils/slug-generator';
+  Activities,
+  ActivityAmenities,
+  ActivityDates,
+  ActivityImages,
+  ActivityItinerary,
+  ActivityPackages,
+  ActivityPolicies,
+} from "@repo/db/schema/activities";
+import { Images } from "@repo/db/schema/image";
+import { NationalParks } from "@repo/db/schema/park";
+import { Policies } from "@repo/db/schema/policies";
+import { generateSlug } from "@repo/db/utils/slug-generator";
 
 import type {
   TActivityBase,
@@ -247,7 +252,6 @@ export const getActivityBySlug = async (slug: string) => {
           city: {
             with: { state: true },
           },
-          zones: true,
         },
       },
       images: {
@@ -998,4 +1002,46 @@ export const getPackagesByActivityId = async (activityId: string) => {
       eq(ActivityPackages.active, true)
     ),
   });
+};
+
+export const getActivityDates = async (activityId: number) => {
+  if (!db) return [];
+  const dates = await db!.query.ActivityDates.findMany({
+    where: eq(ActivityDates.activity_id, activityId),
+  });
+  return dates.map((d) => d.date);
+};
+
+export const updateActivityDates = async (
+  activityId: number,
+  dates: Date[]
+) => {
+  if (!db) throw new Error("Database connection not available");
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Delete existing future dates for this activity
+  await db
+    .delete(ActivityDates)
+    .where(
+      and(
+        eq(ActivityDates.activity_id, activityId),
+        gte(ActivityDates.date, today)
+      )
+    );
+
+  // Filter input dates to only future ones
+  const futureDates = dates.filter((d) => d >= today);
+
+  if (futureDates.length === 0) return [];
+
+  // Insert new dates
+  const values = futureDates.map((date) => ({
+    activity_id: activityId,
+    date: date,
+  }));
+
+  const newDates = await db.insert(ActivityDates).values(values).returning();
+  return newDates;
 };

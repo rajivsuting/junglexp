@@ -1,30 +1,45 @@
 "use client";
 
-import { format } from 'date-fns';
-import { CalendarIcon, CheckCircle2 } from 'lucide-react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import { format } from "date-fns";
+import { CalendarIcon, CheckCircle2, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createActivityBooking } from '@repo/actions';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createActivityBooking } from "@repo/actions";
+import { getActivityDates } from "@repo/actions/activities.actions";
 
 import type { TActivityBookingBase } from "@repo/db/schema/activity-bookings";
+import { toast } from "sonner";
+import type { TActivityPackageBase } from "@repo/db/index";
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -40,17 +55,6 @@ const bookingSchema = z.object({
 
 type BookingFormData = z.infer<typeof bookingSchema>;
 
-interface Package {
-  id: number;
-  name: string;
-  description?: string | null;
-  price: number;
-  duration?: string | null;
-  max_participants?: number | null;
-  highlights?: string[];
-  included_items?: string[];
-}
-
 interface Activity {
   id: number;
   name: string;
@@ -60,7 +64,7 @@ interface Activity {
 interface ActivityBookingModalProps {
   isOpen: boolean;
   onChangeState: (state: boolean) => void;
-  selectedPackage: Package;
+  selectedPackage: TActivityPackageBase;
   activity: Activity;
 }
 
@@ -75,6 +79,26 @@ export function ActivityBookingModal({
   const [isLoading, setIsLoading] = useState(false);
   const [bookingDetails, setBookingDetails] =
     useState<TActivityBookingBase | null>(null);
+  const [availableDates, setAvailableDates] = useState<Date[]>([]);
+  const [loadingDates, setLoadingDates] = useState(false);
+
+  useEffect(() => {
+    const fetchDates = async () => {
+      if (!activity.id) return;
+      try {
+        setLoadingDates(true);
+        const dates = await getActivityDates(activity.id);
+        setAvailableDates(dates.map((d) => new Date(d)));
+      } catch (error) {
+        console.error("Failed to fetch available dates", error);
+      } finally {
+        setLoadingDates(false);
+      }
+    };
+    if (isOpen) {
+      fetchDates();
+    }
+  }, [activity.id, isOpen]);
 
   const {
     register,
@@ -92,7 +116,7 @@ export function ActivityBookingModal({
   });
 
   const watchedValues = watch();
-  const maxParticipants = selectedPackage.max_participants || 10;
+  const maxParticipants = selectedPackage.number || 0;
 
   const handleFormSubmit = async (data: BookingFormData) => {
     try {
@@ -161,10 +185,10 @@ export function ActivityBookingModal({
                       <span>{selectedPackage.duration} Hours</span>
                     </div>
                   )}
-                  {selectedPackage.max_participants && (
+                  {selectedPackage.number && (
                     <div className="flex justify-between text-sm">
                       <span>Max Participants</span>
-                      <span>{selectedPackage.max_participants} people</span>
+                      <span>{selectedPackage.number} people</span>
                     </div>
                   )}
                 </CardContent>
@@ -226,39 +250,75 @@ export function ActivityBookingModal({
                 <h3 className="font-semibold">Booking Details</h3>
 
                 <div className="space-y-2">
-                  <Label>Preferred Date*</Label>
-                  <Popover
-                    open={isCalendarOpen}
-                    onOpenChange={setIsCalendarOpen}
-                  >
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !watchedValues.preferredDate &&
-                            "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {watchedValues.preferredDate
-                          ? format(watchedValues.preferredDate, "PPP")
-                          : "Pick a date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={watchedValues.preferredDate}
-                        onSelect={(date) => {
-                          setValue("preferredDate", date as Date);
-                          setIsCalendarOpen(false);
-                        }}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <Label>Select Date*</Label>
+                  {loadingDates ? (
+                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md text-muted-foreground text-sm">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Loading dates...
+                    </div>
+                  ) : availableDates.length > 0 ? (
+                    <Select
+                      value={
+                        watchedValues.preferredDate
+                          ? format(watchedValues.preferredDate, "yyyy-MM-dd")
+                          : ""
+                      }
+                      onValueChange={(value) => {
+                        const date = new Date(value + "T00:00:00");
+                        setValue("preferredDate", date);
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a date" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableDates
+                          .sort((a, b) => a.getTime() - b.getTime())
+                          .filter((date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            return date >= today;
+                          })
+                          .map((date) => (
+                            <SelectItem
+                              key={date.toISOString()}
+                              value={format(date, "yyyy-MM-dd")}
+                            >
+                              {format(date, "PPP")}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      type="date"
+                      min={new Date().toISOString().split("T")[0]}
+                      disabled={loadingDates}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !watchedValues.preferredDate && "text-muted-foreground"
+                      )}
+                      value={
+                        watchedValues.preferredDate
+                          ? format(watchedValues.preferredDate, "yyyy-MM-dd")
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const dateString = e.target.value;
+                        if (!dateString) return;
+
+                        const selectedDate = new Date(dateString + "T00:00:00");
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+
+                        if (selectedDate < today) {
+                          return; // Invalid date (past)
+                        }
+
+                        setValue("preferredDate", selectedDate);
+                      }}
+                    />
+                  )}
                   {errors.preferredDate && (
                     <p className="text-sm text-destructive">
                       {errors.preferredDate.message}
@@ -271,15 +331,26 @@ export function ActivityBookingModal({
                     <Label htmlFor="numberOfAdults">Number of Adults*</Label>
                     <Select
                       value={watchedValues.numberOfAdults?.toString()}
-                      onValueChange={(value) =>
-                        setValue("numberOfAdults", parseInt(value))
-                      }
+                      onValueChange={(value) => {
+                        const newAdults = parseInt(value);
+                        const currentKids = watchedValues.numberOfKids || 0;
+                        if (
+                          maxParticipants > 0 &&
+                          newAdults + currentKids > maxParticipants
+                        ) {
+                          toast.error(
+                            `Total participants cannot exceed ${maxParticipants}`
+                          );
+                          return;
+                        }
+                        setValue("numberOfAdults", newAdults);
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        {[...Array(maxParticipants)].map((_, i) => (
+                        {[...Array(maxParticipants || 10)].map((_, i) => (
                           <SelectItem key={i + 1} value={String(i + 1)}>
                             {i + 1} {i + 1 === 1 ? "Adult" : "Adults"}
                           </SelectItem>
@@ -297,15 +368,26 @@ export function ActivityBookingModal({
                     <Label htmlFor="numberOfKids">Number of Children</Label>
                     <Select
                       value={watchedValues.numberOfKids?.toString()}
-                      onValueChange={(value) =>
-                        setValue("numberOfKids", parseInt(value))
-                      }
+                      onValueChange={(value) => {
+                        const newKids = parseInt(value);
+                        const currentAdults = watchedValues.numberOfAdults || 0;
+                        if (
+                          maxParticipants > 0 &&
+                          currentAdults + newKids > maxParticipants
+                        ) {
+                          toast.error(
+                            `Total participants cannot exceed ${maxParticipants}`
+                          );
+                          return;
+                        }
+                        setValue("numberOfKids", newKids);
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        {[...Array(maxParticipants)].map((_, i) => (
+                        {[...Array(maxParticipants || 10)].map((_, i) => (
                           <SelectItem key={i} value={String(i)}>
                             {i} {i === 1 ? "Child" : "Children"}
                           </SelectItem>

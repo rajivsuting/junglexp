@@ -1,21 +1,14 @@
 "use client";
 
-import { Clock, Star, Users } from 'lucide-react';
+import { Clock, Star, Users } from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface Package {
-  id: number;
-  name: string;
-  price: number;
-  duration?: string | null;
-  max_participants?: number | null;
-}
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TActivityPackageBase } from "@repo/db/index";
 
 interface ActivityBookingCardDesktopProps {
-  packages: Package[];
+  packages: TActivityPackageBase[];
   basePrice: number;
   rating?: number | null;
   duration?: string | null;
@@ -30,7 +23,7 @@ export function ActivityBookingCardDesktop({
   maxGroupSize,
 }: ActivityBookingCardDesktopProps) {
   const price = packages?.[0]?.price || basePrice;
-  const maxParticipants = packages?.[0]?.max_participants || maxGroupSize || 10;
+  const maxParticipants = packages?.[0]?.number || maxGroupSize || 10;
 
   const scrollToPackages = () => {
     const packagesSection = document.getElementById("packages");

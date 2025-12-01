@@ -1,14 +1,25 @@
 "use client";
-import React, { useCallback, useMemo } from 'react';
-import { z } from 'zod';
+import React, { useCallback, useMemo } from "react";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, rectSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@repo/db/utils/file-utils';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
 
 import type { DragEndEvent } from "@dnd-kit/core";
 
@@ -82,6 +93,7 @@ export const keyOf = (img: FormImage) =>
 
 // Validation helpers
 export const validateImages = (images: FormImage[]) => {
+  console.log("images", images);
   const errors: string[] = [];
 
   images.forEach((img, index) => {
@@ -132,10 +144,12 @@ export const FileUploader: React.FC<Props> = ({
   const onFiles = useCallback(
     (files: FileList | File[]) => {
       const incoming = Array.from(files);
+
       const accept = new Set(ACCEPTED_IMAGE_TYPES);
       const filtered = incoming.filter(
         (f) => f.size <= maxSize && accept.has(f.type)
       );
+
       if (filtered.length === 0) return;
 
       const remainingSlots = Math.max(0, maxFiles - value.length);

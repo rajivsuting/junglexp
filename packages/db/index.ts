@@ -2,11 +2,12 @@ import { config } from 'dotenv';
 import { drizzle } from 'drizzle-orm/neon-http';
 
 import {
-    Activities, ActivityAmenities, ActivityImages, ActivityItinerary, ActivityPackages,
+    Activities, ActivityAmenities, ActivityDates, ActivityImages, ActivityItinerary, ActivityPackages,
     ActivityPolicies
 } from './schema/activities';
 import { ActivityBookings, activityBookingStatusEnum } from './schema/activity-bookings';
 import { Amenities } from './schema/amenities';
+import { Blogs } from './schema/blogs';
 import { Cities } from './schema/city';
 import { Faqs } from './schema/faqs';
 import { HotelAmenities } from './schema/hotel-amenities';
@@ -65,6 +66,7 @@ export type {
   TActivityPackageBase,
   TNewActivityPackage,
 } from "./schema/activities";
+export type { TBlog, TNewBlog } from "./schema/blogs";
 export * from "./schema/types";
 
 export const schemaWithoutRelations = {
@@ -100,6 +102,7 @@ export const schemaWithoutRelations = {
   ActivityAmenities,
   ActivityPackages,
   ActivityPolicies,
+  ActivityDates,
   Naturalist,
   HotelBookings,
   hotelBookingStatusEnum,
@@ -112,6 +115,7 @@ export const schemaWithoutRelations = {
   ActivityBookings,
   activityBookingStatusEnum,
   NaturalistActivities,
+  Blogs,
 };
 
 export const schema = {

@@ -81,7 +81,7 @@
   --foreground: #2f2f2f;
 }
 
-.dark {
+/* .dark {
   --background: #2d2a1f;
   --foreground: #fff8e1;
   --card: #f3f3f3;
@@ -113,7 +113,7 @@
   --sidebar-accent-foreground: #2d2a1f;
   --sidebar-border: #877b4f;
   --sidebar-ring: #ffd700;
-}
+} */
 
 @layer base {
   * {

@@ -1,18 +1,27 @@
 "use client";
-import { ShoppingBag, Video } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { FileText, ShoppingBag, Video } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
-    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton,
-    SidebarMenuItem
-} from '@/components/ui/sidebar';
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 const items = [
   {
     title: "Reels",
     url: "/reels",
     icon: Video,
+  },
+  {
+    title: "Blogs",
+    url: "/blogs",
+    icon: FileText,
   },
 ];
 

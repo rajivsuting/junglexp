@@ -1,38 +1,28 @@
-import { Clock, MapPin, Star, Users, Zap } from 'lucide-react';
+import { Clock, MapPin, Star, Users, Zap } from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/badge";
+import type { TNationalPark } from "@repo/db/index";
 
 interface ActivityTitleSectionProps {
   name: string;
   rating?: number | null;
-  zone?: {
-    name: string;
-    park?: {
-      name: string;
-      city?: {
-        name: string;
-        state?: {
-          name: string;
-        };
-      };
-    };
-  } | null;
   duration?: string | null;
   difficulty?: string | null;
   maxGroupSize?: number | null;
+  park?: TNationalPark;
 }
 
 export function ActivityTitleSection({
   name,
+  park,
   rating,
-  zone,
   duration,
   difficulty,
   maxGroupSize,
 }: ActivityTitleSectionProps) {
-  const location = zone?.park?.city
-    ? `${zone.name}, ${zone.park.name}, ${zone.park.city.name}`
-    : zone?.name || "Location not specified";
+  const location = park?.city
+    ? `${park.name}, ${park.city.name}, ${park.city.state.name}`
+    : "Location not specified";
 
   const getDifficultyColor = (difficulty: string | null) => {
     switch (difficulty?.toLowerCase()) {

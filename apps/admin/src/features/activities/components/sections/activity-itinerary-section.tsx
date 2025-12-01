@@ -1,24 +1,32 @@
 "use client";
 
-import { GripVertical, Loader2, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { GripVertical, Loader2, Plus, Trash2, Pencil } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form } from '@/components/ui/form';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
 import {
-    closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors
-} from '@dnd-kit/core';
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
-    arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable,
-    verticalListSortingStrategy
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { updateActivityItineraries } from '@repo/actions/activities.actions';
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { updateActivityItineraries } from "@repo/actions/activities.actions";
 
-import { AddItineraryModal } from './add-itinerary-modal';
+import { AddItineraryModal } from "./add-itinerary-modal";
 
 import type { TActivity, TActivityItineraryBase } from "@repo/db/index";
 
@@ -44,11 +52,13 @@ const SortableItineraryItem = ({
   item,
   index,
   onRemove,
+  onEdit,
   disabled,
 }: {
   item: ItineraryItem;
   index: number;
   onRemove: (id: string) => void;
+  onEdit: (item: ItineraryItem) => void;
   disabled: boolean;
 }) => {
   const {
@@ -97,14 +107,24 @@ const SortableItineraryItem = ({
           {item.description}
         </p>
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => onRemove(item.id)}
-        disabled={disabled}
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onEdit(item)}
+          disabled={disabled}
+        >
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onRemove(item.id)}
+          disabled={disabled}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };
@@ -140,6 +160,7 @@ export default function ActivityItinerarySection({
   const itinerary = watch("itinerary");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<ItineraryItem | null>(null);
 
   // DND Kit sensors
   const sensors = useSensors(
@@ -149,15 +170,34 @@ export default function ActivityItinerarySection({
     })
   );
 
-  const addItineraryItem = (item: { title: string; description: string }) => {
-    const newItineraryItem: ItineraryItem = {
-      id: `new-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      title: item.title,
-      description: item.description,
-      isExisting: false, // Mark as new item
-    };
-    const updatedItinerary = [...itinerary, newItineraryItem];
-    setValue("itinerary", updatedItinerary, { shouldDirty: true });
+  const handleSaveItem = (itemData: { title: string; description: string }) => {
+    if (editingItem) {
+      const updatedItinerary = itinerary.map((item) =>
+        item.id === editingItem.id ? { ...item, ...itemData } : item
+      );
+      setValue("itinerary", updatedItinerary, { shouldDirty: true });
+      setEditingItem(null);
+    } else {
+      const newItineraryItem: ItineraryItem = {
+        id: `new-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        title: itemData.title,
+        description: itemData.description,
+        isExisting: false, // Mark as new item
+      };
+      const updatedItinerary = [...itinerary, newItineraryItem];
+      setValue("itinerary", updatedItinerary, { shouldDirty: true });
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleEdit = (item: ItineraryItem) => {
+    setEditingItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleAdd = () => {
+    setEditingItem(null);
+    setIsModalOpen(true);
   };
 
   const removeItineraryItem = (id: string) => {
@@ -242,7 +282,7 @@ export default function ActivityItinerarySection({
           <CardTitle>Activity Itinerary</CardTitle>
           <Button
             type="button"
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleAdd}
             size="sm"
             variant="outline"
             disabled={isSubmitting}
@@ -276,6 +316,7 @@ export default function ActivityItinerarySection({
                     item={item}
                     index={index}
                     onRemove={removeItineraryItem}
+                    onEdit={handleEdit}
                     disabled={isSubmitting}
                   />
                 ))}
@@ -298,7 +339,8 @@ export default function ActivityItinerarySection({
         <AddItineraryModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onAdd={addItineraryItem}
+          onSave={handleSaveItem}
+          initialData={editingItem}
         />
       </form>
     </Form>

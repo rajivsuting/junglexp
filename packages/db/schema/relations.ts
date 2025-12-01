@@ -3,6 +3,7 @@ import { relations } from "drizzle-orm";
 import {
   Activities,
   ActivityAmenities,
+  ActivityDates,
   ActivityImages,
   ActivityItinerary,
   ActivityPackages,
@@ -10,6 +11,7 @@ import {
 } from "./activities";
 import { ActivityBookings } from "./activity-bookings";
 import { Amenities } from "./amenities";
+import { Blogs } from "./blogs";
 import { Cities } from "./city";
 import { Faqs } from "./faqs";
 import { HotelAmenities } from "./hotel-amenities";
@@ -259,6 +261,7 @@ export const activityRelations = relations(Activities, ({ one, many }) => ({
   itinerary: many(ActivityItinerary),
   amenities: many(ActivityAmenities),
   packages: many(ActivityPackages),
+  dates: many(ActivityDates),
 }));
 
 export const activityPoliciesRelations = relations(
@@ -317,6 +320,16 @@ export const activityPackagesRelations = relations(
       references: [Activities.id],
     }),
   })
+);
+
+export const activityDatesRelations = relations(
+    ActivityDates,
+    ({ one }) => ({
+        activity: one(Activities, {
+            fields: [ActivityDates.activity_id],
+            references: [Activities.id],
+        }),
+    })
 );
 
 export const naturalistRelations = relations(Naturalist, ({ one, many }) => ({
@@ -392,3 +405,13 @@ export const activityBookingsRelations = relations(
     }),
   })
 );
+
+/**
+--------------------------------------- Blogs ---------------------------------------
+*/
+export const blogsRelations = relations(Blogs, ({ one }) => ({
+  thumbnail: one(Images, {
+    fields: [Blogs.thumbnail_image_id],
+    references: [Images.id],
+  }),
+}));

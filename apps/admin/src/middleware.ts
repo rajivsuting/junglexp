@@ -7,6 +7,7 @@ import {
 } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher(["/sign-in", "/api/webhooks/clerk"]);
+const isPublicApiRoute = createRouteMatcher(["/api/v1/blogs"]);
 const isSuperAdminRoute = createRouteMatcher(["/users", "/users(.*)"]);
 
 export const config = {
@@ -26,6 +27,10 @@ export default clerkMiddleware(async (auth, req) => {
     if (userId) {
       return NextResponse.redirect(new URL("/", req.url));
     }
+    return NextResponse.next();
+  }
+
+  if (isPublicApiRoute(req)) {
     return NextResponse.next();
   }
 

@@ -1,26 +1,15 @@
 "use client";
 
-import { Check, Clock, Star, Users } from 'lucide-react';
-import { useState } from 'react';
+import { Check, Clock, Star, Users } from "lucide-react";
+import { useState } from "react";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
-import { ActivityBookingModal } from './activity-booking-modal';
-
-interface Package {
-  id: number;
-  name: string;
-  description?: string | null;
-  price: number;
-  duration?: string | null;
-  max_participants?: number | null;
-  highlights?: string[];
-  included_items?: string[];
-  is_popular?: boolean;
-}
+import { ActivityBookingModal } from "./activity-booking-modal";
+import type { TActivityPackageBase } from "@repo/db/index";
 
 interface Activity {
   id: number;
@@ -29,7 +18,7 @@ interface Activity {
 }
 
 interface ActivityPackagesSectionProps {
-  packages: Package[];
+  packages: TActivityPackageBase[];
   activity: Activity;
 }
 
@@ -37,14 +26,15 @@ export function ActivityPackagesSection({
   packages,
   activity,
 }: ActivityPackagesSectionProps) {
-  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+  const [selectedPackage, setSelectedPackage] =
+    useState<TActivityPackageBase | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!packages || packages.length === 0) {
     return null;
   }
 
-  const handleSelectPackage = (pkg: Package) => {
+  const handleSelectPackage = (pkg: TActivityPackageBase) => {
     setSelectedPackage(pkg);
     setIsModalOpen(true);
   };
@@ -66,18 +56,18 @@ export function ActivityPackagesSection({
             <Card
               key={pkg.id}
               className={cn(
-                "relative cursor-pointer transition-all duration-300 hover:shadow-lg",
-                pkg.is_popular && "border-primary"
+                "relative cursor-pointer transition-all duration-300 hover:shadow-lg"
+                // pkg.is_popular && "border-primary"
               )}
             >
-              {pkg.is_popular && (
+              {/* {pkg.is_popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-primary text-primary-foreground px-3 py-1">
                     <Star className="w-3 h-3 mr-1" />
                     Most Popular
                   </Badge>
                 </div>
-              )}
+              )} */}
 
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
@@ -94,11 +84,11 @@ export function ActivityPackagesSection({
                   </div>
                 </div>
 
-                {pkg.description && (
+                {/* {pkg.description && (
                   <p className="text-muted-foreground text-sm mt-2">
                     {pkg.description}
                   </p>
-                )}
+                )} */}
               </CardHeader>
 
               <CardContent className="space-y-4">
@@ -110,16 +100,16 @@ export function ActivityPackagesSection({
                       <span>{pkg.duration} Hours</span>
                     </div>
                   )}
-                  {pkg.max_participants && (
+                  {pkg.number && (
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Users className="w-4 h-4" />
-                      <span>Max {pkg.max_participants}</span>
+                      <span>Max {pkg.number}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Highlights */}
-                {pkg.highlights && pkg.highlights.length > 0 && (
+                {/* {pkg.highlights && pkg.highlights.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-sm mb-2">Highlights</h4>
                     <ul className="space-y-1">
@@ -141,10 +131,10 @@ export function ActivityPackagesSection({
                       )}
                     </ul>
                   </div>
-                )}
+                )} */}
 
                 {/* Included Items */}
-                {pkg.included_items && pkg.included_items.length > 0 && (
+                {/* {pkg.included_items && pkg.included_items.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-sm mb-2">
                       What's Included
@@ -166,7 +156,7 @@ export function ActivityPackagesSection({
                       )}
                     </ul>
                   </div>
-                )}
+                )} */}
 
                 {/* Selection Button */}
                 <Button

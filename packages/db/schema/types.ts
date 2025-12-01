@@ -165,3 +165,7 @@ export type TNaturalist = TNaturalistBase & {
   image: TImage;
   park: TNationalPark;
 };
+
+export type TActivityPackage = TActivityPackageBase & {
+  activity: TActivityBase;
+};
