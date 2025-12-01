@@ -1,7 +1,13 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
-
+import Image from "next/image";
+import Link from "next/link";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+  FaWhatsapp,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 const Footer = () => {
   return (
     <footer className="bg-[#3C553D] text-white py-12">
@@ -17,14 +23,34 @@ const Footer = () => {
               height={80}
             />
             <div className="flex space-x-4">
-              <Link href="https://facebook.com" className="hover:text-gray-300">
+              <Link
+                target="_blank"
+                href="https://www.facebook.com/share/1BbY8UgRGR/"
+                className="hover:text-gray-300"
+              >
                 <FaFacebook size={24} />
               </Link>
               <Link
-                href="https://instagram.com"
+                target="_blank"
+                href="https://www.instagram.com/junglexpecotour?igsh=bzFseDB6ZWZsdnI4"
                 className="hover:text-gray-300"
               >
                 <FaInstagram size={24} />
+              </Link>
+              <Link
+                target="_blank"
+                href="https://www.linkedin.com/in/junglexp-eco-tours-85a063392?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                className="hover:text-gray-300"
+              >
+                <FaLinkedin size={24} />
+              </Link>
+
+              <Link
+                target="_blank"
+                href="https://x.com/junglexpecotour?t=TUtDuu0ftzIiD-cjYpcFwQ&s=09"
+                className="hover:text-gray-300"
+              >
+                <FaXTwitter size={24} />
               </Link>
             </div>
           </div>
