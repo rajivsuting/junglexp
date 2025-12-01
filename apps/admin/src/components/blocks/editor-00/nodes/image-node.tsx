@@ -150,9 +150,8 @@ export class ImageNode extends DecoratorNode<React.JSX.Element> {
         src={this.__src}
         alt={this.__altText}
         style={{
-          width: this.__width === "inherit" ? "100%" : this.__width,
+          width: "100%",
           height: this.__height === "inherit" ? "auto" : this.__height,
-          maxWidth: this.__maxWidth,
         }}
       />
     );
