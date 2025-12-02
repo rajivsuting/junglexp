@@ -1,25 +1,34 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { uploadVideo } from '@/lib/video-upload';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createReel, updateReel } from '@repo/actions/reels.actions';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { uploadVideo } from "@/lib/video-upload";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createReel, updateReel } from "@repo/actions/reels.actions";
 
 import type { TReelBase } from "@repo/db/schema/reels";
 
@@ -190,9 +199,10 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
         toast.error("Failed to upload video");
         return;
       }
+      const { videoFile, ...rest } = data;
       // For create, you'll likely upload the file and set videoUrl to the uploaded URL on server
       const inserted = await createReel({
-        ...data,
+        ...rest,
         videoUrl: url,
       } as any);
       if (inserted) {
