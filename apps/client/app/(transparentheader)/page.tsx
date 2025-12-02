@@ -9,6 +9,7 @@ import Map from "@/components/Map";
 import { SafariSection } from "@/components/safari-section";
 import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 import { getConfiguration } from "@repo/actions/configurations.actions";
+import { cn } from "@/lib/utils";
 
 const parkName = "green-walks-by-junglexp";
 
@@ -65,7 +66,7 @@ export default async function HomePage() {
           <p className="text-sm md:text-[16px] font-light mb-4 text-white">
             DISCOVER . EXPLORE . EXPERIENCE
           </p>
-          <div className="text-[32px] md:text-[62px] font-light mb-6 w-full md:leading-18 text-white drop-shadow">
+          <div className="text-[32px] md:text-[62px] mb-6 w-full md:leading-18 text-white drop-shadow [&_b]:font-bold [&_br]:block">
             {typeof homePageTitle === "string" ? (
               <span dangerouslySetInnerHTML={{ __html: homePageTitle }} />
             ) : (
