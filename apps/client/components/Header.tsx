@@ -4,15 +4,16 @@ import React from 'react';
 
 import TopBar from './TopBar';
 
+const parkName = "green-walks-by-junglexp";
 const navLinks = [
   { name: "Home", href: "/" },
   {
     name: "Stays",
-    href: "/parks/jim-corbet-national-park/stays?stay-type=resort",
+    href: `/parks/${parkName}/stays?stay-type=resort`,
   },
   {
     name: "Activities & Safaris",
-    href: "/parks/jim-corbet-national-park/activities",
+    href: `/parks/${parkName}/activities`,
   },
   { name: "Contact Us", href: "https://wa.me/917428006473" },
 ];

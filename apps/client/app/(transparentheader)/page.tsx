@@ -10,8 +10,10 @@ import { SafariSection } from "@/components/safari-section";
 import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 import { getConfiguration } from "@repo/actions/configurations.actions";
 
+const parkName = "green-walks-by-junglexp";
+
 export const generateMetadata = async () => {
-  const park = await getNationalParkBySlug("jim-corbet-national-park");
+  const park = await getNationalParkBySlug(parkName);
 
   return {
     title: park?.name,
@@ -26,7 +28,7 @@ export const generateMetadata = async () => {
 
 export default async function HomePage() {
   const [park, homePageTitleConfig] = await Promise.all([
-    getNationalParkBySlug("jim-corbet-national-park"),
+    getNationalParkBySlug(parkName),
     getConfiguration("home_page_title"),
   ]);
 
@@ -72,7 +74,7 @@ export default async function HomePage() {
           </div>
           <div className="flex items-center gap-4">
             <Link
-              href="/parks/jim-corbet-national-park/stays?stay-type=resort"
+              href={`/parks/${park.slug}/stays?stay-type=resort`}
               className="px-6 py-2 border-2 w-fit border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors"
             >
               Find Lodges
