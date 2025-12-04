@@ -22,6 +22,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@repo/db/utils/file-utils";
 
 import type { DragEndEvent } from "@dnd-kit/core";
+import { toast } from "sonner";
 
 export const ExistingImageSchema = z.object({
   _type: z.literal("existing"),
@@ -144,12 +145,18 @@ export const FileUploader: React.FC<Props> = ({
   const onFiles = useCallback(
     (files: FileList | File[]) => {
       const incoming = Array.from(files);
-
+      console.log("incoming", incoming);
       const accept = new Set(ACCEPTED_IMAGE_TYPES);
       const filtered = incoming.filter(
         (f) => f.size <= maxSize && accept.has(f.type)
       );
+      console.log("filtered", filtered);
 
+      if (incoming.length !== filtered.length) {
+        toast.error(
+          "Some files are not accepted. Please check the file types and sizes."
+        );
+      }
       if (filtered.length === 0) return;
 
       const remainingSlots = Math.max(0, maxFiles - value.length);
@@ -237,7 +244,10 @@ export const FileUploader: React.FC<Props> = ({
           document.getElementById(id)?.click();
         }}
       >
-        <p className="text-sm">Click or drag images here</p>
+        <p className="text-sm">
+          Click or drag images here (max {maxFiles} files, max size{" "}
+          {maxSize / 1024 / 1024}MB)
+        </p>
         <input
           id={id}
           type="file"

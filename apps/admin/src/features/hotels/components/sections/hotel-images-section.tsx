@@ -204,9 +204,11 @@ export const HotelImagesSection = ({
               <FormControl>
                 <FileUploader
                   value={(field.value || []) as FileUploaderFormImage[]}
-                  onValueChange={(value) =>
-                    field.onChange(value as FormImage[])
-                  }
+                  onValueChange={(value) => {
+                    console.log("value", value);
+
+                    field.onChange(value as FormImage[]);
+                  }}
                   multiple={true}
                   maxFiles={20}
                   progresses={uploadProgress}

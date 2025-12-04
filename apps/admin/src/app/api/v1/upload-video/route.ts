@@ -1,8 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { uploadVideo } from '@/lib/video-upload';
+import { uploadVideo } from "@/lib/video-upload";
 
 export const runtime = "nodejs";
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "60mb", // Adjust this to your needs (e.g., '50mb')
+    },
+  },
+};
 
 export async function POST(req: NextRequest) {
   try {

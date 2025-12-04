@@ -56,9 +56,19 @@ const createSchema = z
               resolve(false);
               return;
             }
+            // Check file size (60MB = 60 * 1024 * 1024 bytes)
+            if (file.size > 60 * 1024 * 1024) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Video file size must be less than 60MB.",
+              });
+              resolve(false);
+              return;
+            }
             const ratio = width / height;
             const target = 9 / 16;
             const tolerance = 0.02;
+
             resolve(Math.abs(ratio - target) <= tolerance);
           };
           video.onerror = () => {
@@ -278,6 +288,7 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
                         {...field}
                       />
                     </FormControl>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -288,7 +299,7 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
                 name="videoFile"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Video File</FormLabel>
+                    <FormLabel>Video File (max size 60MB)</FormLabel>
                     <FormControl>
                       <Input
                         type="file"
@@ -300,7 +311,9 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
                       />
                     </FormControl>
                     <p className="text-xs text-muted-foreground">
-                      Only one video file allowed
+                      Only one video file allowed, Please upload smaller video
+                      file if possible, as larger files may make the page load
+                      slower.
                     </p>
                     <FormMessage />
                   </FormItem>
