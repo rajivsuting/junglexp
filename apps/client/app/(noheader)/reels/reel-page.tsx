@@ -1,10 +1,10 @@
 "use client";
 
 import type { TReelBase } from "@repo/db/schema/reels";
-import { Pause, Play } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
+import { Pause, Play } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 
 interface ReelItemProps {
   reel: TReelBase;
@@ -138,7 +138,17 @@ function ReelItem({ reel, isActive, isMuted, onToggleMute }: ReelItemProps) {
             )}
           </button>
         </div>
-        <Link target="_blank" href={reel.redirectUrl} className="p-4">
+        <Link
+          target="_blank"
+          href={reel.redirectUrl}
+          className="p-4"
+          onClick={() => {
+            if (videoRef.current) {
+              videoRef.current.pause();
+              setIsPlaying(false);
+            }
+          }}
+        >
           <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
             <div className="flex items-start space-x-3">
               {/* Package Image */}
