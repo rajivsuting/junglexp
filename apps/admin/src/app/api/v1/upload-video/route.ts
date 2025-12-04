@@ -4,14 +4,6 @@ import { uploadVideo } from "@/lib/video-upload";
 
 export const runtime = "nodejs";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "60mb", // Adjust this to your needs (e.g., '50mb')
-    },
-  },
-};
-
 export async function POST(req: NextRequest) {
   try {
     const contentType = req.headers.get("content-type") || "";

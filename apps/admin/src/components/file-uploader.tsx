@@ -94,7 +94,6 @@ export const keyOf = (img: FormImage) =>
 
 // Validation helpers
 export const validateImages = (images: FormImage[]) => {
-  console.log("images", images);
   const errors: string[] = [];
 
   images.forEach((img, index) => {
