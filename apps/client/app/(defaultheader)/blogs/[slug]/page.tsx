@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import RelatedBlogs from "./RelatedBlogs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import type { Metadata } from "next/types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -15,7 +16,9 @@ export async function generateStaticParams() {
   return blogs.map((blog) => ({ slug: blog.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 

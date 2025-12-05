@@ -144,12 +144,10 @@ export const FileUploader: React.FC<Props> = ({
   const onFiles = useCallback(
     (files: FileList | File[]) => {
       const incoming = Array.from(files);
-      console.log("incoming", incoming);
       const accept = new Set(ACCEPTED_IMAGE_TYPES);
       const filtered = incoming.filter(
         (f) => f.size <= maxSize && accept.has(f.type)
       );
-      console.log("filtered", filtered);
 
       if (incoming.length !== filtered.length) {
         toast.error(

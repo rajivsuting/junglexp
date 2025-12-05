@@ -1,5 +1,5 @@
-import sharp from 'sharp';
-import { bucket } from '@/lib/gcs';
+import sharp from "sharp";
+import { bucket } from "@/lib/gcs";
 
 // Image sizes for responsive variants
 export const IMAGE_SIZES = {
@@ -27,12 +27,18 @@ export interface UploadResult {
   originalName: string;
 }
 
-function tsName(base: string, suffix: string) {
-  const nameWithoutExt = base.split(".").slice(0, -1).join(".") || base;
-  const timestamp = Date.now();
-  return suffix
-    ? `${timestamp}-${nameWithoutExt}${suffix}.webp`
-    : `${timestamp}-${nameWithoutExt}.webp`;
+function generateUniqueName() {
+  const now = new Date();
+  const datePart = now
+    .toISOString()
+    .replace(/[-:T.]/g, "")
+    .slice(0, 14);
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let randomPart = "";
+  for (let i = 0; i < 20; i++) {
+    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `${datePart}-${randomPart}`;
 }
 
 async function processImage(buffer: Buffer, size: ImageSize) {
@@ -63,12 +69,13 @@ export async function uploadAndMakeVariantsFromBuffer(
   originalName: string
 ): Promise<UploadResult> {
   const variants: ImageVariant[] = [];
+  const uniqueBaseName = generateUniqueName();
 
   for (const [key, cfg] of Object.entries(IMAGE_SIZES)) {
     const size = key as ImageSize;
     try {
       const { buffer, metadata } = await processImage(input, size);
-      const fileName = tsName(originalName, cfg.suffix);
+      const fileName = `${uniqueBaseName}${cfg.suffix}.webp`;
       const destination = `uploads/${fileName}`;
       await bucket().file(destination).save(buffer, {
         contentType: "image/webp",
@@ -102,4 +109,3 @@ export async function uploadAndMakeVariantsFromFile(
   const input = Buffer.from(await file.arrayBuffer());
   return uploadAndMakeVariantsFromBuffer(input, file.name);
 }
-

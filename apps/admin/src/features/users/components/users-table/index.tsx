@@ -44,7 +44,6 @@ export function UsersTable({ data, totalItems }: UsersTableProps) {
 
   const deleteSelectedRows = useCallback(() => {
     // TODO: Implement bulk delete functionality
-    console.log("Delete selected users");
   }, []);
 
   // Show loading state while user data is loading

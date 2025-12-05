@@ -47,8 +47,6 @@ export default async function ActivitiesPage({ params }: PageProps) {
 
   const activity = await getActivityBySlug(activitySlug);
 
-  console.log("activity", activity);
-
   if (!activity) {
     notFound();
   }

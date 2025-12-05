@@ -1,6 +1,7 @@
 "use server";
 
 import { db, eq, desc, sql, and, ne } from "@repo/db";
+import { BlogCategories } from "@repo/db/schema/blog-categories";
 import { Blogs, createBlogSchema } from "@repo/db/schema/blogs";
 import { generateSlug } from "@repo/db/utils/slug-generator";
 import { z } from "zod";
@@ -136,6 +137,15 @@ export async function createBlog(data: z.infer<typeof createBlogSchema>) {
     .returning();
 
   return newBlog;
+}
+export async function getCategoryByName(name: string) {
+  if (!db) throw new Error("Database connection not available");
+
+  const category = await db.query.BlogCategories.findFirst({
+    where: eq(BlogCategories.name, name),
+  });
+
+  return category;
 }
 
 export async function updateBlog(

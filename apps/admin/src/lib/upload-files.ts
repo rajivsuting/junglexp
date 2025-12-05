@@ -240,20 +240,24 @@ export async function uploadFilesWithProgress(
   onProgress?: (progressByFile: ProgressMap) => void,
   endpoint: string = DEFAULT_ENDPOINT
 ): Promise<UploadResultWithImage[]> {
-  const tasks = files.map(async (file) => {
+  const results: UploadResultWithImage[] = [];
+
+  for (const file of files) {
     const useChunked = file.size >= LARGE_FILE_THRESHOLD;
     try {
       if (useChunked) {
-        return await uploadFileChunked(file, onProgress, endpoint);
+        const re = await uploadFileChunked(file, onProgress, endpoint);
+        results.push(re);
       } else {
-        return await uploadSingleWithProgress(file, onProgress, endpoint);
+        const re = await uploadSingleWithProgress(file, onProgress, endpoint);
+        results.push(re);
       }
     } catch (err) {
       // Surface per-file failure with 0% to make UI aware
       setProgress(onProgress, file.name, 0);
       throw err;
     }
-  });
+  }
 
-  return Promise.all(tasks);
+  return results;
 }

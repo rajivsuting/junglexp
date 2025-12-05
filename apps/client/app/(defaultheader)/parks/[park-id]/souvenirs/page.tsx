@@ -19,6 +19,21 @@ type PageProps = {
   params: Promise<{ "park-id": string }>;
 };
 
+export const generateMetadata = async ({ params }: PageProps) => {
+  const park = await getNationalParkBySlug(params["park-id"]);
+  if (!park) return notFound();
+  return {
+    title: `${park.name} Souvenirs`,
+    description: `${park.name} offers a diverse range of activities from exciting safaris to cultural experiences and adventure activities.`,
+    openGraph: {
+      title: `${park.name} Activities`,
+      description: `${park.name} offers a diverse range of activities from exciting safaris to cultural experiences and adventure activities.`,
+      images: park.images.map((image) => image.image?.small_url),
+    },
+  };
+};
+
+
 export default async function ParkSouvenirsPage(props: PageProps) {
   const params = await props.params;
 

@@ -25,19 +25,7 @@ type PageProps = {
   params: Promise<{ "park-id": string }>;
 };
 
-export const generateMetadata = async ({ params }: PageProps) => {
-  const park = await getNationalParkBySlug(params["park-id"]);
-  if (!park) return notFound();
-  return {
-    title: `${park.name} Activities`,
-    description: `${park.name} offers a diverse range of activities from exciting safaris to cultural experiences and adventure activities.`,
-    openGraph: {
-      title: `${park.name} Activities`,
-      description: `${park.name} offers a diverse range of activities from exciting safaris to cultural experiences and adventure activities.`,
-      images: park.images.map((image) => image.image?.small_url),
-    },
-  };
-};
+st
 
 // Duration tier mapping based on activity duration
 const getDurationTier = (duration: number) => {

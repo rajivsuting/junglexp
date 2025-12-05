@@ -26,6 +26,7 @@ export const generateMetadata = async ({ params }: PageProps) => {
     },
   };
 };
+
 export default async function SouvenirDetailsPage(props: PageProps) {
   const params = await props.params;
 

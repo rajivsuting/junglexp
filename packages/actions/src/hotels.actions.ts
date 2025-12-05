@@ -1,18 +1,38 @@
 "use server";
-import { and, asc, count, desc, eq, getTableColumns, ilike, inArray, sql } from 'drizzle-orm';
-
-import { db } from '@repo/db/index';
-import { HotelAmenities } from '@repo/db/schema/hotel-amenities';
 import {
-    HotelFaqs, HotelImages, HotelPolicies, Hotels, HotelSaftyFeatures, hotelTypeEnum,
-    insertHotelSchema
-} from '@repo/db/schema/hotels';
-import { Images } from '@repo/db/schema/image';
-import { NationalParks } from '@repo/db/schema/park';
-import { PlaceImages, Places } from '@repo/db/schema/places';
-import { Policies } from '@repo/db/schema/policies';
-import { RoomAmenities, RoomImages, RoomPlans, Rooms } from '@repo/db/schema/rooms';
-import { Zones } from '@repo/db/schema/zones';
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  getTableColumns,
+  ilike,
+  inArray,
+  sql,
+} from "drizzle-orm";
+
+import { db } from "@repo/db/index";
+import { HotelAmenities } from "@repo/db/schema/hotel-amenities";
+import {
+  HotelFaqs,
+  HotelImages,
+  HotelPolicies,
+  Hotels,
+  HotelSaftyFeatures,
+  hotelTypeEnum,
+  insertHotelSchema,
+} from "@repo/db/schema/hotels";
+import { Images } from "@repo/db/schema/image";
+import { NationalParks } from "@repo/db/schema/park";
+import { PlaceImages, Places } from "@repo/db/schema/places";
+import { Policies } from "@repo/db/schema/policies";
+import {
+  RoomAmenities,
+  RoomImages,
+  RoomPlans,
+  Rooms,
+} from "@repo/db/schema/rooms";
+import { Zones } from "@repo/db/schema/zones";
 
 import type { TRoomBase, TRoomPlanBase } from "@repo/db/schema/rooms";
 import type { THotelType, TNewHotel } from "@repo/db/schema/hotels";
@@ -721,6 +741,13 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
     images: hotel.hotel.id ? imagesByHotelId[hotel.hotel.id] || [] : [],
     rooms: hotel.hotel.id ? roomsByHotelId[hotel.hotel.id] || [] : [],
   }));
+};
+
+export const getAllHotelsSlugs = async () => {
+  if (!db) return [];
+
+  const hotels = await db.select({ slug: Hotels.slug }).from(Hotels);
+  return hotels.map((hotel) => hotel.slug);
 };
 
 export const getHotels = async (filters: {

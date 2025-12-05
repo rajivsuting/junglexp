@@ -1,8 +1,8 @@
 "use server";
-import { db, eq, inArray, sql } from '@repo/db';
-import { Images } from '@repo/db/schema/image';
+import { db, eq, inArray, sql } from "@repo/db";
+import { Images } from "@repo/db/schema/image";
 
-import { bucket, toObjectNameFromUrl } from './libs/gcs';
+import { bucket, toObjectNameFromUrl } from "./libs/gcs";
 
 import type { TImage, TNewImage } from "@repo/db/schema/image";
 

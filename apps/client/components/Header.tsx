@@ -1,16 +1,16 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
-import TopBar from './TopBar';
+import TopBar from "./TopBar";
 
 const parkName = "green-walks-by-junglexp";
 const navLinks = [
   { name: "Home", href: "/" },
-  {
-    name: "Stays",
-    href: `/parks/${parkName}/stays?stay-type=resort`,
-  },
+  // {
+  //   name: "Stays",
+  //   href: `/parks/${parkName}/stays?stay-type=resort`,
+  // },
   {
     name: "Activities & Safaris",
     href: `/parks/${parkName}/activities`,

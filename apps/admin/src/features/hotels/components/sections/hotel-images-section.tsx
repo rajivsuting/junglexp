@@ -205,8 +205,6 @@ export const HotelImagesSection = ({
                 <FileUploader
                   value={(field.value || []) as FileUploaderFormImage[]}
                   onValueChange={(value) => {
-                    console.log("value", value);
-
                     field.onChange(value as FormImage[]);
                   }}
                   multiple={true}

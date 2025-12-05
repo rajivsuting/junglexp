@@ -40,7 +40,6 @@ export function RoomsTable({ data, totalItems, columns }: RoomsTableProps) {
 
   const deleteSelectedRows = useCallback(() => {
     // TODO: Implement bulk delete functionality
-    console.log("Delete selected rooms");
   }, []);
 
   return (

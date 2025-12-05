@@ -1,4 +1,4 @@
-import { createBlog } from "@repo/actions/blogs.actions";
+import { createBlog, getCategoryByName } from "@repo/actions/blogs.actions";
 import { createImage } from "@repo/actions/image.actions";
 import { createBlogSchema } from "@repo/db/schema/blogs";
 import { NextResponse } from "next/server";
@@ -6,8 +6,20 @@ import {
   uploadAndMakeVariantsFromFile,
   type UploadResult,
 } from "@/lib/image-upload";
+import { createBlogCategory } from "@repo/actions/blog-categories.actions";
 
 export const runtime = "nodejs";
+
+const getCategoryId = async (categoryName: string) => {
+  const category = await getCategoryByName(categoryName);
+  if (!category) {
+    const newCategory = await createBlogCategory({
+      name: categoryName,
+    });
+    return newCategory.id;
+  }
+  return category.id;
+};
 
 function getImageMapFromUploadResult(result: UploadResult) {
   const small = result.variants.find((v) => v.size === "small");
@@ -34,12 +46,14 @@ export async function POST(request: Request) {
     let content: string;
     let categoryId: number;
     let thumbnailImageId: number | undefined;
+    let categoryName: string;
 
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData();
       title = formData.get("title") as string;
       content = formData.get("content") as string;
       categoryId = parseInt(formData.get("category_id") as string, 10);
+      categoryName = formData.get("category_name") as string;
 
       const imageFile = formData.get("image") as File | null;
 
@@ -67,6 +81,7 @@ export async function POST(request: Request) {
       content = body.content;
       categoryId = body.category_id;
       thumbnailImageId = body.thumbnail_image_id;
+      categoryName = body.category_name;
     }
 
     if (!thumbnailImageId) {
@@ -77,6 +92,16 @@ export async function POST(request: Request) {
         },
         { status: 400 }
       );
+    }
+
+    if (!categoryId && categoryName) {
+      if (!categoryName.trim()) {
+        return NextResponse.json(
+          { error: "Category name is required" },
+          { status: 400 }
+        );
+      }
+      categoryId = await getCategoryId(categoryName);
     }
 
     const blogData = {

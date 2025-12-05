@@ -24,6 +24,7 @@ export const generateMetadata = async ({ params }: Props) => {
     },
   };
 };
+
 export default async function NaturalistsPage({ params }: Props) {
   const { "park-id": parkSlug } = await params;
 

@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 
 import StayDetails from "@/screens/stays-page";
-import { getHotelBySlug } from "@repo/actions/hotels.actions";
+import {
+  getAllHotelsSlugs,
+  getHotelBySlug,
+} from "@repo/actions/hotels.actions";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -22,6 +25,11 @@ export const generateMetadata = async ({ params }: PageProps) => {
     },
   };
 };
+
+export async function generateStaticParams() {
+  const stays = await getAllHotelsSlugs();
+  return stays.map((stay) => ({ slug: stay }));
+}
 
 export default async function ActivitiesPage({
   params,
