@@ -1,10 +1,11 @@
 "use server";
-import { and, count, db, desc, eq, ilike } from '@repo/db/index';
-import { Reels } from '@repo/db/schema/reels';
+import { and, count, db, desc, eq, ilike } from "@repo/db/index";
+import { Reels } from "@repo/db/schema/reels";
 
-import { getOrSet } from './libs/cache';
+import { getOrSet } from "./libs/cache";
 
 import type { TNewReel, TReelStatus } from "@repo/db/schema/reels";
+import { bucket, toObjectNameFromUrl } from "./libs/gcs";
 
 export type TGetReelsFilters = {
   search?: string;
@@ -91,7 +92,10 @@ export const setReelStatus = async (id: string, status: TReelStatus) => {
 };
 
 export const deleteReel = async (id: string) => {
-  await db!.delete(Reels).where(eq(Reels.id, id));
+  const returned = await db!.delete(Reels).where(eq(Reels.id, id)).returning();
+  if (returned[0].videoUrl) {
+    bucket().file(toObjectNameFromUrl(returned[0].videoUrl)).delete();
+  }
   getReelsFromCache();
   return { id };
 };
