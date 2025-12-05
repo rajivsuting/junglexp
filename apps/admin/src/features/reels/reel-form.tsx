@@ -201,7 +201,7 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
         method: "POST",
         body: JSON.stringify({ contentType: data.videoFile.type }),
       });
-      const { url } = await res.json();
+      const { url, file } = await res.json();
 
       await fetch(url, {
         method: "PUT",
@@ -211,7 +211,7 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
         },
       });
 
-      if (!url) {
+      if (!file) {
         setLoading(false);
         toast.error("Failed to upload video");
         return;
@@ -220,7 +220,7 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
       // For create, you'll likely upload the file and set videoUrl to the uploaded URL on server
       const inserted = await createReel({
         ...rest,
-        videoUrl: url,
+        videoUrl: file,
       } as any);
       if (inserted) {
         toast.success("Reel created successfully");
