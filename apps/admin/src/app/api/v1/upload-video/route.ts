@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
 
     const buffer = await file.arrayBuffer();
 
+    const fileName = `uploads/videos/${Date.now()}-${file.name}`;
     const { url } = await uploadVideo({
       data: buffer,
       fileName: file.name,

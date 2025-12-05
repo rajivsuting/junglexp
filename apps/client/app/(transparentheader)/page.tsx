@@ -28,9 +28,16 @@ export const generateMetadata = async () => {
 };
 
 export default async function HomePage() {
-  const [park, homePageTitleConfig] = await Promise.all([
+  const [
+    park,
+    homePageTitleConfig,
+    homePageCtaTextConfig,
+    homePageCtaLinkConfig,
+  ] = await Promise.all([
     getNationalParkBySlug(parkName),
     getConfiguration("home_page_title"),
+    getConfiguration("home_page_cta_text"),
+    getConfiguration("home_page_cta_link"),
   ]);
 
   if (!park) {
@@ -47,6 +54,11 @@ export default async function HomePage() {
     </span>
   );
 
+  const ctaText = homePageCtaTextConfig?.value || "Find Lodges";
+  const ctaLink =
+    homePageCtaLinkConfig?.value ||
+    `/parks/${park.slug}/stays?stay-type=resort`;
+
   return (
     <div className="bg-background text-foreground font-sans">
       {/* Hero Section */}
@@ -62,6 +74,7 @@ export default async function HomePage() {
           mobileImages={park?.mobile_images?.map((image) => image.image) || []}
           images={park?.images.map((image) => image.image) || []}
         />
+        <div className="absolute inset-0 z-0 bg-black/30"></div>
         <div className="relative grid grid-cols-1 z-10 mx-4 sm:mx-6 lg:mx-24">
           <p className="text-sm md:text-[16px] font-light mb-4 text-white">
             DISCOVER . EXPLORE . EXPERIENCE
@@ -75,10 +88,10 @@ export default async function HomePage() {
           </div>
           <div className="flex items-center gap-4">
             <Link
-              href={`/parks/${park.slug}/stays?stay-type=resort`}
+              href={ctaLink}
               className="px-6 py-2 border-2 w-fit border-white text-white text-base font-medium hover:bg-white hover:text-black transition-colors"
             >
-              Find Lodges
+              {ctaText}
             </Link>
           </div>
         </div>

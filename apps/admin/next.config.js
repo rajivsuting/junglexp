@@ -5,6 +5,7 @@ const nextConfig = {
   },
   output: "standalone",
   experimental: {
+    middlewareClientMaxBodySize: "60MB",
     serverActions: {
       bodySizeLimit: "60MB",
     },

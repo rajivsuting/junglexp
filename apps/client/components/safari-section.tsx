@@ -1,11 +1,15 @@
-import { Truck, Users, Waves } from 'lucide-react';
-import Link from 'next/link';
+import { Truck, Users, Waves } from "lucide-react";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getActivities, getActivitiesByParkSlug } from '@repo/actions/activities.actions';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  getActivities,
+  getActivitiesByParkSlug,
+} from "@repo/actions/activities.actions";
 
 import type { TNationalPark } from "@repo/db/index";
+import Image from "next/image";
 // Placeholder SVG for Elephant
 function ElephantIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -60,11 +64,14 @@ export async function SafariSection({ park }: { park: TNationalPark }) {
         ) : (
           <>
             <div className="relative overflow-hidden shadow-xl mb-12">
-              <img
-                src="/a-rugged-open-top-safari-jeep-with-tourists-wearin.png"
-                alt="Jeep Safari"
-                className="w-full h-[32rem] object-cover"
-              />
+              <div className="w-full h-[32rem]">
+                <Image
+                  src="/a-rugged-open-top-safari-jeep-with-tourists-wearin.png"
+                  alt="Jeep Safari"
+                  fill
+                  objectFit="cover"
+                />
+              </div>
 
               {/* Desktop Overlay */}
               <div className="hidden md:flex absolute top-1/2 right-8 -translate-y-1/2 bg-white/95 backdrop-blur-sm shadow-xl p-8 max-w-md w-full flex-col items-start gap-2">

@@ -3,14 +3,15 @@
 import { eq } from "drizzle-orm";
 import { db } from "@repo/db";
 import { Configurations } from "@repo/db/schema/configurations";
-import type { TNewConfiguration } from "@repo/db/schema/configurations";
+import type {
+  TNewConfiguration,
+  TConfigurationKey,
+} from "@repo/db/schema/configurations";
 import { getOrSet, setJSON } from "./libs/cache";
-import { redis } from "./libs/redis";
-import { revalidatePath } from "next/cache";
 
 const CONFIG_CACHE_KEY = "config";
 
-export const getConfiguration = async (key: string) => {
+export const getConfiguration = async (key: TConfigurationKey) => {
   if (!db) return null;
 
   return await getOrSet(
@@ -22,13 +23,12 @@ export const getConfiguration = async (key: string) => {
     },
     {
       key: `${CONFIG_CACHE_KEY}:${key}`,
-      ttlSeconds: 60 * 60 * 24, // 24 hours
     }
   );
 };
 
 export const updateConfiguration = async (
-  key: string,
+  key: TConfigurationKey,
   value: string,
   description?: string
 ) => {

@@ -21,3 +21,11 @@ export const createConfigurationSchema = z.object({
 export type TConfiguration = typeof Configurations.$inferSelect;
 export type TNewConfiguration = typeof Configurations.$inferInsert;
 
+export const ConfigurationKeys = {
+  home_page_title: "home_page_title",
+  home_page_cta_text: "home_page_cta_text",
+  home_page_cta_link: "home_page_cta_link",
+} as const;
+
+export type TConfigurationKey =
+  (typeof ConfigurationKeys)[keyof typeof ConfigurationKeys];

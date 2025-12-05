@@ -6,6 +6,8 @@ import PageContainer from "@/components/layout/page-container";
 export default async function ConfigurationsPage() {
   // Fetch existing configuration (if any) to pass as initial data
   const homePageTitleConfig = await getConfiguration("home_page_title");
+  const homePageCtaTextConfig = await getConfiguration("home_page_cta_text");
+  const homePageCtaLinkConfig = await getConfiguration("home_page_cta_link");
 
   return (
     <PageContainer scrollable>
@@ -17,8 +19,8 @@ export default async function ConfigurationsPage() {
           Manage global configurations for the client application.
         </p>
         <Separator />
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-6">
+        <div className="w-full">
+          <div className="space-y-6 w-full">
             <div>
               <h3 className="text-lg font-medium">Global Settings</h3>
               <p className="text-sm text-muted-foreground">
@@ -29,6 +31,8 @@ export default async function ConfigurationsPage() {
             <ConfigurationForm
               initialData={{
                 home_page_title: homePageTitleConfig?.value || "",
+                home_page_cta_text: homePageCtaTextConfig?.value || "",
+                home_page_cta_link: homePageCtaLinkConfig?.value || "",
               }}
             />
           </div>

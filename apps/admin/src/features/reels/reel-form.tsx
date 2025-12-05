@@ -197,12 +197,19 @@ export default function ReelForm({ initialData, pageTitle }: ReelFormProps) {
 
       const formData = new FormData();
       formData.append("file", data.videoFile);
-      const response = await fetch("/api/v1/upload-video", {
+      const res = await fetch("/api/v1/upload-url", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({ contentType: data.videoFile.type }),
       });
+      const { url } = await res.json();
 
-      const { url } = await response.json();
+      await fetch(url, {
+        method: "PUT",
+        body: data.videoFile,
+        headers: {
+          "Content-Type": data.videoFile.type, // Must match what you signed
+        },
+      });
 
       if (!url) {
         setLoading(false);
