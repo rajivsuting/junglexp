@@ -11,7 +11,7 @@ import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 import { getConfiguration } from "@repo/actions/configurations.actions";
 import { cn } from "@/lib/utils";
 
-const parkName = "green-walks-by-junglexp";
+const parkName = "jim-corbet-national-park";
 
 export const generateMetadata = async () => {
   const park = await getNationalParkBySlug(parkName);

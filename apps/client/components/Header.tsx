@@ -4,7 +4,7 @@ import React from "react";
 
 import TopBar from "./TopBar";
 
-const parkName = "green-walks-by-junglexp";
+const parkName = "jim-corbet-national-park";
 const navLinks = [
   { name: "Home", href: "/" },
   // {
