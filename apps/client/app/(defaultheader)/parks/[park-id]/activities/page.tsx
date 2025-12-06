@@ -24,9 +24,6 @@ export const fetchCache = "force-no-store";
 type PageProps = {
   params: Promise<{ "park-id": string }>;
 };
-
-st
-
 // Duration tier mapping based on activity duration
 const getDurationTier = (duration: number) => {
   if (duration >= 8) return "Full Day";
