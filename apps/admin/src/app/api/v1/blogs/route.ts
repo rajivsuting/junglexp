@@ -39,6 +39,109 @@ function getImageMapFromUploadResult(result: UploadResult) {
   };
 }
 
+function convertHtmlToLexical(html: string) {
+  if (!html) return "";
+  // If it's already JSON (starts with {), assume it's valid Lexical state
+  if (html.trim().startsWith("{")) {
+    return html;
+  }
+
+  const rootChildren = [];
+
+  // Split by h2 tags, capturing the delimiters
+  // Using [\s\S] to match newlines
+  const parts = html.split(/(<h2>[\s\S]*?<\/h2>)/i);
+
+  for (const part of parts) {
+    if (part.match(/^<h2>[\s\S]*?<\/h2>$/i)) {
+      // It's a heading
+      const text = part.replace(/<\/?h2>/gi, "").trim();
+      const lines = part.split(/<br\s*\/?>/i);
+
+      if (text) {
+        rootChildren.push({
+          children: [
+            {
+              detail: 0,
+              format: 0,
+              mode: "normal",
+              style: "",
+              text: text,
+              type: "text",
+              version: 1,
+            },
+          ],
+          direction: "ltr",
+          format: "",
+          indent: 0,
+          tag: "h2",
+          type: "heading",
+          version: 1,
+        });
+      }
+    } else {
+      // It's text (potentially multiple paragraphs)
+      // Split by double newlines to indicate a new paragraph (treat <br> as line breaks within paragraph)
+      const paragraphs = part.split(/(?:\r?\n\s*){2,}/i);
+
+      for (const p of paragraphs) {
+        // Handle single <br> tags within a paragraph as line breaks
+        // We split by <br> or <br/>
+        const lines = p.split(/<br\s*\/?>/i);
+        const paragraphChildren = [];
+
+        for (let i = 0; i < lines.length; i++) {
+          const lineText = lines[i].replace(/<[^>]+>/g, "").trim(); // detailed cleanup still needed?
+          // Actually we should be careful not to strip too much if we want to preserve some inline formatting,
+          // but for now we are stripping all tags.
+
+          if (lineText) {
+            paragraphChildren.push({
+              detail: 0,
+              format: 0,
+              mode: "normal",
+              style: "",
+              text: lineText,
+              type: "text",
+              version: 1,
+            });
+          }
+
+          // Add a LineBreak node after each line except the last one
+          if (i < lines.length - 1) {
+            paragraphChildren.push({
+              type: "linebreak",
+              version: 1,
+            });
+          }
+        }
+
+        if (paragraphChildren.length > 0) {
+          rootChildren.push({
+            children: paragraphChildren,
+            direction: "ltr",
+            format: "",
+            indent: 0,
+            type: "paragraph",
+            version: 1,
+          });
+        }
+      }
+    }
+  }
+
+  return JSON.stringify({
+    root: {
+      children: rootChildren,
+      direction: "ltr",
+      format: "",
+      indent: 0,
+      type: "root",
+      version: 1,
+    },
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const contentType = request.headers.get("content-type") || "";
@@ -104,9 +207,12 @@ export async function POST(request: Request) {
       categoryId = await getCategoryId(categoryName);
     }
 
+    // Convert HTML content to Lexical JSON if needed
+    const processedContent = convertHtmlToLexical(content);
+
     const blogData = {
       title,
-      content,
+      content: processedContent,
       category_id: categoryId,
       thumbnail_image_id: thumbnailImageId,
     };

@@ -152,6 +152,8 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
           {children}
         </a>
       );
+    case "linebreak":
+      return <br key={index} />;
     case "image":
       // Assuming image node structure from our admin implementation
       // It usually doesn't have children but has src/alt props directly
