@@ -56,7 +56,6 @@ function convertHtmlToLexical(html: string) {
     if (part.match(/^<h2>[\s\S]*?<\/h2>$/i)) {
       // It's a heading
       const text = part.replace(/<\/?h2>/gi, "").trim();
-      const lines = part.split(/<br\s*\/?>/i);
 
       if (text) {
         rootChildren.push({
@@ -91,7 +90,10 @@ function convertHtmlToLexical(html: string) {
         const paragraphChildren = [];
 
         for (let i = 0; i < lines.length; i++) {
-          const lineText = lines[i].replace(/<[^>]+>/g, "").trim(); // detailed cleanup still needed?
+          const lineText = lines[i]
+            .replace(/<[^>]+>/g, "")
+            .replace(/\s+/g, " ")
+            .trim(); // detailed cleanup still needed?
           // Actually we should be careful not to strip too much if we want to preserve some inline formatting,
           // but for now we are stripping all tags.
 
