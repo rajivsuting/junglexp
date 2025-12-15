@@ -15,6 +15,10 @@ const navLinks = [
     name: "Activities & Safaris",
     href: `/parks/${parkName}/activities`,
   },
+  {
+    name: "Blogs",
+    href: `/blogs`,
+  },
   { name: "Contact Us", href: "https://wa.me/917428006473" },
 ];
 

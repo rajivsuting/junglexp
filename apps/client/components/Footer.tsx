@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import {
   FaFacebook,
   FaInstagram,
@@ -126,6 +127,34 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} Junglexp</p>
         </div>
       </div>
+
+      <Script id="chat-widget-config" strategy="afterInteractive">
+        {`
+          window.ChatWidgetConfig = {
+            webhook: {
+              url: 'https://n8n.branofy.com/webhook/34f6f873-5839-4c5c-99e1-fa791d44711c/chat',
+              route: 'general'
+            },
+            branding: {
+              logo: 'https://ik.imagekit.io/teggaadfo/3.png',
+              name: 'JungleXP AI Assistant',
+              welcomeText: 'Hi 👋, how can we help?',
+              responseTimeText: 'We typically respond right away'
+            },
+            style: {
+              primaryColor: '#8b9467',
+              secondaryColor: '#2e2e2e',
+              position: 'right',
+              backgroundColor: '#ffffff',
+              fontColor: '#333333'
+            }
+          };
+        `}
+      </Script>
+      <Script
+        src="https://cdn.jsdelivr.net/gh/WayneSimpson/n8n-chatbot-template@ba944c3/chat-widget.js"
+        strategy="lazyOnload"
+      />
     </footer>
   );
 };
