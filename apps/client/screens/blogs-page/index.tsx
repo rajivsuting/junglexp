@@ -1,8 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { TBlog, TBlogCategory } from "@repo/db/index";
-import { calculateReadTime } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
 import { BlogCard } from "@/components/blog-card";
 
 type BlogWithThumbnail = TBlog & {
@@ -30,15 +27,22 @@ export default function BlogsPage({
   return (
     <div className="text-primary font-sans min-h-screen">
       {/* Header Section matching Home Page style */}
-      <section className="relative py-20 flex items-center justify-center bg-[#2F2F2F] text-white overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20">
-          {/* Optional: Add a background pattern or image here if desired, similar to home page hero but simpler */}
+      <section className="relative min-h-[60dvh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src={"/blog-hero.jpg"}
+            alt="Blogs Page Hero"
+            fill
+            className="object-cover object-center"
+            priority
+          />
         </div>
-        <div className="relative z-10 text-center px-4">
-          <p className="text-sm md:text-[16px] font-light mb-4 tracking-widest">
+        <div className="absolute inset-0 z-0 bg-black/30"></div>
+        <div className="relative z-10 text-center px-4 text-white">
+          <p className="text-sm md:text-[16px] font-light mb-4 tracking-widest drop-shadow">
             DISCOVER . EXPLORE . READ
           </p>
-          <h1 className="text-4xl md:text-6xl font-light">
+          <h1 className="text-4xl md:text-6xl font-light drop-shadow">
             <span className="font-bold">JUNGLEXP</span> BLOGS
           </h1>
         </div>

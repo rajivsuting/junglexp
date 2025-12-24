@@ -19,7 +19,7 @@ const navLinks = [
     name: "Blogs",
     href: `/blogs`,
   },
-  { name: "Contact Us", href: "https://wa.me/917428006473" },
+  { name: "Contact Us", href: "/contact-us" },
 ];
 
 export default async function Header({

@@ -53,38 +53,41 @@ export default async function SafarisAndActivitiesPage(props: PageProps) {
     park_slug: params["park-id"],
   });
 
+  // Get first image for hero (desktop and mobile)
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-primary text-white py-20">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative min-h-[60dvh] flex items-center justify-start overflow-hidden">
+        {/* Desktop Image */}
+        <div className="hidden md:block absolute inset-0">
+          <Image
+            src="/blog-hero.jpg"
+            alt={`${park.name} Activities`}
+            fill
+            className="object-cover object-center"
+            priority
+          />
+        </div>
+
+        <div className="absolute inset-0 z-0 bg-black/30"></div>
+        <div className="relative grid grid-cols-1 z-10 mx-4 sm:mx-6 lg:mx-24 text-center">
           {/* Best Price Guarantee Banner */}
-          <div className="inline-block bg-white text-primary px-6 py-2 rounded-full text-sm font-bold mb-8">
+          <div className="inline-flex w-fit mx-auto bg-white text-primary px-6 py-2 rounded-full text-sm font-bold mb-8">
             ★ BEST PRICE GUARANTEE ★
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-light mb-4">
+          <h1 className="text-[32px] md:text-[62px] font-light mb-4 text-white drop-shadow">
             {park.name.toUpperCase()} ACTIVITIES
           </h1>
 
-          <p className="text-xl mb-2 opacity-90">Specialists in {park.name}</p>
+          <p className="text-xl mb-2 opacity-90 text-white">
+            Specialists in {park.name}
+          </p>
 
           <div className="w-24 h-1 bg-white mx-auto mb-8"></div>
-
-          <p className="text-lg max-w-4xl mx-auto mb-4">
-            {park.name} offers a diverse range of activities from exciting
-            safaris to cultural experiences and adventure activities.
-          </p>
-
-          <p className="text-lg">
-            Below is a comprehensive list of activities organized by duration.
-          </p>
-
-          <p className="text-lg font-semibold mt-4">
-            Please enquire for availability and specials.
-          </p>
         </div>
-      </div>
+      </section>
 
       {/* Quick Navigation */}
       {/* <div className='bg-background border-b shadow-sm'>
