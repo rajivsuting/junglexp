@@ -1,37 +1,10 @@
-import { Truck, Users, Waves } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  getActivities,
-  getActivitiesByParkSlug,
-} from "@repo/actions/activities.actions";
+import { getActivitiesByParkSlug } from "@repo/actions/activities.actions";
 
 import type { TNationalPark } from "@repo/db/index";
 import Image from "next/image";
-// Placeholder SVG for Elephant
-function ElephantIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <ellipse cx="12" cy="16" rx="8" ry="5" fill="currentColor" />
-      <rect x="6" y="8" width="12" height="8" rx="4" fill="currentColor" />
-      <circle cx="8" cy="12" r="2" fill="currentColor" />
-      <rect x="16" y="12" width="2" height="4" rx="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-// Placeholder SVG for Hot Air Balloon
-function BalloonIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <ellipse cx="12" cy="10" rx="6" ry="8" fill="#877B4E" />
-      <rect x="10" y="18" width="4" height="3" rx="1" fill="#A5A58D" />
-      <rect x="11" y="16" width="2" height="2" rx="1" fill="#A5A58D" />
-    </svg>
-  );
-}
 
 export async function SafariSection({ park }: { park: TNationalPark }) {
   const result = await getActivitiesByParkSlug({
@@ -39,10 +12,17 @@ export async function SafariSection({ park }: { park: TNationalPark }) {
     limit: 5,
   });
 
+  const [featured] = result.activities.filter(
+    (activity) => activity.is_featured
+  );
+
   const safariActivities = result.activities;
 
-  const firstActivity = safariActivities[0];
-  const restActivities = safariActivities.slice(1);
+  const firstActivity = featured || safariActivities[0];
+  const restActivities = featured
+    ? safariActivities.filter((activity) => activity.id !== featured?.id)
+    : safariActivities.slice(1);
+
   return (
     <section className="py-16" id="safari-section">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,7 +62,7 @@ export async function SafariSection({ park }: { park: TNationalPark }) {
                   {firstActivity?.description}
                 </p>
                 <div className="text-2xl font-bold text-primary">
-                  ₹{firstActivity?.packages[0]?.price_1.toLocaleString()}{" "}
+                  ₹{firstActivity?.packages[0]?.price.toLocaleString()}{" "}
                 </div>
                 <div className="text-xs text-[#9B8B6C] mb-2 font-light">
                   max. {firstActivity?.packages[0]?.number} People allowed in
@@ -107,7 +87,7 @@ export async function SafariSection({ park }: { park: TNationalPark }) {
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <div className="text-xl font-bold text-primary">
-                      ₹{firstActivity?.packages[0]?.price_1.toLocaleString()}
+                      ₹{firstActivity?.packages[0]?.price.toLocaleString()}
                     </div>
                     <div className="text-xs text-[#9B8B6C] font-light">
                       max. {firstActivity?.packages[0]?.number} People
@@ -150,7 +130,7 @@ export async function SafariSection({ park }: { park: TNationalPark }) {
                     </CardHeader>
                     <CardContent className="space-y-2 flex-1 flex flex-col justify-between">
                       <div className="text-xl font-bold text-primary">
-                        ₹{activity.packages[0]?.price_1.toLocaleString()}
+                        ₹{activity.packages[0]?.price.toLocaleString()}
                       </div>
                       <Link
                         href={`/parks/${park.slug}/activities/${activity.slug}`}
