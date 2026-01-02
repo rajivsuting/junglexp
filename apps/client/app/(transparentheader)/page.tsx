@@ -158,13 +158,13 @@ export default async function HomePage() {
               QUICK NAVIGATION LINKS
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
               {[
-                {
-                  title: "RESORT STAYS",
-                  href: `/parks/${park.slug}/stays?stay-type=resort`,
-                  color: "bg-[#6B705C]",
-                },
+                // {
+                //   title: "RESORT STAYS",
+                //   href: `/parks/${park.slug}/stays?stay-type=resort`,
+                //   color: "bg-[#6B705C]",
+                // },
                 {
                   title: "FOREST STAYS",
                   href: `/parks/${park.slug}/stays?stay-type=forest`,

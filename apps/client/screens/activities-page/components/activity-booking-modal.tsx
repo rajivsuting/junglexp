@@ -78,7 +78,7 @@ export function ActivityBookingModal({
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
   const [loadingDates, setLoadingDates] = useState(false);
 
-  const dateType = "any";
+  const dateType = activity.date_type;
 
   useEffect(() => {
     const fetchData = async () => {

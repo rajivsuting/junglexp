@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -31,8 +31,10 @@ import {
 import { getNationalParks } from "@repo/actions/parks.actions";
 import { createActivitySchema } from "@repo/db/schema/activities";
 
-import type { TActivityBase, TNewActivity } from "@repo/db";
+import type { TActivityBase, TNationalParkBase, TNewActivity } from "@repo/db";
 import type { z } from "zod";
+import { Toggle } from "@/components/ui/toggle";
+import { Switch } from "@/components/ui/switch";
 
 type ActivityFormData = z.infer<typeof createActivitySchema>;
 
@@ -46,6 +48,8 @@ export default function ActivityDetailsSection({
   onSuccess,
 }: ActivityDetailsSectionProps) {
   const router = useRouter();
+  const [parks, setParks] = useState<TNationalParkBase[]>([]);
+  const [loadingParks, setLoadingParks] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const form = useForm<ActivityFormData>({
@@ -54,9 +58,25 @@ export default function ActivityDetailsSection({
       name: initialData?.name || "",
       description: initialData?.description || "",
       park_id: initialData?.park_id || undefined,
+      is_featured: initialData?.is_featured || false,
     },
   });
 
+  useEffect(() => {
+    const fetchParks = async () => {
+      try {
+        setLoadingParks(true);
+        const { parks: parksData } = await getNationalParks();
+        setParks(parksData);
+      } catch (error) {
+        console.error("Error fetching parks:", error);
+        toast.error("Failed to fetch parks");
+      } finally {
+        setLoadingParks(false);
+      }
+    };
+    fetchParks();
+  }, []);
   const onSubmit = async (data: ActivityFormData) => {
     try {
       setLoading(true);
@@ -138,12 +158,39 @@ export default function ActivityDetailsSection({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {/* This would need to be populated with actual parks data */}
-                    <SelectItem value="1">Jim Corbett National Park</SelectItem>
-                    <SelectItem value="2">Ranthambore National Park</SelectItem>
+                    {loadingParks ? (
+                      <SelectItem value="loading" disabled>
+                        Loading parks...
+                      </SelectItem>
+                    ) : parks.length === 0 ? (
+                      <SelectItem value="no-parks" disabled>
+                        No parks available
+                      </SelectItem>
+                    ) : (
+                      parks.map((park) => (
+                        <SelectItem key={park.id} value={park.id.toString()}>
+                          {park.name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="is_featured"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Is Featured</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

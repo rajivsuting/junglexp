@@ -6,7 +6,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import {
   closestCenter,
@@ -279,7 +285,13 @@ export default function ActivityItinerarySection({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="flex items-center justify-between">
-          <CardTitle>Activity Itinerary</CardTitle>
+          <div>
+            <CardTitle>Activity Itinerary</CardTitle>
+            <CardDescription>
+              Please add the itinerary items for the activity per day.
+            </CardDescription>
+          </div>
+
           <Button
             type="button"
             onClick={handleAdd}

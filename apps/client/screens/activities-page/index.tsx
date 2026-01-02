@@ -1,7 +1,5 @@
-import { FAQSection } from "@/components/faq-section";
 import ReviewsSection from "@/components/ReviewsSection";
 
-import { StayAmenitiesSection } from "../stays-page/components/stay-amenities-section";
 import { StayPoliciesSection } from "../stays-page/components/stay-policies-section";
 import { ActivityImageGallery } from "./components/activity-image-gallery";
 import { ActivityItinerarySection } from "./components/activity-itinerary-section";
@@ -81,7 +79,7 @@ export default function ActivityDetails(props: ActivityDetailsProps) {
           <StayPoliciesSection policies={excluded as any} kind="exclude" />
 
           {/* Amenities */}
-          <StayAmenitiesSection amenities={amenities as any} />
+          {/* <StayAmenitiesSection amenities={amenities as any} /> */}
 
           {/* <FAQSection
             faqs={activity.faqs?.map((item) => item.faq) || ([] as any)}

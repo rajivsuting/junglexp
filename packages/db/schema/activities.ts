@@ -37,7 +37,7 @@ export const Activities = pgTable(
     park_id: integer("park_id").references(() => NationalParks.id, {
       onDelete: "cascade",
     }),
-
+    is_featured: boolean("is_featured").notNull().default(false),
     created_at: timestamp("created_at").defaultNow().notNull(),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
   },
@@ -148,6 +148,7 @@ export const createActivitySchema = z.object({
     .string()
     .min(1, "Activity name is required")
     .max(255, "Activity name must be less than 255 characters"),
+  is_featured: z.boolean().optional().default(false),
   description: z.string().min(1, "Activity description is required"),
   park_id: z.number().int().positive().optional(),
   date_type: z.enum(["predefined", "any"]).optional().default("predefined"),

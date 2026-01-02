@@ -1,5 +1,5 @@
 "use server";
-import { and, count, eq, gte, ilike, inArray, or } from "drizzle-orm";
+import { and, count, eq, gte, ilike, inArray, ne, or } from "drizzle-orm";
 
 import { db } from "@repo/db";
 import {
@@ -283,6 +283,22 @@ export const getActivityBySlug = async (slug: string) => {
   return activity;
 };
 
+export const updateActivityFeatured = async (
+  id: number,
+  is_featured: boolean,
+  park_id: number
+) => {
+  if (!db) throw new Error("Database connection not available");
+
+  if (is_featured) {
+    // Set all other activities in the same park to not featured
+    await db
+      .update(Activities)
+      .set({ is_featured: false })
+      .where(and(eq(Activities.park_id, park_id), ne(Activities.id, id)));
+  }
+};
+
 export const createActivity = async (data: TCreateActivity) => {
   if (!db) throw new Error("Database connection not available");
 
@@ -306,6 +322,10 @@ export const createActivity = async (data: TCreateActivity) => {
     .insert(Activities)
     .values(activityData)
     .returning();
+
+  if (data.is_featured) {
+    await updateActivityFeatured(activity.id, data.is_featured, data.park_id);
+  }
   return activity;
 };
 
@@ -320,6 +340,10 @@ export const updateActivity = async (
     .set({ ...data, updated_at: new Date() })
     .where(eq(Activities.id, id))
     .returning();
+
+  if (data.is_featured) {
+    await updateActivityFeatured(activity.id, data.is_featured, data.park_id);
+  }
   return activity;
 };
 

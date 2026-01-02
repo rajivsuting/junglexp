@@ -1,11 +1,12 @@
 import Link from "next/link";
 import {
+  FaEnvelope,
   FaFacebook,
   FaInstagram,
   FaWhatsapp,
   FaXTwitter,
 } from "react-icons/fa6";
-import { FaLinkedin } from "react-icons/fa";
+import { FaLinkedin, FaPhone } from "react-icons/fa";
 import Map from "@/components/Map";
 import Image from "next/image"; // Added for hero image
 
@@ -21,7 +22,7 @@ export default function ContactUsPage() {
       {/* Hero Section */}
       <section className="relative min-h-[60dvh] flex items-center justify-center text-white overflow-hidden">
         <Image
-          src="/blog-hero.jpg" // Using a generic hero image, can be replaced
+          src="/tiger-heroi.jpg" // Using a generic hero image, can be replaced
           alt="Contact Us Hero"
           fill
           priority
@@ -66,24 +67,38 @@ export default function ContactUsPage() {
                     Address:
                   </span>
                   <br />
-                  Near PWD Guest house Ward no 1
+                  Unit 6 Tribhuvan Complex,
                   <br />
-                  Pampa Puri Ranikhet Road, Ramnagar,
+                  Ishwar Nagar Block 1,
                   <br />
-                  Nainital, Uttarakhand, India
+                  New Delhi, India, 110065
                 </p>
                 <p className="flex items-center space-x-3">
                   <span className="font-semibold text-primary-dark">
-                    Whatsapp:
+                    Email:
+                  </span>{" "}
+                  info@junglexp.in{" "}
+                  <Link
+                    href="mailto:info@junglexp.in"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:scale-110 ml-2 transition-transform"
+                  >
+                    <FaEnvelope className="text-green-700" size={24} />
+                  </Link>
+                </p>
+                <p className="flex items-center space-x-3">
+                  <span className="font-semibold text-primary-dark">
+                    Contact number:
                   </span>{" "}
                   +91-7428006473
                   <Link
-                    href="https://wa.me/917428006473"
+                    href="tel:+917428006473"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:scale-110 transition-transform"
+                    className="hover:scale-110 ml-2 transition-transform"
                   >
-                    <FaWhatsapp className="text-green-700" size={24} />
+                    <FaPhone className="text-green-700" size={24} />
                   </Link>
                 </p>
               </div>
@@ -135,7 +150,7 @@ export default function ContactUsPage() {
       {/* Map Section */}
       <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-4xl font-bold text-primary text-center mb-10 border-b-2 border-primary-light pb-2">
+          <h2 className="text-4xl font-medium text-primary text-center mb-10 border-b-2 border-primary-light pb-2">
             Our Location
           </h2>
           <div className="h-[500px] w-full rounded-xl overflow-hidden shadow-xl border-2 border-gray-200">

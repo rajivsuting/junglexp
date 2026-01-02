@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card';
+import { Card } from "@/components/ui/card";
 
 import type { TActivityItineraryBase } from "@repo/db/index";
 

@@ -9,7 +9,7 @@ export default function Loading() {
       <section className="relative min-h-[60dvh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src={"/blog-hero.jpg"}
+            src="/tiger-heroi.jpg"
             alt="Blogs Page Hero"
             fill
             className="object-cover object-center"

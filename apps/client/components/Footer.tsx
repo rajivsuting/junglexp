@@ -2,13 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import {
+  FaEnvelope,
   FaFacebook,
   FaInstagram,
   FaLinkedin,
   FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaPhone, FaXTwitter } from "react-icons/fa6";
+
 const Footer = () => {
   return (
     <footer className="bg-[#3C553D] text-white py-12">
@@ -99,13 +101,19 @@ const Footer = () => {
               <Link href="/" className="text-green-400">
                 Junglexp.in
               </Link>
-              <p>Near PWD Guest house Ward no 1</p>
-              <p>Pampa Puri Ranikhet Road, Ramnagar,</p>
-              <p>Nainital, Uttarakhand, India</p>
+              <p>Unit 6 Tribhuvan Complex,</p>
+              <p>Ishwar Nagar Block 1,</p>
+              <p>New Delhi, India, 110065</p>
               <div className="flex items-center space-x-2">
-                <span>Whatsapp: +91-7428006473</span>
-                <Link href="https://wa.me/917428006473">
-                  <FaWhatsapp className="text-green-400" size={20} />
+                <span>Email: info@junglexp.in</span>
+                <Link href="mailto:info@junglexp.in">
+                  <FaEnvelope className="text-green-400" size={20} />
+                </Link>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span>Contact: +91-7428006473</span>
+                <Link href="tel:+917428006473">
+                  <FaPhone className="text-green-400" size={20} />
                 </Link>
               </div>
               {/* <div className="mt-4">
