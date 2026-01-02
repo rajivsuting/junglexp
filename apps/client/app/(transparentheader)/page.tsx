@@ -2,14 +2,12 @@ import { PlayCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import ForestStaysSection from "@/components/ForestStaysSection";
 import ImageSlideshow from "@/components/ImageSlideshow";
-import LodgesSection from "@/components/LodgesSection";
-import Map from "@/components/Map";
-import { SafariSection } from "@/components/safari-section";
-import { getNationalParkBySlug } from "@repo/actions/parks.actions";
-import { getConfiguration } from "@repo/actions/configurations.actions";
 import { cn } from "@/lib/utils";
+import MapDestination from "@/components/MapDestination";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
+import { SafariSection } from "@/components/safari-section";
+import { getConfiguration } from "@repo/actions/configurations.actions";
 
 const parkName = "jim-corbet-national-park";
 
@@ -219,7 +217,7 @@ export default async function HomePage() {
         <SafariSection park={park as any} />
       </Suspense>
 
-      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
+      <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto mb-16"></div>
 
       {/* Lodges Section */}
       {/* <Suspense>
@@ -231,7 +229,7 @@ export default async function HomePage() {
       </Suspense> */}
 
       {/* Map Section (Placeholder) */}
-      <Map />
+      <MapDestination park={park.name} />
       {/* <section className="py-16 bg-muted">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 text-primary">
