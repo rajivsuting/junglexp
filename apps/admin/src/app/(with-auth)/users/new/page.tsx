@@ -4,7 +4,7 @@ import PageContainer from "@/components/layout/page-container";
 import UserForm from "@/features/users/components/user-form";
 import { isSuperAdmin } from "@/lib/auth";
 
-const NewUserPage = async () => {
+const NewUserPage = async ({ params }: PageProps<"/users/new">) => {
   // Check if user has super admin access
   const hasAccess = await isSuperAdmin();
 

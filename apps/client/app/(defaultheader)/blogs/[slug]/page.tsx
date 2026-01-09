@@ -7,18 +7,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import type { Metadata } from "next/types";
 
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
-
 export async function generateStaticParams() {
   const blogs = await getAllBlogsSlugs();
-  return blogs.map((blog) => ({ slug: blog.slug }));
+
+  return blogs;
 }
 
 export async function generateMetadata({
   params,
-}: PageProps): Promise<Metadata> {
+}: PageProps<"/blogs/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 
@@ -39,7 +36,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: PageProps<"/blogs/[slug]">) {
   const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 

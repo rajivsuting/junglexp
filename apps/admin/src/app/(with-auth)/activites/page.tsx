@@ -7,12 +7,8 @@ import { searchParamsCache } from "@/lib/searchparams";
 
 import type { SearchParams } from "nuqs/server";
 
-type TSearchParams = {
-  searchParams: Promise<SearchParams>;
-};
-
-const Activities = async (props: TSearchParams) => {
-  const searchParams = await props.searchParams;
+const Activities = async (props: PageProps<"/activites">) => {
+  const searchParams = (await props.searchParams) as SearchParams;
 
   searchParamsCache.parse(searchParams);
 
