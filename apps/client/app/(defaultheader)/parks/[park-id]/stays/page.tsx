@@ -16,11 +16,6 @@ import { cn } from "@/lib/utils";
 import { getHotelsByParkId } from "@repo/actions/hotels.actions";
 import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
-// Force dynamic rendering to avoid build-time database calls
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
-
 import type { TRoomBase, TRoomPlan } from "@repo/db/index";
 
 type PageProps = {
@@ -54,6 +49,10 @@ const getPriceRange = (rooms: TRoomBase & { plans: TRoomPlan[] }[]) => {
 
   return { min: min === 0 ? (max == 0 ? 0 : max) : min, max: max };
 };
+
+export const dynamicParams = true;
+export const dynamic = "force-static";
+export const revalidate = 86400;
 
 export const generateMetadata = async ({ params }: PageProps) => {
   const park = await getNationalParkBySlug(params["park-id"]);

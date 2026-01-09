@@ -1,17 +1,17 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 // Force dynamic rendering to avoid build-time database calls
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-export const fetchCache = 'force-no-store';
+export const dynamicParams = true;
+export const dynamic = "force-static";
+export const revalidate = 86400;
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { getNationalParkBySlug } from '@repo/actions/parks.actions';
-import { getSouvenirs } from '@repo/actions/souvenirs.actions';
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { getNationalParkBySlug } from "@repo/actions/parks.actions";
+import { getSouvenirs } from "@repo/actions/souvenirs.actions";
 
 import type { TSouvenir } from "@repo/db";
 
@@ -32,7 +32,6 @@ export const generateMetadata = async ({ params }: PageProps) => {
     },
   };
 };
-
 
 export default async function ParkSouvenirsPage(props: PageProps) {
   const params = await props.params;

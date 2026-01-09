@@ -13,6 +13,10 @@ export async function generateStaticParams() {
   return blogs;
 }
 
+export const dynamicParams = true;
+export const dynamic = "force-static";
+export const revalidate = 86400;
+
 export async function generateMetadata({
   params,
 }: PageProps<"/blogs/[slug]">): Promise<Metadata> {

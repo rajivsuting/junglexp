@@ -1,10 +1,5 @@
 import { notFound } from "next/navigation";
 
-// Force dynamic rendering to avoid build-time database calls
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
-
 import ActivityDetails from "@/screens/activities-page";
 import {
   getActivities,
@@ -16,6 +11,9 @@ type PageProps = {
   params: Promise<{ "park-id": string; "activity-slug": string }>;
 };
 
+export const dynamicParams = true;
+export const dynamic = "force-static";
+export const revalidate = 86400;
 export const generateMetadata = async ({ params }: PageProps) => {
   const { "activity-slug": activitySlug } = await params;
   const activity = await getActivityBySlug(activitySlug);

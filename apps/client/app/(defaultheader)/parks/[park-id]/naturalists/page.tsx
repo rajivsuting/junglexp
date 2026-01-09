@@ -10,6 +10,10 @@ type Props = {
   params: Promise<{ "park-id": string }>;
 };
 
+export const dynamicParams = true;
+export const dynamic = "force-static";
+export const revalidate = 86400;
+
 export const generateMetadata = async ({ params }: Props) => {
   const { "park-id": parkSlug } = await params;
   const park = await getNationalParkBySlug(parkSlug);
