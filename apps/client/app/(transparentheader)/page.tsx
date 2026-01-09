@@ -15,13 +15,13 @@ export const generateMetadata = async () => {
   const park = await getNationalParkBySlug(parkName);
 
   return {
-    title: `Junglexp - ${park?.name}`,
+    title: `Junglexp.in | Nature, Wellness & Lifestyle Experiences`,
     description:
-      "Plan your Jim Corbett National Park safari with curated forest stays and guided wildlife tours near Ramnagar, Uttarakhand.",
+      "Step into the Natural Habitats, where  trail whispers stories of forests, wildlife, and forgotten histories. Our curated experiences engages you to slow down, observe, and reconnect, with expert naturalists guiding you through an immersive, mindful journey into the wild",
     openGraph: {
-      title: `Junglexp - ${park?.name}`,
+      title: `Junglexp.in | Nature, Wellness & Lifestyle Experiences`,
       description:
-        "Plan your Jim Corbett National Park safari with curated forest stays and guided wildlife tours near Ramnagar, Uttarakhand.",
+        "Step into the Natural Habitats, where  trail whispers stories of forests, wildlife, and forgotten histories. Our curated experiences engages you to slow down, observe, and reconnect, with expert naturalists guiding you through an immersive, mindful journey into the wild",
       images: park?.images.map((image) => image.image.small_url),
     },
   };
