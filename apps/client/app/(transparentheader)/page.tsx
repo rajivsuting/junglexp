@@ -15,11 +15,13 @@ export const generateMetadata = async () => {
   const park = await getNationalParkBySlug(parkName);
 
   return {
-    title: park?.name,
-    description: park?.description,
+    title: `Junglexp - ${park?.name}`,
+    description:
+      "Plan your Jim Corbett National Park safari with curated forest stays and guided wildlife tours near Ramnagar, Uttarakhand.",
     openGraph: {
-      title: park?.name,
-      description: park?.description,
+      title: `Junglexp - ${park?.name}`,
+      description:
+        "Plan your Jim Corbett National Park safari with curated forest stays and guided wildlife tours near Ramnagar, Uttarakhand.",
       images: park?.images.map((image) => image.image.small_url),
     },
   };
@@ -77,13 +79,13 @@ export default async function HomePage() {
           <p className="text-sm md:text-[16px] font-light mb-4 text-white">
             DISCOVER . EXPLORE . EXPERIENCE
           </p>
-          <div className="text-[32px] md:text-[62px] mb-6 w-full md:leading-18 text-white drop-shadow [&_b]:font-bold [&_br]:block">
+          <h1 className="text-[32px] md:text-[62px] mb-6 w-full md:leading-18 text-white drop-shadow [&_b]:font-bold [&_br]:block">
             {typeof homePageTitle === "string" ? (
               <span dangerouslySetInnerHTML={{ __html: homePageTitle }} />
             ) : (
               homePageTitle
             )}
-          </div>
+          </h1>
           <div className="flex items-center gap-4">
             <Link
               href={ctaLink}
@@ -118,17 +120,17 @@ export default async function HomePage() {
             <span className="font-bold">JIM CORBETT</span> NATIONAL PARK
           </h1>
 
-          <div className="space-y-6 text-primary font-light">
+          <p className="space-y-6 text-primary font-light">
             {park?.description.split("\n").map((line, index) => (
-              <p key={index} className="text-lg max-w-4xl mx-auto">
+              <span key={index} className="text-lg max-w-4xl mx-auto">
                 {line}
-              </p>
+              </span>
             ))}
 
             {/* <div className="pt-8">
               <div className="w-72 h-[1px] bg-[#9B8B6C] mx-auto"></div>
             </div> */}
-          </div>
+          </p>
         </div>
       </section>
 

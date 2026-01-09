@@ -1,6 +1,6 @@
-import { getReelsFromCache } from '@repo/actions/reels.actions';
+import { getReelsFromCache } from "@repo/actions/reels.actions";
 
-import ReelsPage from './reel-page';
+import ReelsPage from "./reel-page";
 
 export default async function _ReelsPage() {
   const reels = await getReelsFromCache();

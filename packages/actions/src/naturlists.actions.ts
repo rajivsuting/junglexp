@@ -1,6 +1,6 @@
 "use server";
-import { and, count, db, eq, ilike, inArray } from '@repo/db/index';
-import { Naturalist, NaturalistActivities } from '@repo/db/schema/naturalist';
+import { and, count, db, eq, ilike, inArray } from "@repo/db/index";
+import { Naturalist, NaturalistActivities } from "@repo/db/schema/naturalist";
 
 import type {
   TNewNaturalist,
@@ -153,4 +153,15 @@ export const updateNaturalist = async (
   }
 
   return updatedNaturalist;
+};
+
+export const getNaturalistsIds = async () => {
+  if (!db) return [];
+
+  const naturalists = await db.query.Naturalist.findMany({
+    columns: {
+      id: true,
+    },
+  });
+  return naturalists.map((naturalist) => naturalist.id);
 };

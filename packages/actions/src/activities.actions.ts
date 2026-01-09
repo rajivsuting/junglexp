@@ -1069,3 +1069,11 @@ export const updateActivityDates = async (
   const newDates = await db.insert(ActivityDates).values(values).returning();
   return newDates;
 };
+
+export const getActivitiesSlugs = async () => {
+  if (!db) return [];
+  const activities = await db!.query.Activities.findMany({
+    columns: { slug: true },
+  });
+  return activities.map((activity) => activity.slug);
+};

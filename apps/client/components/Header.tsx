@@ -48,7 +48,7 @@ export default async function Header({
               <h1 className="text-2xl font-bold text-white tracking-wider mb-1">
                 <Image
                   src="/LogoWhite.svg"
-                  alt="Junglexp Logo"
+                  alt="Logo of Junglexp"
                   width={150}
                   height={40}
                 />
