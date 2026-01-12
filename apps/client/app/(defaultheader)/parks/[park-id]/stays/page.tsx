@@ -54,7 +54,8 @@ export const dynamicParams = true;
 export const dynamic = "force-static";
 export const revalidate = 86400;
 
-export const generateMetadata = async ({ params }: PageProps) => {
+export const generateMetadata = async (props: PageProps) => {
+  const params = await props.params;
   const park = await getNationalParkBySlug(params["park-id"]);
   if (!park) return notFound();
 
@@ -72,6 +73,8 @@ export const generateMetadata = async ({ params }: PageProps) => {
 export default async function AllStaysPage(props: PageProps) {
   const params = await props.params;
   const searchParams = await props.searchParams;
+
+  console.log("params", params["park-id"], params, searchParams);
 
   const park = await getNationalParkBySlug(params["park-id"]);
 

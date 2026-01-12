@@ -1,15 +1,18 @@
 "use server";
-import { and, count, eq, ilike, inArray } from 'drizzle-orm';
+import { and, count, eq, ilike, inArray } from "drizzle-orm";
 
-import { db, schema } from '@repo/db';
-import { Images } from '@repo/db/schema/image';
+import { db, schema } from "@repo/db";
+import { Images } from "@repo/db/schema/image";
 import {
-    NationalParks, nationaParkInsertSchema, ParkImages, parkImagesInsertSchema
-} from '@repo/db/schema/park';
+  NationalParks,
+  nationaParkInsertSchema,
+  ParkImages,
+  parkImagesInsertSchema,
+} from "@repo/db/schema/park";
 
-import { deleteImages } from './image.actions';
-import { getOrSet } from './libs/cache';
-import { nationalParkBySlugKey } from './libs/keys';
+import { deleteImages } from "./image.actions";
+import { getOrSet } from "./libs/cache";
+import { nationalParkBySlugKey } from "./libs/keys";
 
 import type {
   TNewNationalPark,
@@ -92,6 +95,7 @@ export const getNationalParkById = async (parkId: string) => {
 
 export const getNationalParkBySlug = async (slug: string) => {
   if (!db) return null;
+
   return getOrSet(
     () =>
       db!.query.NationalParks.findFirst({
@@ -117,7 +121,7 @@ export const getNationalParkBySlug = async (slug: string) => {
         },
       }),
     {
-      key: await nationalParkBySlugKey(slug),
+      key: nationalParkBySlugKey(slug),
     }
   );
 };
