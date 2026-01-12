@@ -6,6 +6,8 @@ export const metadata: Metadata = {
     "Terms and conditions for using JungleXp platform and booking services.",
 };
 
+export const dynamic = "force-static";
+
 export default function TermsAndConditionsPage() {
   return (
     <div className="bg-background text-foreground font-sans">

@@ -16,6 +16,8 @@ export const metadata = {
     "Get in touch with Junglexp.in for your safari and activity bookings.",
 };
 
+export const dynamic = "force-static";
+
 export default function ContactUsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
