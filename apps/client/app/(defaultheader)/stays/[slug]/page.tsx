@@ -10,10 +10,6 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const dynamicParams = true;
-export const dynamic = "force-static";
-export const revalidate = 86400;
-
 export const generateMetadata = async ({ params }: PageProps) => {
   const { slug } = await params;
   const stay = await getHotelBySlug(slug);

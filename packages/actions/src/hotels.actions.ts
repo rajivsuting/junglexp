@@ -581,7 +581,7 @@ export const getHotelsByParkId = async (parkId: number, type?: THotelType) => {
   if (!db) return [];
 
   // First get all hotels in the park
-  const whereConditions = [eq(NationalParks.id, parkId)];
+  const whereConditions = [eq(Zones.park_id, parkId)];
 
   // Add hotel type filter if provided
   if (type) {

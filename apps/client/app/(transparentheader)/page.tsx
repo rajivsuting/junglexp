@@ -8,6 +8,7 @@ import MapDestination from "@/components/MapDestination";
 import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 import { SafariSection } from "@/components/safari-section";
 import { getConfiguration } from "@repo/actions/configurations.actions";
+import type { Metadata } from "next";
 
 const parkName = "jim-corbet-national-park";
 
@@ -158,7 +159,7 @@ export default async function HomePage() {
               QUICK NAVIGATION LINKS
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
               {[
                 // {
                 //   title: "RESORT STAYS",
@@ -174,6 +175,11 @@ export default async function HomePage() {
                   title: "SAFARIS & ACTIVITIES",
                   href: `/parks/${park.slug}/activities`,
                   color: "bg-[#2F2F2F]",
+                },
+                {
+                  title: "HOME STAYS",
+                  href: `/parks/${park.slug}/stays?stay-type=home`,
+                  color: "bg-[#6B705C]",
                 },
               ].map((link) => (
                 <a

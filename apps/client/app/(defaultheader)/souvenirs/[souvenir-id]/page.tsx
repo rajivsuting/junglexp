@@ -12,10 +12,6 @@ type PageProps = {
   params: Promise<{ "souvenir-id": string }>;
 };
 
-export const dynamicParams = true;
-export const dynamic = "force-static";
-export const revalidate = 86400;
-
 export const generateMetadata = async ({ params }: PageProps) => {
   const souvenir = await getSouvenirBySlug(params["souvenir-id"]);
   if (!souvenir) return notFound();

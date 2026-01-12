@@ -17,11 +17,7 @@ import { getHotelsByParkId } from "@repo/actions/hotels.actions";
 import { getNationalParkBySlug } from "@repo/actions/parks.actions";
 
 import type { TRoomBase, TRoomPlan } from "@repo/db/index";
-
-type PageProps = {
-  params: Promise<{ "park-id": string }>;
-  searchParams: Promise<{ "stay-type": string }>;
-};
+import type { THotelType } from "@repo/db/schema/hotels";
 
 // Price tier mapping based on hotel rating
 const getPriceTier = (rating: number) => {
@@ -51,10 +47,12 @@ const getPriceRange = (rooms: TRoomBase & { plans: TRoomPlan[] }[]) => {
 };
 
 export const dynamicParams = true;
-export const dynamic = "force-static";
+
 export const revalidate = 86400;
 
-export const generateMetadata = async (props: PageProps) => {
+export const generateMetadata = async (
+  props: PageProps<"/parks/[park-id]/stays">
+) => {
   const params = await props.params;
   const park = await getNationalParkBySlug(params["park-id"]);
   if (!park) return notFound();
@@ -70,11 +68,11 @@ export const generateMetadata = async (props: PageProps) => {
   };
 };
 
-export default async function AllStaysPage(props: PageProps) {
+export default async function AllStaysPage(
+  props: PageProps<"/parks/[park-id]/stays">
+) {
   const params = await props.params;
   const searchParams = await props.searchParams;
-
-  console.log("params", params["park-id"], params, searchParams);
 
   const park = await getNationalParkBySlug(params["park-id"]);
 
@@ -84,12 +82,15 @@ export default async function AllStaysPage(props: PageProps) {
 
   let stayType = searchParams["stay-type"] || undefined;
 
-  if (!!stayType && !["resort", "forest", "home"].includes(stayType)) {
+  if (
+    !!stayType &&
+    !["resort", "forest", "home"].includes(stayType as THotelType)
+  ) {
     stayType = undefined;
   }
 
   // Get all hotels for this park
-  const allHotels = await getHotelsByParkId(park.id);
+  const allHotels = await getHotelsByParkId(park.id, stayType as THotelType);
 
   // Get first image for hero (desktop and mobile)
   const heroImage = park?.images?.[0]?.image;
@@ -106,6 +107,7 @@ export default async function AllStaysPage(props: PageProps) {
               src={heroImage.original_url}
               alt={heroImage.alt_text || `${park.name} Stays`}
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover object-center"
               priority
             />
@@ -115,6 +117,7 @@ export default async function AllStaysPage(props: PageProps) {
         {mobileHeroImage && (
           <div className="block md:hidden absolute inset-0">
             <Image
+              sizes="(max-width: 768px) 100vw, 50vw"
               src={mobileHeroImage.original_url}
               alt={mobileHeroImage.alt_text || `${park.name} Stays`}
               fill
@@ -146,19 +149,28 @@ export default async function AllStaysPage(props: PageProps) {
       <div className="bg-background border-b shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="outline" asChild>
+            <Button
+              variant={stayType === "resort" ? "default" : "outline"}
+              asChild
+            >
               <Link href={`/parks/${park.slug}/stays?stay-type=resort`}>
                 Resorts (
                 {allHotels.filter((h) => h.hotel_type === "resort").length})
               </Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button
+              variant={stayType === "forest" ? "default" : "outline"}
+              asChild
+            >
               <Link href={`/parks/${park.slug}/stays?stay-type=forest`}>
                 Forest Stays (
                 {allHotels.filter((h) => h.hotel_type === "forest").length})
               </Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button
+              variant={stayType === "home" ? "default" : "outline"}
+              asChild
+            >
               <Link href={`/parks/${park.slug}/stays?stay-type=home`}>
                 Home Stays (
                 {allHotels.filter((h) => h.hotel_type === "home").length})
@@ -217,6 +229,7 @@ export default async function AllStaysPage(props: PageProps) {
                             src={hotel.images[0]?.image?.original_url || ""}
                             alt={hotel.name}
                             fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover"
                           />
                         ) : (
